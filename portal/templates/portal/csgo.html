@@ -1,28 +1,11 @@
+{% extends 'portal/base.html' %}
 
-{% load staticfiles %}
-{% include 'portal/navbar.html' %}
-<div class="bgded overlay" style="background-image:url(http://eskipaper.com/images/gaming-wallpaper-31.jpg);">
+{% block content %}
+<div class="container">
+
 {% if user.is_authenticated %}
-{% if profiles.status_CS is not 1 %}
-<div class="row">
-	<div class="col-3">
-	</div>
-	
-	<div class="col-5">
-		<!--<span>
-			<select>
-				{% for player in players %}
-					<option>{{ player.username }} </option>
-				{%endfor%}
-			</select>
-		</span> -->
-		
-		<div class="alert alert-dismissible alert-success">
-		  <button type="button" class="close" data-dismiss="alert">&times;</button>
-		  <strong>Well done!</strong> Now register
-		</div>
-		<div >
-			<label for="staticEmail">Create a team or join an existing one</label>
+	{% if profiles.status_CS is not 1 %}
+
 		<form action="#" method="post">
 			{% csrf_token %}
 			{% for field in form %}
@@ -31,20 +14,11 @@
 			<input type="submit" value="submit" style="margin-top:20px;">
 		</form>
 		</div>
-		
-		
-	</div>
-	<div class="col-2">
-	</div>
-</div>
-{%else%}
-<br><br><br><br><br><bR>
-<center><div class="alert alert-dismissible alert-primary">
-  <button type="button" class="close" data-dismiss="alert">&times;</button>
-  <strong>Ohhh!</strong> I see you already have a team. Go to <a href="{% url 'portal:user_detail' user.id  %}" class="alert-link"> dashboard</a>
-</div>
-</center>
+	{% else %}
+		Go to <a href="{% url 'portal:user_detail' user.id  %}" class="alert-link"> dashboard
+	{% endif %}
 {% endif %}
-{% endif %}
+
 </div>
-{% include 'portal/footer.html' %}
+
+{% endblock %}
