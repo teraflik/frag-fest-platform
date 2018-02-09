@@ -25,4 +25,4 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^portal/', include('portal.urls')),
     url(r'^$', TemplateView.as_view(template_name="portal/before_login.html"),name='home'),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
