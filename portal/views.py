@@ -157,22 +157,6 @@ def ProfileView(request):
         changepassword_form = PasswordChangeForm(request.user)
     return render(request, template_name,{'detail':detail,'profile':profile,'user_form':user_form,'profile_form':profile_form, 'changepassword_form':changepassword_form})
 
-def change_password(request):
-    if request.method == 'POST':
-        form = PasswordChangeForm(request.user, request.POST)
-        if form.is_valid():
-            user = form.save()
-            update_session_auth_hash(request, user)  # Important!
-            messages.success(request, 'Your password was successfully updated!')
-            return redirect('portal:change_password')
-        else:
-            messages.error(request, 'Please correct the error below.')
-    else:
-        form = PasswordChangeForm(request.user)
-    return render(request, 'portal/change_password.html', {
-        'form': form
-    })
-
 class dashboard(View):
     template_name = 'portal/dashboard.html'
     form_class = TeamForm
