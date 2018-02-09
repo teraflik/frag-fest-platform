@@ -31,6 +31,7 @@ urlpatterns = [
     url(r'^change_password/$', views.change_password, name='change_password'), 
     url(r'^login/$', auth_views.login, {'template_name': 'portal/login.html'}, name='login'),
     url(r'^logout/$', views.logout_view, name='logout'),
+    url(r'^team/(?P<team_id>\d+)/$', views.SingleTeam, name='single_team'),
     url(r'^teams/$', views.TeamView.as_view(), name='teams'),
     url(r'^dashboard/', views.dashboard.as_view(), name='dashboard'),
     url(r'^CSConfirm123/2/(?P<team_id>\d+)/4/21/(?P<user_id>\d+)/32/$', views.CSTeamConfirmView, name='CSTeamConfirmView'),

@@ -111,6 +111,15 @@ class TeamView(View):
         cs = Team.objects.filter(tournament="CS")
         return render(request, self.template_name, {'cs': cs})
 
+def SingleTeam(request,team_id):
+    template_name = 'portal/single_team.html'
+    if Team.objects.filter(id=team_id).count()==0:
+        team1 = Team.objects.get(id=team_id)
+        players = Profile.objects.filter(team_cs=team1)
+        return render(request,template_name,{'team1':team1,'players':player})
+
+
+
     
 @login_required
 def ProfileView(request):
@@ -185,25 +194,26 @@ class dashboard(View):
         count=0
         notifications = None
         team1=None
-
+        captain=None
         players = None
         if request.user.is_authenticated():
             profiles = Profile.objects.get(id=request.user.id)
             if profiles.status_CS==1:
                 team1 = profiles.team_cs
+                captain=team1.team_head.username
                 notifications = TeamNotification.objects.filter(team=team1)
                 players = Profile.objects.filter(team_cs=team1)
                 count=players.count();
                 if notifications.count()==0:
                     notifications=None
 
-        return render(request, self.template_name,{'profiles':profiles,'players':players,'count':count,'notifications':notifications,'team1':team1,'team_form':team_form,'member_form':member_form})
+        return render(request, self.template_name,{'captain':captain,'profiles':profiles,'players':players,'count':count,'notifications':notifications,'team1':team1,'team_form':team_form,'member_form':member_form})
     def post(self,request):
         team_form = self.form_class(request.POST)
         member_form = self.form_class2(request.POST)
         profiles = None
         count=0
-
+        captain=None
         if team_form.is_valid():
             uniqueTeam = Team.objects.filter(team_name=team_form.cleaned_data['team_name'],tournament='CS')
             if uniqueTeam.count() > 0:
@@ -227,12 +237,13 @@ class dashboard(View):
                     profiles = Profile.objects.get(id=request.user.id)
                     if profiles.status_CS==1:
                         team1 = profiles.team_cs
+                        captain=team1.team_head.username
                         notifications = TeamNotification.objects.filter(team=team1)
                         players = Profile.objects.filter(team_cs=team1)
                         count=players.count();
                         if notifications.count()==0:
                             notifications=None
-                return render(request, self.template_name,{'profiles':profiles,'players':players,'count':count,'notifications':notifications,'team1':team1,'team_form':team_form,'member_form':member_form})
+                return render(request, self.template_name,{'captain':captain,'profiles':profiles,'players':players,'count':count,'notifications':notifications,'team1':team1,'team_form':team_form,'member_form':member_form})
 
 
         if member_form.is_valid():
@@ -255,13 +266,14 @@ class dashboard(View):
             profiles = Profile.objects.get(id=request.user.id)
             if profiles.status_CS==1:
                 team1 = profiles.team_cs
+                captain=team1.team_head.username
                 notifications = TeamNotification.objects.filter(team=team1)
                 players = Profile.objects.filter(team_cs=team1)
                 count=players.count();
                 if notifications.count()==0:
                     notifications=None
 
-        return render(request, self.template_name,{'profiles':profiles,'players':players,'count':count,'notifications':notifications,'team1':team1,'team_form':team_form,'member_form':member_form})
+        return render(request, self.template_name,{'captain':captain,'profiles':profiles,'players':players,'count':count,'notifications':notifications,'team1':team1,'team_form':team_form,'member_form':member_form})
 
 
 def CSTeamConfirmView(request,team_id,user_id):
@@ -304,6 +316,8 @@ def RemovePlayer(request,team_id,user_id):
 
     return redirect('portal:index')    
     
+
+
     
 
 def logout_view(request):
