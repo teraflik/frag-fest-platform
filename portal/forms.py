@@ -28,9 +28,7 @@ class UserForm(forms.ModelForm):
             }
 
 class UpdateForm(forms.Form):
-    username = forms.CharField(label='username', max_length=100, required=True, widget=forms.TextInput(attrs={'placeholder': 'Username*'}))
-    first_name = forms.CharField(label='first_name',required=True, widget=forms.TextInput(attrs={'placeholder': 'First Name*'}))
-    last_name = forms.CharField(label='last_name',required=True, widget=forms.TextInput(attrs={'placeholder': 'Last Name*'}))
+    username = forms.CharField(label='username', max_length=100, required=False, widget=forms.TextInput(attrs={'placeholder': 'Username*'}))
 
 
 class TournamentForm(forms.ModelForm):   

@@ -112,65 +112,66 @@ class TeamView(View):
         return render(request, self.template_name, {'cs': cs})
 
     
-
+@login_required
 def ProfileView(request):
     template_name = 'portal/profile.html'
-    form_class = UpdateForm
-    form_class1 = ProfileForm
-    form_class2 = PasswordChangeForm
-    if request.method == "GET":
-        if request.user.is_authenticated():
-            detail = User.objects.get(id=request.user.id)
-            profile = Profile.objects.get(id=request.user.id)    
-            user_form = form_class(None)
-            profile_form = form_class1(None)
-            changepassword_form = form_class2(request.user)
-            return render(request, template_name,{'detail':detail,'profile':profile,'user_form':user_form,'profile_form':profile_form, 'changepassword_form':changepassword_form})
-        else:
-            return redirect('portal:index')
 
     if request.method == "POST":
-        
         detail = User.objects.get(id=request.user.id)
         profile = Profile.objects.get(id=request.user.id)
-        user_form = form_class(request.POST)
-        profile_form = form_class1(request.POST)
-        changepassword_form = form_class2(request.user, request.POST)
+        user_form = UpdateForm(request.POST)
+        profile_form = ProfileForm(request.POST)
+        changepassword_form = PasswordChangeForm(request.user, request.POST)
             
-        if user_form.is_valid():
-            uniqueUser = User.objects.filter(username=user_form.cleaned_data['username'])
-            if uniqueUser.count() > 0:
-                uniqueUser2 = User.objects.get(username=user_form.cleaned_data['username'])
-                if uniqueUser2.id != request.user.id:
-                    return render(request, template_name,{'detail':detail,'profile':profile,'user_form':user_form,'profile_form':profile_form, 'changepassword_form':changepassword_form})
-          
-            detail.username = user_form.cleaned_data['username']
-            detail.first_name = user_form.cleaned_data['first_name']
-            detail.last_name = user_form.cleaned_data['last_name']
-            detail.save()
+        if changepassword_form.is_valid():
+            user = changepassword_form.save()
+            update_session_auth_hash(request, user)
+            messages.success(request, 'Your password was successfully updated!')
+            return redirect('portal:profile')
+
+        else:
+            if user_form.is_valid() and user_form.cleaned_data['username']!='' :
+                uniqueUser = User.objects.filter(username=user_form.cleaned_data['username'])
+                if uniqueUser.count() > 0:
+                    uniqueUser2 = User.objects.get(username=user_form.cleaned_data['username'])
+                    if uniqueUser2.id != request.user.id:
+                        return render(request, template_name,{'detail':detail,'profile':profile,'user_form':user_form,'profile_form':profile_form, 'changepassword_form':changepassword_form})
+            
+                detail.username = user_form.cleaned_data['username']
+                detail.save()
 
             if profile_form.is_valid():
                 if profile_form.cleaned_data['steam_id']!=None and profile_form.cleaned_data['steam_id']!='':
                     profile.steam_id = profile_form.cleaned_data['steam_id']
- 
+
                 if profile_form.cleaned_data['location']!=None:
                     profile.location = profile_form.cleaned_data['location']
-
                 profile.save()
-                
-                                   
-        if changepassword_form.is_valid():
-            #user = User.objects.get(username=request.user.username)
-            #user.set_password(form2.cleaned_data['new_pass'])
-            #user.save()
-            user = changepassword_form.save()
-            update_session_auth_hash(request, user)
-            
+            else:
+                messages.failure(request, 'Error!')
+    else:
+        detail = User.objects.get(id=request.user.id)
+        profile = Profile.objects.get(id=request.user.id)
+        user_form = UpdateForm(None)
+        profile_form = ProfileForm(None)
+        changepassword_form = PasswordChangeForm(request.user)
+    return render(request, template_name,{'detail':detail,'profile':profile,'user_form':user_form,'profile_form':profile_form, 'changepassword_form':changepassword_form})
+
+def change_password(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  # Important!
             messages.success(request, 'Your password was successfully updated!')
-        
-        return render(request, template_name,{'detail':detail,'profile':profile,'user_form':user_form,'profile_form':profile_form, 'changepassword_form':changepassword_form})
-
-
+            return redirect('portal:change_password')
+        else:
+            messages.error(request, 'Please correct the error below.')
+    else:
+        form = PasswordChangeForm(request.user)
+    return render(request, 'portal/change_password.html', {
+        'form': form
+    })
 
 class dashboard(View):
     template_name = 'portal/dashboard.html'

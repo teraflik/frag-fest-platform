@@ -28,6 +28,7 @@ urlpatterns = [
     #url(r'^$',views.index,name='index')
     #url(r'^base/$',views.BaseView,name='base'),
     url(r'^profile/$', views.ProfileView, name='profile'), 
+    url(r'^change_password/$', views.change_password, name='change_password'), 
     url(r'^login/$', auth_views.login, {'template_name': 'portal/login.html'}, name='login'),
     url(r'^logout/$', views.logout_view, name='logout'),
     url(r'^teams/$', views.TeamView.as_view(), name='teams'),
