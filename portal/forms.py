@@ -29,7 +29,6 @@ class UserForm(forms.ModelForm):
 
 class UpdateForm(forms.Form):
     username = forms.CharField(label='username', max_length=100, required=True, widget=forms.TextInput(attrs={'placeholder': 'Username*'}))
-    email = forms.EmailField(label='email', required=True, widget=forms.TextInput(attrs={'placeholder': 'Email*'}))
     first_name = forms.CharField(label='first_name',required=True, widget=forms.TextInput(attrs={'placeholder': 'First Name*'}))
     last_name = forms.CharField(label='last_name',required=True, widget=forms.TextInput(attrs={'placeholder': 'Last Name*'}))
 
@@ -39,7 +38,8 @@ class TournamentForm(forms.ModelForm):
         model = Tournament
         fields = ['tournament_name','tournament_date','no_of_players']
         
-
+class subscriptionform(forms.Form):
+    is_subscribe = forms.BooleanField(initial=True)
 
 class ProfileForm(forms.Form):
     steam_id = forms.CharField(label='steam_id', max_length=100, required=False, widget=forms.TextInput(attrs={'placeholder': 'Steam ID'}))

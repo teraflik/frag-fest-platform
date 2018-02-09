@@ -18,13 +18,10 @@ class Team(models.Model):
     team_name = models.CharField(max_length=200, default=None)
     #tournament = models.ForeignKey(Tournament,default=None,null=True)
     tournament = models.CharField(max_length=200, default=None)
-    player1 = models.CharField(max_length=200,default=None,null=True,blank=True)
-    player2 = models.CharField(max_length=200,default=None,null=True,blank=True)
-    player3 = models.CharField(max_length=200,default=None,null=True,blank=True)
-    player4 = models.CharField(max_length=200,default=None,null=True,blank=True)
-    player5 = models.CharField(max_length=200,default=None,null=True,blank=True)
+    number_of_players = models.IntegerField(default=0, null=True)
     game_on = models.IntegerField(default=0, null=True)
     team_lock = models.IntegerField(default=0, null=True)
+    team_avatar = models.ImageField(upload_to="team_image", blank=True)
     
     def __unicode__(self):
         return unicode(team_name)
@@ -51,6 +48,7 @@ class Profile(models.Model):
     status_FIFA = models.IntegerField(default=0, null=True)
     status_DOTA = models.IntegerField(default=0, null=True)
     team_cs = models.ForeignKey(Team,default=None,null=True)
+    is_subscribe = models.BooleanField(default=True)
     def __unicode__(self):
         return unicode(user)
 

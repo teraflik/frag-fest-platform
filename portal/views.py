@@ -10,7 +10,7 @@ from .models import Player,Team,Tournament,Profile,TeamNotification
 from django.core.urlresolvers import reverse_lazy
 from django.contrib.auth import authenticate, login
 from django.views.generic import View
-from .forms import UserForm,TournamentForm,TeamForm,UpdateForm,ProfileForm,PlayerForm,DeleteTeamForm, changepass, forgetpass
+from .forms import UserForm,TournamentForm,TeamForm,UpdateForm,ProfileForm,PlayerForm,DeleteTeamForm, changepass, forgetpass, subscriptionform
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
@@ -37,6 +37,7 @@ class Register(View):
     template_name = 'portal/register.html'
     form_class = UserForm
     form_class2 = forgetpass
+    form_class3 = subscriptionform
     def get(self, request):
         if request.user.is_authenticated:
             return redirect('portal:home')
@@ -44,13 +45,14 @@ class Register(View):
         else:
             form = self.form_class(None)
             form2 = self.form_class2(None)
-            
-            return render(request, self.template_name, {'form': form, 'form2':form2})
+            form3 = self.form_class3(None)
+            return render(request, self.template_name, {'form': form, 'form2':form2,'form3':form3})
         
     #process form data
     def post(self, request):
         form = self.form_class(request.POST)
         form2 = self.form_class2(request.POST)
+        form3 = self.form_class3(request.POST)
         
         if form.is_valid():
             user1 = User.objects.create_user(username=form.cleaned_data['username'],email=form.cleaned_data['email'],first_name=form.cleaned_data['first_name'],last_name=form.cleaned_data['last_name'])
@@ -62,6 +64,11 @@ class Register(View):
             profile = Profile.objects.create(user=user1,steam_id=None,location=None)
             profile.id = user1.id
             profile.save()
+
+            if form3.is_valid():
+                profile.is_subscription=form3.cleaned_data['is_subscribe']
+                profile.save()
+
             user2 = authenticate(username = username, password= password)
             if user2 is not None:
                 login(request, user2)
@@ -72,7 +79,7 @@ class Register(View):
                 send_mail(subject,message,from_email,to_list,fail_silently=True)
                 return redirect('portal:index')
             else:
-                return render(request, self.template_name, {'form': form, 'form2':form2})
+                return render(request, self.template_name, {'form': form, 'form2':form2,'form3':form3})
 
         if form2.is_valid():
             username123 = form2.cleaned_data['usernamee']
@@ -94,131 +101,74 @@ class Register(View):
                 messages.success(request, 'Your password was successfully sent!')
                 return redirect('portal:login')
             else:
-                return render(request, self.template_name, {'form': form, 'form2':form2})
+                return render(request, self.template_name, {'form': form, 'form2':form2,'form3':form3})
 
-        return render(request, self.template_name, {'form': form, 'form2':form2})
+        return render(request, self.template_name, {'form': form, 'form2':form2,'form3':form3})
         
 class TeamView(View):
     template_name = 'portal/teams.html'
     def get(self, request):
         cs = Team.objects.filter(tournament="CS")
-        dota = Team.objects.filter(tournament="DOTA")
-        return render(request, self.template_name, {'cs': cs, 'dota':dota})
+        return render(request, self.template_name, {'cs': cs})
 
     
 
-def user_detail(request,user_id):
-    template_name = 'portal/details.html'
+def ProfileView(request):
+    template_name = 'portal/profile.html'
     form_class = UpdateForm
     form_class1 = ProfileForm
-    form_class2 = changepass
+    form_class2 = PasswordChangeForm
     if request.method == "GET":
-        #print(user_id)
-        detail = User.objects.get(id=user_id)
-        profile = Profile.objects.get(id=user_id)
-        csteam = None
-        dotateam = None
-        if profile.status_CS==1:
-            csteam = profile.team_cs
-               
-                
-        form = form_class(None)
-        form1 = form_class1(None)
-        form2 = form_class2(None)
-        return render(request, template_name,{'detail':detail,'profile':profile,'form':form,'form1':form1, 'form2':form2,'csteam':csteam,'dotateam':dotateam})
+        if request.user.is_authenticated():
+            detail = User.objects.get(id=request.user.id)
+            profile = Profile.objects.get(id=request.user.id)    
+            user_form = form_class(None)
+            profile_form = form_class1(None)
+            changepassword_form = form_class2(request.user)
+            return render(request, template_name,{'detail':detail,'profile':profile,'user_form':user_form,'profile_form':profile_form, 'changepassword_form':changepassword_form})
+        else:
+            return redirect('portal:index')
 
     if request.method == "POST":
         
-        detail = User.objects.get(id=user_id)
-        profile = Profile.objects.get(id=user_id)
-        form = form_class(request.POST)
-        form1 = form_class1(request.POST)
-        form2 = form_class2(request.POST)
-        csteam = None
-        if profile.status_CS==1:
-            csteam = profile.team_cs
+        detail = User.objects.get(id=request.user.id)
+        profile = Profile.objects.get(id=request.user.id)
+        user_form = form_class(request.POST)
+        profile_form = form_class1(request.POST)
+        changepassword_form = form_class2(request.user, request.POST)
             
-        if form.is_valid():
-            print(11111111111111)
-            uniqueUser = User.objects.filter(username=form.cleaned_data['username'])
+        if user_form.is_valid():
+            uniqueUser = User.objects.filter(username=user_form.cleaned_data['username'])
             if uniqueUser.count() > 0:
-                uniqueUser2 = User.objects.get(username=form.cleaned_data['username'])
+                uniqueUser2 = User.objects.get(username=user_form.cleaned_data['username'])
                 if uniqueUser2.id != request.user.id:
-                    return render(request, template_name,{'detail':detail,'profile':profile,'form':form,'form1':form1, 'form2':form2, 'csteam':csteam,'dotateam':dotateam})
-
-            player = Profile.objects.get(user = detail)
-            if player.status_CS == 1:
-                if Team.objects.filter(player1=detail.username).count()!=0:
-                    team1=Team.objects.get(player1=detail.username)
-                    team1.player1 = form.cleaned_data['username']
-                    team1.save()
-                elif Team.objects.filter(player2=detail.username).count()!=0:
-                    team1=Team.objects.get(player2=detail.username)
-                    team1.player2 = form.cleaned_data['username']
-                    team1.save()
-                elif Team.objects.filter(player3=detail.username).count()!=0:
-                    team1=Team.objects.get(player3=detail.username)
-                    team1.player3 = form.cleaned_data['username']
-                    team1.save()
-                elif Team.objects.filter(player4=detail.username).count()!=0:
-                    team1=Team.objects.get(player4=detail.username)
-                    team1.player4 = form.cleaned_data['username']
-                    team1.save()
-
-            if player.status_DOTA == 1:
-                if Team.objects.filter(player1=detail.username).count()!=0:
-                    team1=Team.objects.get(player1=detail.username)
-                    team1.player1 = form.cleaned_data['username']
-                    team1.save()
-                elif Team.objects.filter(player2=detail.username).count()!=0:
-                    team1=Team.objects.get(player2=detail.username)
-                    team1.player2 = form.cleaned_data['username']
-                    team1.save()
-                elif Team.objects.filter(player3=detail.username).count()!=0:
-                    team1=Team.objects.get(player3=detail.username)
-                    team1.player3 = form.cleaned_data['username']
-                    team1.save()
-                elif Team.objects.filter(player4=detail.username).count()!=0:
-                    team1=Team.objects.get(player4=detail.username)
-                    team1.player4 = form.cleaned_data['username']
-                    team1.save()
-                        
-            detail.username = form.cleaned_data['username']
-            detail.first_name = form.cleaned_data['first_name']
-            detail.last_name = form.cleaned_data['last_name']
-            detail.email = form.cleaned_data['email']
+                    return render(request, template_name,{'detail':detail,'profile':profile,'user_form':user_form,'profile_form':profile_form, 'changepassword_form':changepassword_form})
+          
+            detail.username = user_form.cleaned_data['username']
+            detail.first_name = user_form.cleaned_data['first_name']
+            detail.last_name = user_form.cleaned_data['last_name']
             detail.save()
-            subject = 'Updated email for fragfest'
-            message = 'You just updated your profile and email in fragfest 2018 website. Your username = ' + detail.username
-            from_email = settings.EMAIL_HOST_USER
-            to_list = [detail.email]
-            send_mail(subject,message,from_email,to_list,fail_silently=True)
-            messages.success(request, 'Your password was successfully sent!')
 
-            if form1.is_valid():
-                if form1.cleaned_data['steam_id']!=None and form1.cleaned_data['steam_id']!='':
-                    profile.steam_id = form1.cleaned_data['steam_id']
-                else:
-                    profile.steam_id = None
-                if form1.cleaned_data['location']!=None:
-                    profile.location = form1.cleaned_data['location']
+            if profile_form.is_valid():
+                if profile_form.cleaned_data['steam_id']!=None and profile_form.cleaned_data['steam_id']!='':
+                    profile.steam_id = profile_form.cleaned_data['steam_id']
+ 
+                if profile_form.cleaned_data['location']!=None:
+                    profile.location = profile_form.cleaned_data['location']
 
                 profile.save()
                 
-            if form1.cleaned_data['steam_id']=='':
-                profile.steam_id = None
-                profile.save()
-                            
-        print(11111111111)        
-        if form2.is_valid():
-            print(11111111111111111111111111)
-            user = User.objects.get(username=request.user.username)
-            user.set_password(form2.cleaned_data['new_pass'])
-            user.save()
+                                   
+        if changepassword_form.is_valid():
+            #user = User.objects.get(username=request.user.username)
+            #user.set_password(form2.cleaned_data['new_pass'])
+            #user.save()
+            user = changepassword_form.save()
+            update_session_auth_hash(request, user)
             
             messages.success(request, 'Your password was successfully updated!')
         
-        return render(request, template_name,{'detail':detail,'profile':profile,'form':form,'form1':form1, 'form2':form2, 'csteam':csteam,'dotateam':dotateam})
+        return render(request, template_name,{'detail':detail,'profile':profile,'user_form':user_form,'profile_form':profile_form, 'changepassword_form':changepassword_form})
 
 
 
@@ -231,59 +181,22 @@ class dashboard(View):
         profiles = None
         team_form = self.form_class(None)
         member_form = self.form_class2(None)
-        team_head=None
-        player1=None
-        player2=None
-        player3=None
-        player4=None
-        team_head_user = None
-        user1 = None
-        user2 = None
-        user3 = None
-        user4 = None
         count=0
         notifications = None
         team1=None
 
-        players = []
+        players = None
         if request.user.is_authenticated():
             profiles = Profile.objects.get(id=request.user.id)
             if profiles.status_CS==1:
-
                 team1 = profiles.team_cs
                 notifications = TeamNotification.objects.filter(team=team1)
-                
-                team_head = Profile.objects.get(user=team1.team_head)
-                team_head_user=User.objects.get(id=team1.team_head.id)
-                players.append({'name':team_head_user.username,'url':'http://steamcommunity.com/profiles/'+team_head.steam_id})
-                count+=1
-                if team1.player1!=None:
-                    user1 = User.objects.get(username=team1.player1)
-                    player1 = Profile.objects.get(user=user1)
-                    players.append({'name':user1.username,'url':'http://steamcommunity.com/profiles/'+player1.steam_id})
-                    count+=1
-                if team1.player2!=None:
-                    user2 = User.objects.get(username=team1.player2)
-                    player2 = Profile.objects.get(user=user2)
-                    players.append({'name':user2.username,'url':'http://steamcommunity.com/profiles/'+player2.steam_id})
-                    count+=1
-                if team1.player3!=None:
-                    user3 = User.objects.get(username=team1.player3)
-                    player3 = Profile.objects.get(user=user3)
-                    players.append({'name':user3.username,'url':'http://steamcommunity.com/profiles/'+player3.steam_id})
-                    count+=1
-                if team1.player4!=None:
-                    user4 = User.objects.get(username=team1.player4)
-                    player4 = Profile.objects.get(user=user4)
-                    players.append({'name':user4.username,'url':'http://steamcommunity.com/profiles/'+player4.steam_id})
-                    count+=1
-                
-                '''form2=form_class(None)
-                form3=form_class2(None)'''
+                players = Profile.objects.filter(team_cs=team1)
+                count=players.count();
                 if notifications.count()==0:
                     notifications=None
 
-        return render(request, self.template_name,{'profiles':profiles,'players':players,'count':count,'notifications':notifications,'team1':team1,'team_form':team_form,'member_form':member_form,'team_head':team_head,'team_head_user':team_head_user,'player1':player1,'user1':user1,'player2':player2,'user2':user2,'player3':player3,'user3':user3,'player4':player4,'user4':user4})
+        return render(request, self.template_name,{'profiles':profiles,'players':players,'count':count,'notifications':notifications,'team1':team1,'team_form':team_form,'member_form':member_form})
     def post(self,request):
         team_form = self.form_class(request.POST)
         member_form = self.form_class2(request.POST)
@@ -305,58 +218,20 @@ class dashboard(View):
                 newTeam.save()
                 uniqueUser.team_cs = newTeam
                 uniqueUser.save()
-                team_head=None
-                player1=None
-                player2=None
-                player3=None
-                player4=None
-                team_head_user = None
-                user1 = None
-                user2 = None
-                user3 = None
-                user4 = None
                 notifications = None
                 team1=None
-                players = []
                 count=0
+                players = None
                 if request.user.is_authenticated():
                     profiles = Profile.objects.get(id=request.user.id)
                     if profiles.status_CS==1:
-
                         team1 = profiles.team_cs
                         notifications = TeamNotification.objects.filter(team=team1)
-                        
-                        team_head = Profile.objects.get(user=team1.team_head)
-                        team_head_user=User.objects.get(id=team1.team_head.id)
-                        players.append({'name':team_head_user.username,'url':'http://steamcommunity.com/profiles/'+team_head.steam_id})
-                        count+=1
-                        if team1.player1!=None:
-                            user1 = User.objects.get(username=team1.player1)
-                            player1 = Profile.objects.get(user=user1)
-                            players.append({'name':user1.username,'url':'http://steamcommunity.com/profiles/'+player1.steam_id})
-                            count+=1
-                        if team1.player2!=None:
-                            user2 = User.objects.get(username=team1.player2)
-                            player2 = Profile.objects.get(user=user2)
-                            players.append({'name':user2.username,'url':'http://steamcommunity.com/profiles/'+player2.steam_id})
-                            count+=1
-                        if team1.player3!=None:
-                            user3 = User.objects.get(username=team1.player3)
-                            player3 = Profile.objects.get(user=user3)
-                            players.append({'name':user3.username,'url':'http://steamcommunity.com/profiles/'+player3.steam_id})
-                            count+=1
-                        if team1.player4!=None:
-                            user4 = User.objects.get(username=team1.player4)
-                            player4 = Profile.objects.get(user=user4)
-                            players.append({'name':user4.username,'url':'http://steamcommunity.com/profiles/'+player4.steam_id})
-                            count+=1
-                        
-                        '''form2=form_class(None)
-                        form3=form_class2(None)'''
+                        players = Profile.objects.filter(team_cs=team1)
+                        count=players.count();
                         if notifications.count()==0:
                             notifications=None
-                    profiles = Profile.objects.get(id=request.user.id)
-                return render(request, self.template_name,{'profiles':profiles,'players':players,'count':count,'notifications':notifications,'team1':team1,'team_form':team_form,'member_form':member_form,'team_head':team_head,'team_head_user':team_head_user,'player1':player1,'user1':user1,'player2':player2,'user2':user2,'player3':player3,'user3':user3,'player4':player4,'user4':user4})
+                return render(request, self.template_name,{'profiles':profiles,'players':players,'count':count,'notifications':notifications,'team1':team1,'team_form':team_form,'member_form':member_form})
 
 
         if member_form.is_valid():
@@ -364,467 +239,75 @@ class dashboard(View):
             if uniqueUser.count()!=0:
                 user1 = User.objects.get(username=member_form.cleaned_data['player'])
                 uniqueUser = Profile.objects.get(user=user1)
+                team1 = profiles.team_cs
                 if uniqueUser.status_CS==0:
-                    if team1.player1 == None:
-                        team1.player1 = member_form.cleaned_data['player']
-                        uniqueUser.status_CS = 1
-                        uniqueUser.team_cs = team1
-                        uniqueUser.save()
-                        team1.save()
-                    elif team1.player2 == None:
-                        team1.player2 = member_form.cleaned_data['player']
-                        uniqueUser.status_CS = 1
-                        uniqueUser.team_cs = team1
-                        uniqueUser.save()
-                        team1.save()
-                    elif team1.player3 == None:
-                        team1.player3 = member_form.cleaned_data['player']
-                        uniqueUser.status_CS = 1
-                        uniqueUser.team_cs = team1
-                        uniqueUser.save()
-                        team1.save()
-                    elif team1.player4 == None:
-                        team1.player4 = member_form.cleaned_data['player']
-                        uniqueUser.status_CS = 1
-                        uniqueUser.team_cs = team1
-                        uniqueUser.save()
-                        team1.save()
+                    uniqueUser.status_CS = 1
+                    uniqueUser.team_cs = team1
+                    uniqueUser.save()
         
         profiles = None
-        team_head=None
-        player1=None
-        player2=None
-        player3=None
-        player4=None
-        team_head_user = None
-        user1 = None
-        user2 = None
-        user3 = None
-        user4 = None
         notifications = None
-        players = []
         count=0
         team1=None
+        players = None
         if request.user.is_authenticated():
             profiles = Profile.objects.get(id=request.user.id)
             if profiles.status_CS==1:
-
                 team1 = profiles.team_cs
                 notifications = TeamNotification.objects.filter(team=team1)
-                
-                team_head = Profile.objects.get(user=team1.team_head)
-                team_head_user=User.objects.get(id=team1.team_head.id)
-                players.append({'name':team_head_user.username,'url':'http://steamcommunity.com/profiles/'+team_head.steam_id})
-                count+=1
-                if team1.player1!=None:
-                    user1 = User.objects.get(username=team1.player1)
-                    player1 = Profile.objects.get(user=user1)
-                    players.append({'name':user1.username,'url':'http://steamcommunity.com/profiles/'+player1.steam_id})
-                    count+=1
-                if team1.player2!=None:
-                    user2 = User.objects.get(username=team1.player2)
-                    player2 = Profile.objects.get(user=user2)
-                    players.append({'name':user2.username,'url':'http://steamcommunity.com/profiles/'+player2.steam_id})
-                    count+=1
-                if team1.player3!=None:
-                    user3 = User.objects.get(username=team1.player3)
-                    player3 = Profile.objects.get(user=user3)
-                    players.append({'name':user3.username,'url':'http://steamcommunity.com/profiles/'+player3.steam_id})
-                    count+=1
-                if team1.player4!=None:
-                    user4 = User.objects.get(username=team1.player4)
-                    player4 = Profile.objects.get(user=user4)
-                    players.append({'name':user4.username,'url':'http://steamcommunity.com/profiles/'+player4.steam_id})
-                    count+=1
-                
-                '''form2=form_class(None)
-                form3=form_class2(None)'''
+                players = Profile.objects.filter(team_cs=team1)
+                count=players.count();
                 if notifications.count()==0:
                     notifications=None
-            profiles = Profile.objects.get(id=request.user.id)
 
-        return render(request, self.template_name,{'profiles':profiles,'players':players,'count':count,'notifications':notifications,'team1':team1,'team_form':team_form,'member_form':member_form,'team_head':team_head,'team_head_user':team_head_user,'player1':player1,'user1':user1,'player2':player2,'user2':user2,'player3':player3,'user3':user3,'player4':player4,'user4':user4})
+        return render(request, self.template_name,{'profiles':profiles,'players':players,'count':count,'notifications':notifications,'team1':team1,'team_form':team_form,'member_form':member_form})
 
-
-def CSView(request,team_id):
-    template_name = 'portal/csgodash.html'
-    form_class = PlayerForm
-    form_class2 = DeleteTeamForm
-    
-    if request.method == "GET":
-        team1 = Team.objects.get(id=team_id)
-        notifications = TeamNotification.objects.filter(team=team1)
-        form =form_class(None)
-        team_head=None
-        player1=None
-        player2=None
-        player3=None
-        player4=None
-        team_head_user = None
-        user1 = None
-        user2 = None
-        user3 = None
-        user4 = None
-        team_head = Profile.objects.get(user=team1.team_head)
-        team_head_user=User.objects.get(id=team1.team_head.id)
-        if team1.player1!=None:
-            user1 = User.objects.get(username=team1.player1)
-            player1 = Profile.objects.get(user=user1)
-            
-        if team1.player2!=None:
-            user2 = User.objects.get(username=team1.player2)
-            player2 = Profile.objects.get(user=user2)
-        if team1.player3!=None:
-            user3 = User.objects.get(username=team1.player3)
-            player3 = Profile.objects.get(user=user3)
-        if team1.player4!=None:
-            user4 = User.objects.get(username=team1.player4)
-            player4 = Profile.objects.get(user=user4)
-        
-        '''form2=form_class(None)
-        form3=form_class2(None)'''
-        if notifications.count()==0:
-            notifications=None
-        return render(request, template_name,{'notifications':notifications,'team1':team1,'form':form,'team_head':team_head,'team_head_user':team_head_user,'player1':player1,'user1':user1,'player2':player2,'user2':user2,'player3':player3,'user3':user3,'player4':player4,'user4':user4})
-    if request.method == "POST":
-        team1 = Team.objects.get(id=team_id)
-        notifications = TeamNotification.objects.filter(team=team1)
-        if notifications.count()==0:
-            notifications=None
-        form =form_class(request.POST)
-        '''form2=form_class(request.POST)
-        form3=form_class2(request.POST)'''
-        if form.is_valid():
-            uniqueUser = User.objects.filter(username=form.cleaned_data['player'])
-            if uniqueUser.count()!=0:
-                user1 = User.objects.get(username=form.cleaned_data['player'])
-                uniqueUser = Profile.objects.get(user=user1)
-                if uniqueUser.status_CS==0:
-                    if team1.player1 == None:
-                        team1.player1 = form.cleaned_data['player']
-                        uniqueUser.status_CS = 1
-                        uniqueUser.save()
-                        team1.save()
-                    elif team1.player2 == None:
-                        team1.player2 = form.cleaned_data['player']
-                        uniqueUser.status_CS = 1
-                        uniqueUser.save()
-                        team1.save()
-                    elif team1.player3 == None:
-                        team1.player3 = form.cleaned_data['player']
-                        uniqueUser.status_CS = 1
-                        uniqueUser.save()
-                        team1.save()
-                    elif team1.player4 == None:
-                        team1.player4 = form.cleaned_data['player']
-                        uniqueUser.status_CS = 1
-                        uniqueUser.save()
-                        team1.save()
-                
-        
-        team_head=None
-        player1=None
-        player2=None
-        player3=None
-        player4=None
-        team_head_user = None
-        user1 = None
-        user2 = None
-        user3 = None
-        user4 = None
-        team_head = Profile.objects.get(user=team1.team_head)
-        team_head_user=User.objects.get(id=team1.team_head.id)
-        if team1.player1!=None:
-            user1 = User.objects.get(username=team1.player1)
-            player1 = Profile.objects.get(user=user1)           
-        if team1.player2!=None:
-            user2 = User.objects.get(username=team1.player2)
-            player2 = Profile.objects.get(user=user2)
-        if team1.player3!=None:
-            user3 = User.objects.get(username=team1.player3)
-            player3 = Profile.objects.get(user=user3)
-        if team1.player4!=None:
-            user4 = User.objects.get(username=team1.player4)
-            player4 = Profile.objects.get(user=user4)
-        return render(request, template_name,{'notifications':notifications,'team1':team1,'form':form,'team_head':team_head,'team_head_user':team_head_user,'player1':player1,'user1':user1,'player2':player2,'user2':user2,'player3':player3,'user3':user3,'player4':player4,'user4':user4})
 
 def CSTeamConfirmView(request,team_id,user_id):
     team_id1 = team_id
-    if request.method == "GET" and Profile.objects.get(id=user_id).status_CS==0:
+    team1 = Team.objects.get(id=team_id)
+    if request.method == "GET" and request.user==team1.team_head and Profile.objects.get(id=user_id).status_CS==0 and Profile.objects.filter(team_cs=team1).count()<5:
         uniqueTeam = Team.objects.get(id=team_id)
         user1 = User.objects.get(id=user_id)
-        if uniqueTeam.player1 == None:
-            uniqueTeam.player1 = user1.username
-            uniqueUser = Profile.objects.get(id=user1.id)
-            uniqueUser.status_CS = 1
-            uniqueUser.team_cs=uniqueTeam
-            uniqueUser.save()
-            uniqueTeam.save()
-        elif uniqueTeam.player2 == None:
-            uniqueTeam.player2 = user1.username
-            uniqueUser = Profile.objects.get(id=user1.id)
-            uniqueUser.status_CS = 1
-            uniqueUser.team_cs=uniqueTeam
-            uniqueUser.save()
-            uniqueTeam.save()
-        elif uniqueTeam.player3 == None:
-            uniqueTeam.player3 = user1.username
-            uniqueUser = Profile.objects.get(id=user1.id)
-            uniqueUser.status_CS = 1
-            uniqueUser.team_cs=uniqueTeam
-            uniqueUser.save()
-            uniqueTeam.save()
-        elif uniqueTeam.player4 == None:
-            uniqueTeam.player4 = user1.username
-            uniqueUser = Profile.objects.get(id=user1.id)
-            uniqueUser.status_CS = 1
-            uniqueUser.team_cs=uniqueTeam
-            uniqueUser.save()
-            uniqueTeam.save()
+        profiles = Profile.objects.get(id=user_id)
+        profiles.status_CS=1
+        profiles.team_cs=uniqueTeam
+        profiles.save()
         notification = TeamNotification.objects.get(team=uniqueTeam,user=user1)
         notification.delete()
-    return redirect('portal:CSView',team_id = team_id1)
-
-
-class DOTA(View):
-    template_name = 'portal/DOTA.html'
-    form_class = TeamForm
-    def get(self,request):
-        players = User.objects.all()
-        profiles = Profile.objects.get(id=request.user.id)
-        form = self.form_class(None)
-        return render(request, self.template_name,{'form':form,'profiles':profiles, 'players':players})
-    def post(self,request):
-        form = self.form_class(request.POST)
-        profiles = Profile.objects.get(id=request.user.id)
-        players = User.objects.all()
-        if form.is_valid():
-            uniqueTeam = Team.objects.filter(team_name=form.cleaned_data['team_name'],tournament='DOTA')
-            if uniqueTeam.count() > 0:
-                uniqueTeam = Team.objects.get(team_name=form.cleaned_data['team_name'],tournament='DOTA')
-                if TeamNotification.objects.filter(team=uniqueTeam,user=request.user).count()==0:
-                    notification = TeamNotification.objects.create(team=uniqueTeam,user=request.user)
-                    notification.save()
-                return redirect('portal:index')
-            else:
-                newTeam = Team.objects.create(team_head=request.user,team_name=form.cleaned_data['team_name'],tournament='DOTA')
-                uniqueUser = Profile.objects.get(id=request.user.id)
-                uniqueUser.status_DOTA = 1
-                uniqueUser.save()
-                newTeam.save()
-                return redirect('portal:DOTAView',team_id = newTeam.id)
-            return render(request, self.template_name,{'form':form,'profiles':profiles,'players':players})
-        else:
-            return render(request, self.template_name,{'form':form,'profiles':profiles,'players':players})
-
-def DOTAView(request,team_id):
-    template_name = 'portal/dotadash.html'
-    form_class = PlayerForm
-    form_class2 = DeleteTeamForm
-    
-    if request.method == "GET":
-        team1 = Team.objects.get(id=team_id)
-        notifications = TeamNotification.objects.filter(team=team1)
-        form =form_class(None)
-        '''form2=form_class(None)
-        form3=form_class2(None)'''
-        if notifications.count()==0:
-            notifications=None
-        return render(request, template_name,{'notifications':notifications,'team1':team1,'form':form})
-    if request.method == "POST":
-        team1 = Team.objects.get(id=team_id)
-        notifications = TeamNotification.objects.filter(team=team1)
-        if notifications.count()==0:
-            notifications=None
-        form =form_class(request.POST)
-        '''form2=form_class(request.POST)
-        form3=form_class2(request.POST)'''
-        if form.is_valid():
-            uniqueUser = User.objects.filter(username=form.cleaned_data['player'])
-            if uniqueUser.count()!=0:
-                user1 = User.objects.get(username=form.cleaned_data['player'])
-                uniqueUser = Profile.objects.get(user=user1)
-                if uniqueUser.status_DOTA==0:
-                    if team1.player1 == None:
-                        team1.player1 = form.cleaned_data['player']
-                        uniqueUser.status_DOTA = 1
-                        uniqueUser.save()
-                        team1.save()
-                    elif team1.player2 == None:
-                        team1.player2 = form.cleaned_data['player']
-                        uniqueUser.status_DOTA = 1
-                        uniqueUser.save()
-                        team1.save()
-                    elif team1.player3 == None:
-                        team1.player3 = form.cleaned_data['player']
-                        uniqueUser.status_DOTA = 1
-                        uniqueUser.save()
-                        team1.save()
-                    elif team1.player4 == None:
-                        team1.player4 = form.cleaned_data['player']
-                        uniqueUser.status_DOTA = 1
-                        uniqueUser.save()
-                        team1.save()
-                
-        return render(request, template_name,{'notifications':notifications,'team1':team1,'form':form})
-
-def DOTATeamConfirmView(request,team_id,user_id):
-    team_id1 = team_id
-    if request.method == "GET" and Profile.objects.get(id=user_id).status_DOTA==0:
-        uniqueTeam = Team.objects.get(id=team_id)
-        user1 = User.objects.get(id=user_id)
-        if uniqueTeam.player1 == None:
-            uniqueTeam.player1 = user1.username
-            uniqueUser = Profile.objects.get(id=user1.id)
-            uniqueUser.status_DOTA = 1
-            uniqueUser.save()
-            uniqueTeam.save()
-        elif uniqueTeam.player2 == None:
-            uniqueTeam.player2 = user1.username
-            uniqueUser = Profile.objects.get(id=user1.id)
-            uniqueUser.status_DOTA = 1
-            uniqueUser.save()
-            uniqueTeam.save()
-        elif uniqueTeam.player3 == None:
-            uniqueTeam.player3 = user1.username
-            uniqueUser = Profile.objects.get(id=user1.id)
-            uniqueUser.status_DOTA = 1
-            uniqueUser.save()
-            uniqueTeam.save()
-        elif uniqueTeam.player4 == None:
-            uniqueTeam.player4 = user1.username
-            uniqueUser = Profile.objects.get(id=user1.id)
-            uniqueUser.status_DOTA = 1
-            uniqueUser.save()
-            uniqueTeam.save()
-        notification = TeamNotification.objects.get(team=uniqueTeam,user=user1)
-        notification.delete()
-    if request.method == "GET" and Profile.objects.get(id=user_id).status_DOTA==1:
-        uniqueTeam = Team.objects.get(id=team_id)
-        user1 = User.objects.get(id=user_id)
-        notification = TeamNotification.objects.get(team=uniqueTeam,user=user1)
-        notification.delete()
-		
-    return redirect('portal:DOTAView',team_id = team_id1)
+        return redirect('portal:dashboard',team_id = team_id1)
 
 
 def DeleteTeam(request, team_id):
     team1 = Team.objects.get(id=team_id)
-    if team1.player1 != None:
-        team1.player1 = None
-        user1=User.objects.get(username=team1.player1)
-        uniqueUser = Profile.objects.get(user=user1)
-        if team1.tournament=="CS":
-            uniqueUser.status_CS = 0
-        if team1.tournament=="DOTA":
-            uniqueUser.status_DOTA = 0
-        uniqueUser.save()
-
-    if team1.player2 != None:
-        team1.player2 = None
-        user1=User.objects.get(username=team1.player2)
-        uniqueUser = Profile.objects.get(user=user1)
-        if team1.tournament=="CS":
-            uniqueUser.status_CS = 0
-        if team1.tournament=="DOTA":
-            uniqueUser.status_DOTA = 0
-        uniqueUser.save()
-
-    if team1.player3 != None:
-        team1.player3 = None
-        user1=User.objects.get(username=team1.player3)
-        uniqueUser = Profile.objects.get(user=user1)
-        if team1.tournament=="CS":
-            uniqueUser.status_CS = 0
-        if team1.tournament=="DOTA":
-            uniqueUser.status_DOTA = 0
-        uniqueUser.save()
-
-    if team1.player4 != None:
-        team1.player4 = None
-        user1=User.objects.get(username=team1.player4)
-        uniqueUser = Profile.objects.get(user=user1)
-        if team1.tournament=="CS":
-            uniqueUser.status_CS = 0
-        if team1.tournament=="DOTA":
-            uniqueUser.status_DOTA = 0
-        uniqueUser.save()
-
-    user1=User.objects.get(username=team1.team_head.username)
-    uniqueUser = Profile.objects.get(user=user1)
-    if team1.tournament=="CS":
-        uniqueUser.status_CS = 0
-    if team1.tournament=="DOTA":
-        uniqueUser.status_DOTA = 0
-    uniqueUser.save()
-    team1.delete()
-    return redirect('portal:index')
+    if request.user==team1.team_head:
+        players = Profile.objects.filter(team_cs=team1)
+        for player in players:
+            player.status_CS=0
+            player.team_cs=None
+            player.save()
+        team1.delete()
+        return redirect('portal:index')
+    else:
+        return redirect('portal:dashboard')
 
 
-def RemovePlayer(request,team_id,player_no):
+def RemovePlayer(request,team_id,user_id):
     team_id1=team_id
-    player_no=int(player_no)
-    if request.method=="GET":
-        team1 = Team.objects.get(id=team_id)
-        user1=None
-        if player_no==1:
-            user1 = User.objects.get(username=team1.player1)
-        elif player_no==2:
-            user1 = User.objects.get(username=team1.player2)
-        elif player_no==3:
-            user1 = User.objects.get(username=team1.player3)
-        elif player_no==4:
-            user1 = User.objects.get(username=team1.player4)
-            
-        if player_no == 1:
-            team1.player1 = None
-            uniqueUser = Profile.objects.get(user=user1)
-            if team1.tournament=="CS":
-                uniqueUser.status_CS = 0
-            if team1.tournament=="DOTA":
-                uniqueUser.status_DOTA = 0
-            uniqueUser.save()
-            team1.save()
-        elif player_no == 2:
-            team1.player2 = None
-            uniqueUser = Profile.objects.get(user=user1)
-            if team1.tournament=="CS":
-                uniqueUser.status_CS = 0
-            if team1.tournament=="DOTA":
-                uniqueUser.status_DOTA = 0
-            uniqueUser.save()
-            team1.save()
-        elif player_no == 3:
-            team1.player3 = None
-            uniqueUser = Profile.objects.get(user=user1)
-            if team1.tournament=="CS":
-                uniqueUser.status_CS = 0
-            if team1.tournament=="DOTA":
-                uniqueUser.status_DOTA = 0
-            uniqueUser.save()
-            team1.save()
-        elif player_no == 4:
-            team1.player4 = None
-            uniqueUser = Profile.objects.get(user=user1)
-            if team1.tournament=="CS":
-                uniqueUser.status_CS = 0
-            if team1.tournament=="DOTA":
-                uniqueUser.status_DOTA = 0
-            uniqueUser.save()
-            team1.save()
-            
-    team1 = Team.objects.get(id=team_id1)
-    if team1.tournament == "CS":
-        return redirect('portal:CSView',team_id = team_id1)
-    if team1.tournament == "DOTA":
-        return redirect('portal:DOTAView',team_id = team_id1)
+    team1=Team.objects.get(id=team_id)
+    if request.user==team1.team_head:
+        profiles = Profile.objects.get(id=user_id)
+        profiles.status_CS=0
+        profiles.team_cs=None
+        return redirect('portal:dashboard')
+
+    return redirect('portal:index')    
     
     
 
 def logout_view(request):
     logout(request)
-    template_name = 'portal/before_login.html'
-    return render(request, template_name)
+    return redirect('portal:index')
 
 def home(request):
     template_name = 'portal/index.html'
