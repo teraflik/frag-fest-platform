@@ -280,7 +280,7 @@ class dashboard(View):
                 if notifications.count()==0:
                     notifications=None
 
-        return render(request, self.template_name,{'players':players,'count':count,'notifications':notifications,'team1':team1,'team_form':team_form,'member_form':member_form,'team_head':team_head,'team_head_user':team_head_user,'player1':player1,'user1':user1,'player2':player2,'user2':user2,'player3':player3,'user3':user3,'player4':player4,'user4':user4})
+        return render(request, self.template_name,{'profiles':profiles,'players':players,'count':count,'notifications':notifications,'team1':team1,'team_form':team_form,'member_form':member_form,'team_head':team_head,'team_head_user':team_head_user,'player1':player1,'user1':user1,'player2':player2,'user2':user2,'player3':player3,'user3':user3,'player4':player4,'user4':user4})
     def post(self,request):
         team_form = self.form_class(request.POST)
         member_form = self.form_class2(request.POST)
@@ -350,7 +350,7 @@ class dashboard(View):
                         form3=form_class2(None)'''
                         if notifications.count()==0:
                             notifications=None
-                return render(request, self.template_name,{'players':players,'count':count,'notifications':notifications,'team1':team1,'team_form':team_form,'member_form':member_form,'team_head':team_head,'team_head_user':team_head_user,'player1':player1,'user1':user1,'player2':player2,'user2':user2,'player3':player3,'user3':user3,'player4':player4,'user4':user4})
+                return render(request, self.template_name,{'profiles':profiles,'players':players,'count':count,'notifications':notifications,'team1':team1,'team_form':team_form,'member_form':member_form,'team_head':team_head,'team_head_user':team_head_user,'player1':player1,'user1':user1,'player2':player2,'user2':user2,'player3':player3,'user3':user3,'player4':player4,'user4':user4})
 
 
         if member_form.is_valid():
@@ -434,7 +434,7 @@ class dashboard(View):
                 if notifications.count()==0:
                     notifications=None
 
-        return render(request, self.template_name,{'players':players,'count':count,'notifications':notifications,'team1':team1,'team_form':team_form,'member_form':member_form,'team_head':team_head,'team_head_user':team_head_user,'player1':player1,'user1':user1,'player2':player2,'user2':user2,'player3':player3,'user3':user3,'player4':player4,'user4':user4})
+        return render(request, self.template_name,{'profiles':profiles,'players':players,'count':count,'notifications':notifications,'team1':team1,'team_form':team_form,'member_form':member_form,'team_head':team_head,'team_head_user':team_head_user,'player1':player1,'user1':user1,'player2':player2,'user2':user2,'player3':player3,'user3':user3,'player4':player4,'user4':user4})
 
 
 def CSView(request,team_id):
