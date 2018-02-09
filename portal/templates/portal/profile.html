@@ -1,0 +1,82 @@
+{% extends 'portal/base.html' %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+	  <div class="col-md-8">
+      <div class="pt-md-5 pb-md-4">
+          <h2>Edit Profile</h2>
+      </div>
+      <form class="needs-validation" novalidate>
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label for="{{ form.firstname.id_for_label }}">First name</label>
+            {{ form.firstname }}
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="{{ form.lastname.id_for_label }}">Last name</label>
+            {{ form.lastname }}
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="username">Username</label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">@</span>
+            </div>
+            {{ form.username }}
+            <div class="invalid-feedback" style="width: 100%;">
+            {{ form.username.errors }}
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-3">
+            <label for="email">SteamID64</label>
+            <input type="number" class="form-control" id="" placeholder="12345678901234567">
+            <small class="text-muted">SteamID is required to signup for CS:GO. Find your steamID64 <a href="https://steamidfinder.com/">here</a>.</small>
+        </div>
+
+        <div class="mb-3">
+          <label for="email">Email</label>
+          <input type="email" class="form-control" id="email" placeholder="you@example.com" disabled>
+        </div>
+
+        <div class="mb-3">
+          <label for="address2">Location <span class="text-muted">(Optional)</span></label>
+          <input type="text" class="form-control" id="address2" placeholder="City, State">
+        </div>
+        <hr class="mb-4">
+        <button class="btn btn-primary btn-lg btn-block" type="submit">Update Details</button>
+      </form>
+
+      <form class="needs-validation">
+        <h5 class="mt-5">Change Password</h4>
+        <div class="row">
+          <div class="col-md-6">
+            <label for="cc-name">New Password</label>
+            <input type="text" class="form-control" id="cc-name" placeholder="">
+            <small class="text-muted">Leave blank if you don't want to change your password.</small>
+          </div>
+          <div class="col-md-6">
+            <label for="cc-number">Confirm Password</label>
+            <input type="text" class="form-control" id="cc-number" placeholder="">
+          </div>
+        </div>
+        
+        <hr class="my-4">
+        <button class="btn btn-primary btn-lg btn-block" type="submit">Change Password</button>
+      </form>
+    </div> <!--Edit profile ends -->
+
+    <div class="col-md-4">
+        <label><b>Username: </b></label>&nbsp;&nbsp;<span>{{ detail.username }}</span><br>
+        <label><b>Name: </b></label>&nbsp;&nbsp;<span>{{ detail.first_name }}</span>&nbsp;<span>{{detail.last_name}}</span><br>
+        <label><b>Email: </b></label>&nbsp;&nbsp;<span>{{ detail.email }}</span><br>
+        <label><b>Steam ID: </b></label>&nbsp;&nbsp;<span>{{ profile.steam_id }}</span><br>
+        <label><b>Location: </b></label>&nbsp;&nbsp;<span>{{ profile.location }}</span>
+    </div>
+  </div>
+</div>
+{% endblock %}

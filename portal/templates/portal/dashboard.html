@@ -14,7 +14,7 @@
 			{% else %}
 				<div class="alert alert-dismissible alert-success">
 					<button type="button" class="close" data-dismiss="alert">&times;</button>
-					Your steamid has been set<strong><a href="#" class="alert-link"> Steam ID</a></strong> to signup for be part of a team.
+					Your steamid has been set to <strong><a href="https://www.steamcommunity.com/profiles/{{ profiles.steam_id }}" class="alert-link">{{ profiles.steam_id }} </a></strong>.
 				</div>
 				Create a team or join an existing one
 				<form action="#" method="post">
@@ -22,11 +22,8 @@
 					{{ team_form }}
 					<input type="submit" value="Submit" />
 				</form>
-					
-
 			{% endif %}
 		{% else %}
-		This is your team:
 		<div class="col-md-4 order-md-2 mb-4">
 			<h4 class="d-flex justify-content-between align-items-center mb-3">
 				<span class="text-muted">Your Team</span>
@@ -45,7 +42,7 @@
 				<li class="list-group-item d-flex justify-content-between lh-condensed">
 				<div>
 					<h6 class="my-0">player.name</h6>
-					<small class="text-muted"><a href="{{  }}">{{  }}</a></small>
+					<small class="text-muted"><a href="{{ player.url }}">{{ player.url }}</a></small>
 				</div>
 				<span class="text-muted">Member</span>
 				</li>
@@ -68,18 +65,17 @@
 		</form>
 		{% endif %}
 	{% else %}
-
-	{% endif %}
-	<div class="position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center bg-light">
-		<div class="col-md-5 p-lg-5 mx-auto my-5">
-			<h1 class="display-4 font-weight-normal">Team Dashboard</h1>
-			<p class="lead font-weight-normal">You need to be logged in to access your team dashboard.</p>
-			<a class="btn btn-outline-secondary" href="#">Log In</a>
+		<div class="position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center bg-light">
+			<div class="col-md-5 p-lg-5 mx-auto my-5">
+				<h1 class="display-4 font-weight-normal">Team Dashboard</h1>
+				<p class="lead font-weight-normal">You need to be logged in to access your team dashboard.</p>
+				<a class="btn btn-outline-secondary" href="#">Log In</a>
+			</div>
+			<!-- <div class="product-device box-shadow d-none d-md-block"></div> -->
+			<!-- <div class="product-device product-device-2 box-shadow d-none d-md-block"></div> -->
 		</div>
-		<div class="product-device box-shadow d-none d-md-block"></div>
-		<div class="product-device product-device-2 box-shadow d-none d-md-block"></div>
-	</div>
-	  
+	{% endif %}
+	
 </div><!-- Container End -->
 
 {% endblock %}
