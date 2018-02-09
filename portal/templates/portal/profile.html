@@ -10,17 +10,17 @@
       <form action="#" class="needs-validation" novalidate>
         <div class="row">
           <div class="col-md-6 mb-3">
-            <label for="{{ form.firstname.id_for_label }}">First name</label>
-            {{ user_form.firstname }}
+            <label for="{{ user_form.firstname.id_for_label }}">First name</label>
+            {{ user_form.first_name }}
           </div>
           <div class="col-md-6 mb-3">
-            <label for="{{ form.lastname.id_for_label }}">Last name</label>
-            {{ user_form.lastname }}
+            <label for="{{ user_form.lastname.id_for_label }}">Last name</label>
+            {{ user_form.last_name }}
           </div>
         </div>
 
         <div class="mb-3">
-          <label for="username">Username</label>
+          <label for="{{ user_form.username.id_for_label }}">Username</label>
           <div class="input-group">
             <div class="input-group-prepend">
               <span class="input-group-text">@</span>
@@ -33,8 +33,8 @@
         </div>
 
         <div class="mb-3">
-            <label for="email">SteamID64</label>
-            <input type="number" class="form-control" id="" placeholder="12345678901234567">
+            <label for="{{ profile_form.steam_id.id_for_label }}">SteamID64</label>
+            {{ profile_form.steam_id }}
             <small class="text-muted">SteamID is required to signup for CS:GO. Find your steamID64 <a href="https://steamidfinder.com/">here</a>.</small>
         </div>
 
