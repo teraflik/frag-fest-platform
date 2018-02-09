@@ -222,18 +222,97 @@ def user_detail(request,user_id):
 
 
 
-class CS(View):
-    template_name = 'portal/csgo.html'
+class dashboard(View):
+    template_name = 'portal/dashboard.html'
     form_class = TeamForm
+    form_class2 = PlayerForm
     def get(self,request):
         players = User.objects.all()
         profiles = Profile.objects.get(id=request.user.id)
-        form = self.form_class(None)
-        return render(request, self.template_name,{'form':form,'profiles':profiles, 'players':players})
+        team_form = self.form_class(None)
+        member_form = self.form_class2(None)
+        team_head=None
+        player1=None
+        player2=None
+        player3=None
+        player4=None
+        team_head_user = None
+        user1 = None
+        user2 = None
+        user3 = None
+        user4 = None
+        notifications = None
+        if request.user.is_authenticated():
+            if profiles.status_CS==1:
+
+                team1 = profiles.team_cs
+                notifications = TeamNotification.objects.filter(team=team1)
+                
+                team_head = Profile.objects.get(user=team1.team_head)
+                team_head_user=User.objects.get(id=team1.team_head.id)
+                if team1.player1!=None:
+                    user1 = User.objects.get(username=team1.player1)
+                    player1 = Profile.objects.get(user=user1)
+                    
+                if team1.player2!=None:
+                    user2 = User.objects.get(username=team1.player2)
+                    player2 = Profile.objects.get(user=user2)
+                if team1.player3!=None:
+                    user3 = User.objects.get(username=team1.player3)
+                    player3 = Profile.objects.get(user=user3)
+                if team1.player4!=None:
+                    user4 = User.objects.get(username=team1.player4)
+                    player4 = Profile.objects.get(user=user4)
+                
+                '''form2=form_class(None)
+                form3=form_class2(None)'''
+                if notifications.count()==0:
+                    notifications=None
+
+        return render(request, self.template_name,{'notifications':notifications,'team1':team1,'team_form':team_form,'member_form':member_form,'team_head':team_head,'team_head_user':team_head_user,'player1':player1,'user1':user1,'player2':player2,'user2':user2,'player3':player3,'user3':user3,'player4':player4,'user4':user4})
     def post(self,request):
-        form = self.form_class(request.POST)
-        profiles = Profile.objects.get(id=request.user.id)
+        team_form = self.form_class(request.POST)
+        member_form = self.form_class2(request.POST)
         players = User.objects.all()
+        profiles = Profile.objects.get(id=request.user.id)
+        team_head=None
+        player1=None
+        player2=None
+        player3=None
+        player4=None
+        team_head_user = None
+        user1 = None
+        user2 = None
+        user3 = None
+        user4 = None
+        notifications = None
+        if request.user.is_authenticated():
+            if profiles.status_CS==1:
+
+                team1 = profiles.team_cs
+                notifications = TeamNotification.objects.filter(team=team1)
+                
+                team_head = Profile.objects.get(user=team1.team_head)
+                team_head_user=User.objects.get(id=team1.team_head.id)
+                if team1.player1!=None:
+                    user1 = User.objects.get(username=team1.player1)
+                    player1 = Profile.objects.get(user=user1)
+                    
+                if team1.player2!=None:
+                    user2 = User.objects.get(username=team1.player2)
+                    player2 = Profile.objects.get(user=user2)
+                if team1.player3!=None:
+                    user3 = User.objects.get(username=team1.player3)
+                    player3 = Profile.objects.get(user=user3)
+                if team1.player4!=None:
+                    user4 = User.objects.get(username=team1.player4)
+                    player4 = Profile.objects.get(user=user4)
+                
+                '''form2=form_class(None)
+                form3=form_class2(None)'''
+                if notifications.count()==0:
+                    notifications=None
+
         if form.is_valid():
             uniqueTeam = Team.objects.filter(team_name=form.cleaned_data['team_name'],tournament='CS')
             if uniqueTeam.count() > 0:
