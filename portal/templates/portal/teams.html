@@ -9,7 +9,7 @@
 	<p class="lead">Following teams are signup for the tournament.</p>
 	<div class="list-group">
 			{% for team in cs %}
-			<a href="{% url 'portal:CSView' team_id=team.id %}" class="list-group-item list-group-item-action active">
+			<a href="{% url 'portal:index' %}" class="list-group-item list-group-item-action active">
 					{{ team.team_name }}
 			</a>
 			{% endfor %}

@@ -1,4 +1,5 @@
 {% extends 'portal/base.html' %}
+{% load crispy_forms_tags %}
 
 {% block content %}
 <div class="container">
@@ -24,27 +25,23 @@
 				</form>
 			{% endif %}
 		{% else %}
-		<div class="col-md-4 order-md-2 mb-4">
+		<div class="col-md-6 order-md-2 mb-4">
 			<h4 class="d-flex justify-content-between align-items-center mb-3">
 				<span class="text-muted">Your Team</span>
-				<span class="badge badge-secondary badge-pill">3</span>
+				<span class="badge badge-secondary badge-pill">{{ count }}</span>
 			</h4>
 			<ul class="list-group mb-3">
-				
-				<li class="list-group-item d-flex justify-content-between lh-condensed">
-				<div class="text-success">
-					<h6 class="my-0">Captain Name</h6>
-					<small class="text-muted"><a href="#">www.steamcommunity.com</a></small>
-				</div>
-				<span class="text-success">Captain</span>
-				</li>
 				{% for player in players %}
 				<li class="list-group-item d-flex justify-content-between lh-condensed">
 				<div>
-					<h6 class="my-0">player.name</h6>
-					<small class="text-muted"><a href="{{ player.url }}">{{ player.url }}</a></small>
+					<h6 class="my-0">{{ player.user.username }}</h6>
+					<small class="text-muted"><a href="https://www.steamcommunity.com/profiles/{{ player.steam_id }}">www.steamcommunity.com/profiles/{{ player.steam_id }}</a></small>
 				</div>
+				{% if player.user.username == captain %}
+				<span class="text-success">Captain</span>
+				{% else %}
 				<span class="text-muted">Member</span>
+				{% endif %}
 				</li>
 				{% endfor %}
 			</ul>
@@ -60,7 +57,7 @@
 		</div>
 		<form action="#" method="post">
 			{% csrf_token %}
-			{{ add_member_form }}
+			{{ member_form|crispy }}
 			<input type="submit" value="Submit" />
 		</form>
 		{% endif %}

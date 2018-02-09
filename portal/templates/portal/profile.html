@@ -3,11 +3,19 @@
 
 {% block content %}
 <div class="container">
+  <div class="pt-md-5 pb-md-4">
+      <h2>Profile</h2>
+  </div>
   <div class="row">
-	  <div class="col-md-8">
-      <div class="pt-md-5 pb-md-4">
-          <h2>Edit Profile</h2>
-      </div>
+        <label>Username: </label>{{ detail.username }}
+        <label>Name:</label>{{ detail.first_name }} {{detail.last_name}}
+        <label>Email:</label>{{ detail.email }}
+        <label>Steam ID:</label>{{ profile.steam_id }}
+         <label>Location: </label>{{ profile.location }}
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+        <h5>Edit Profile</h5>
       <form action="#" method="POST" class="needs-validation" novalidate>
         {% csrf_token %}
         <div class="mb-3">
@@ -23,13 +31,13 @@
           </div>
         </div>
 
-        {% if profile.steam_id %}
+        {% if profile.steam_id is none %}
         <div class="mb-3">
             <label for="{{ profile_form.steam_id.id_for_label }}">SteamID64</label>
             {{ profile_form.steam_id }}
             <small class="text-muted">SteamID is required to signup for CS:GO. Find your steamID64 <a href="https://steamidfinder.com/">here</a>.</small>
         </div>
-
+        {% endif %}
         <div class="mb-3">
           <label for="{{ profile_form.location.id_for_label }}">Location <span class="text-muted">(Optional)</span></label>
           {{ profile_form.location }}
@@ -37,23 +45,20 @@
         <hr class="mb-4">
         <button class="btn btn-primary btn-lg btn-block" type="submit">Update Details</button>
       </form>
+    </div><!--Edit profile ends -->
 
+
+	  <div class="col-md-6">
       <form action="#" method="POST" class="needs-validation">
-        <h5 class="mt-5">Change Password</h4>
+        <h5 class="mt-5">Change Password</h5>
           {% csrf_token %}
           {{ changepassword_form|crispy }}
         <input class="btn btn-primary btn-lg btn-block" type="submit" value="submit" />
         <hr class="my-4">
       </form>
-    </div> <!--Edit profile ends -->
+    </div> 
 
-    <div class="col-md-4">
-        <label><b>Username: </b></label>&nbsp;&nbsp;<span>{{ detail.username }}</span><br>
-        <label><b>Name: </b></label>&nbsp;&nbsp;<span>{{ detail.first_name }}</span>&nbsp;<span>{{detail.last_name}}</span><br>
-        <label><b>Email: </b></label>&nbsp;&nbsp;<span>{{ detail.email }}</span><br>
-        <label><b>Steam ID: </b></label>&nbsp;&nbsp;<span>{{ profile.steam_id }}</span><br>
-        <label><b>Location: </b></label>&nbsp;&nbsp;<span>{{ profile.location }}</span>
-    </div>
+    
   </div>
 </div>
 {% endblock %}

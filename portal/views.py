@@ -113,10 +113,12 @@ class TeamView(View):
 
 def SingleTeam(request,team_id):
     template_name = 'portal/single_team.html'
-    if Team.objects.filter(id=team_id).count()==0:
-        team1 = Team.objects.get(id=team_id)
-        players = Profile.objects.filter(team_cs=team1)
-        return render(request,template_name,{'team1':team1,'players':player})
+    if Team.objects.filter(id=team_id).count()!=0:
+        team = Team.objects.get(id=team_id)
+        players = Profile.objects.filter(team_cs=team)
+        return render(request,template_name,{'team':team,'players':players})
+    else:
+        return redirect('portal:index')
 
 
 
@@ -233,6 +235,7 @@ class dashboard(View):
         if member_form.is_valid():
             uniqueUser = User.objects.filter(username=member_form.cleaned_data['player'])
             if uniqueUser.count()!=0:
+                profiles = Profile.objects.get(id=request.user.id)
                 user1 = User.objects.get(username=member_form.cleaned_data['player'])
                 uniqueUser = Profile.objects.get(user=user1)
                 team1 = profiles.team_cs
