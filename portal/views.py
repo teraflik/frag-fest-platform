@@ -813,5 +813,5 @@ def logout_view(request):
     return render(request, template_name)
 
 def home(request):
-    template_name = 'portal/home.html'
+    template_name = 'portal/index.html'
     return render(request, template_name)
