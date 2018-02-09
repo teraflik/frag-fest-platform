@@ -227,7 +227,8 @@ class dashboard(View):
     form_class = TeamForm
     form_class2 = PlayerForm
     def get(self,request):
-        profiles = Profile.objects.get(id=request.user.id)
+
+        profiles = None
         team_form = self.form_class(None)
         member_form = self.form_class2(None)
         team_head=None
@@ -242,9 +243,11 @@ class dashboard(View):
         user4 = None
         count=0
         notifications = None
+        team1=None
 
         players = []
         if request.user.is_authenticated():
+            profiles = Profile.objects.get(id=request.user.id)
             if profiles.status_CS==1:
 
                 team1 = profiles.team_cs
@@ -284,7 +287,7 @@ class dashboard(View):
     def post(self,request):
         team_form = self.form_class(request.POST)
         member_form = self.form_class2(request.POST)
-        profiles = Profile.objects.get(id=request.user.id)
+        profiles = None
         count=0
 
         if team_form.is_valid():
@@ -313,9 +316,11 @@ class dashboard(View):
                 user3 = None
                 user4 = None
                 notifications = None
+                team1=None
                 players = []
                 count=0
                 if request.user.is_authenticated():
+                    profiles = Profile.objects.get(id=request.user.id)
                     if profiles.status_CS==1:
 
                         team1 = profiles.team_cs
@@ -350,6 +355,7 @@ class dashboard(View):
                         form3=form_class2(None)'''
                         if notifications.count()==0:
                             notifications=None
+                    profiles = Profile.objects.get(id=request.user.id)
                 return render(request, self.template_name,{'profiles':profiles,'players':players,'count':count,'notifications':notifications,'team1':team1,'team_form':team_form,'member_form':member_form,'team_head':team_head,'team_head_user':team_head_user,'player1':player1,'user1':user1,'player2':player2,'user2':user2,'player3':player3,'user3':user3,'player4':player4,'user4':user4})
 
 
@@ -384,7 +390,7 @@ class dashboard(View):
                         uniqueUser.save()
                         team1.save()
         
-        profiles = Profile.objects.get(id=request.user.id)
+        profiles = None
         team_head=None
         player1=None
         player2=None
@@ -398,7 +404,9 @@ class dashboard(View):
         notifications = None
         players = []
         count=0
+        team1=None
         if request.user.is_authenticated():
+            profiles = Profile.objects.get(id=request.user.id)
             if profiles.status_CS==1:
 
                 team1 = profiles.team_cs
@@ -433,6 +441,7 @@ class dashboard(View):
                 form3=form_class2(None)'''
                 if notifications.count()==0:
                     notifications=None
+            profiles = Profile.objects.get(id=request.user.id)
 
         return render(request, self.template_name,{'profiles':profiles,'players':players,'count':count,'notifications':notifications,'team1':team1,'team_form':team_form,'member_form':member_form,'team_head':team_head,'team_head_user':team_head_user,'player1':player1,'user1':user1,'player2':player2,'user2':user2,'player3':player3,'user3':user3,'player4':player4,'user4':user4})
 
