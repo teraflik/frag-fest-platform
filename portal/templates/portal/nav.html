@@ -10,21 +10,27 @@
 					<a class="nav-link" href="{% url 'portal:index' %}">Home</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" href="{% url 'portal:teams' %}">Teams</a>
+					<a class="nav-link" href="{% url 'portal:teams' %}">Registered Teams</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" href="#">CS: GO</a>
+					<a class="nav-link" href="{% url 'portal:dashboard' %}">Team Dashboard</a>
 				</li>
 				{% if user.is_authenticated %}
 				<li class="nav-item">
 					<a class="nav-link" href="#">{{ user.username }}</a>
 				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="{% url 'portal:logout' %}">Logout</a>
+				</li>
 				{% else %}
 				<li class="nav-item">
 					<a class="nav-link" href="{% url 'portal:register' %}">Register</a>
 				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="{% url 'portal:login' %}">Login</a>
+				</li>
 				{% endif %}
-				</ul>
+			</ul>
 				<ul class="navbar-nav ml-auto">
 					<li class="nav-item"><a class="nav-link" target="blank" href="https://www.facebook.com/FragFestIIITA/"><i class="fa fa-facebook"></i></a></li>
 					<li class="nav-item"><a class="nav-link" target="blank" href="https://twitter.com/FragFestIIITA/"><i class="fa fa-twitter"></i></a></li>
