@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.core.mail import send_mail
 from django.shortcuts import render, redirect, render_to_response, get_object_or_404
 from django.contrib.sites.shortcuts import get_current_site
-from .models import Player, Team, Tournament, Profile, TeamNotification
+from .models import Team, Tournament, Profile, TeamNotification
 from django.core.urlresolvers import reverse_lazy
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.views.generic import View
@@ -22,11 +22,9 @@ import random
 def id_generator(size=6, chars=string.ascii_uppercase + string.digits):  # randon id generator for e-mail password funtionality
     return ''.join(random.choice(chars) for _ in range(size))
 
-class IndexView(generic.ListView):
+def IndexView(request):
     template_name = 'portal/index.html'
-
-    def get_queryset(self):
-        return Player.objects.filter().order_by('player')
+    return render(request, template_name)
 
 class Register(View):
     template_name = 'portal/register.html'
