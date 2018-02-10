@@ -46,20 +46,16 @@
 				{% endfor %}
 			</ul>
 	
-			<form class="card p-2">
+			<form class="card p-2" action="#" method="POST">
+				 {% csrf_token %}
 				<div class="input-group">
-				<input type="text" class="form-control" placeholder="Username">
+				{{ member_form.player }}
 				<div class="input-group-append">
 					<button type="submit" class="btn btn-secondary">Add</button>
 				</div>
 				</div>
 			</form>
 		</div>
-		<form action="#" method="post">
-			{% csrf_token %}
-			{{ member_form|crispy }}
-			<input type="submit" value="Submit" />
-		</form>
 		{% endif %}
 	{% else %}
 		<div class="position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center bg-light">

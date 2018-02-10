@@ -49,10 +49,10 @@
 
 
 	  <div class="col-md-6">
-      <form action="#" method="POST" class="needs-validation">
+      <form action="#" method="POST">
         <h5 class="mt-5">Change Password</h5>
           {% csrf_token %}
-          {{ changepassword_form|crispy }}
+          {{ changepassword_form.as_p }}
         <input class="btn btn-primary btn-lg btn-block" type="submit" value="submit" />
         <hr class="my-4">
       </form>

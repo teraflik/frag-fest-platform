@@ -22,11 +22,9 @@ app_name = 'portal'
 
 urlpatterns = [ 
     # /portal/
-    url(r'^$', views.IndexView.as_view(), name='index'),
+    url(r'^$', views.IndexView, name='index'),
     url(r'^register/$', views.Register.as_view(), name='register'),
     url(r'^home/$', views.home, name='home'),
-    #url(r'^$',views.index,name='index')
-    #url(r'^base/$',views.BaseView,name='base'),
     url(r'^profile/$', views.ProfileView, name='profile'),
     url(r'^login/$', auth_views.login, {'template_name': 'portal/login.html'}, name='login'),
     url(r'^logout/$', views.logout_view, name='logout'),
