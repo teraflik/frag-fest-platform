@@ -34,15 +34,15 @@ class Register(View):
         if request.user.is_authenticated:
             return redirect('portal:home')  
         else:
-            form = self.UserForm(None)
-            form2 = self.forgetpass(None)
-            form3 = self.subscriptionform(None)
+            form = UserForm(None)
+            form2 = forgetpass(None)
+            form3 = subscriptionform(None)
             return render(request, self.template_name, {'form': form, 'form2':form2,'form3':form3})
         
     def post(self, request):
-        form = self.UserForm(request.POST)
-        form2 = self.forgetpass(request.POST)
-        form3 = self.subscriptionform(request.POST)
+        form = UserForm(request.POST)
+        form2 = forgetpass(request.POST)
+        form3 = subscriptionform(request.POST)
         
         if form.is_valid():
             user1 = User.objects.create_user(username=form.cleaned_data['username'],email=form.cleaned_data['email'],first_name=form.cleaned_data['first_name'],last_name=form.cleaned_data['last_name'])
@@ -157,8 +157,8 @@ class dashboard(View):
     template_name = 'portal/dashboard.html'
     def get(self,request):
         profiles = None
-        team_form = self.TeamForm(None)
-        member_form = self.PlayerForm(None)
+        team_form = TeamForm(None)
+        member_form = PlayerForm(None)
         count=0
         notifications = None
         team1=None
@@ -177,8 +177,8 @@ class dashboard(View):
 
         return render(request, self.template_name,{'captain':captain,'profiles':profiles,'players':players,'count':count,'notifications':notifications,'team1':team1,'team_form':team_form,'member_form':member_form})
     def post(self,request):
-        team_form = self.TeamForm(request.POST)
-        member_form = self.PlayerForm(request.POST)
+        team_form = TeamForm(request.POST)
+        member_form = PlayerForm(request.POST)
         profiles = None
         count=0
         captain=None
