@@ -3,26 +3,21 @@ from __future__ import unicode_literals
 from django.conf import settings
 from django.contrib import messages
 from django.core.mail import send_mail
-from django.shortcuts import render,redirect,render_to_response
-from django.shortcuts import get_object_or_404
+from django.shortcuts import render, redirect, render_to_response, get_object_or_404
 from django.contrib.sites.shortcuts import get_current_site
-from .models import Player,Team,Tournament,Profile,TeamNotification
+from .models import Player, Team, Tournament, Profile, TeamNotification
 from django.core.urlresolvers import reverse_lazy
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.views.generic import View
 from .forms import UserForm,TournamentForm,TeamForm,UpdateForm,ProfileForm,PlayerForm,DeleteTeamForm, changepass, forgetpass, subscriptionform
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import PasswordChangeForm
-from django.contrib.auth import update_session_auth_hash
-from django.contrib.auth import logout
-from django.db.models import Q
 from django.views import generic
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 import requests
 import string
 import random
-
 
 def id_generator(size=6, chars=string.ascii_uppercase + string.digits):  # randon id generator for e-mail password funtionality
     return ''.join(random.choice(chars) for _ in range(size))
@@ -35,28 +30,22 @@ class IndexView(generic.ListView):
 
 class Register(View):
     template_name = 'portal/register.html'
-    form_class = UserForm
-    form_class2 = forgetpass
-    form_class3 = subscriptionform
     def get(self, request):
         if request.user.is_authenticated:
-            return redirect('portal:home')
-            
+            return redirect('portal:home')  
         else:
-            form = self.form_class(None)
-            form2 = self.form_class2(None)
-            form3 = self.form_class3(None)
+            form = self.UserForm(None)
+            form2 = self.forgetpass(None)
+            form3 = self.subscriptionform(None)
             return render(request, self.template_name, {'form': form, 'form2':form2,'form3':form3})
         
-    #process form data
     def post(self, request):
-        form = self.form_class(request.POST)
-        form2 = self.form_class2(request.POST)
-        form3 = self.form_class3(request.POST)
+        form = self.UserForm(request.POST)
+        form2 = self.forgetpass(request.POST)
+        form3 = self.subscriptionform(request.POST)
         
         if form.is_valid():
             user1 = User.objects.create_user(username=form.cleaned_data['username'],email=form.cleaned_data['email'],first_name=form.cleaned_data['first_name'],last_name=form.cleaned_data['last_name'])
-            #cleaned (normalized) data
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
             user1.set_password(password)
@@ -72,7 +61,7 @@ class Register(View):
             user2 = authenticate(username = username, password= password)
             if user2 is not None:
                 login(request, user2)
-                subject = 'Thankyou for registering'
+                subject = 'Thank you for registering'
                 message = 'Welcome to fragfest 2018.'
                 from_email = settings.EMAIL_HOST_USER
                 to_list = [user2.email,settings.EMAIL_HOST_USER]
@@ -91,7 +80,6 @@ class Register(View):
                 user.set_password(password)
                 user.save()
 
-                #send_mail(subject, message, from_email, to_list, fail_silently=True)
                 subject = 'Password change'
                 message = 'You forgot your passwordso we are sending new password. Change this password once you log in. Your username = ' + username123 + ' Your new password = ' + password
                 from_email = settings.EMAIL_HOST_USER
@@ -119,9 +107,6 @@ def SingleTeam(request,team_id):
         return render(request,template_name,{'team':team,'players':players})
     else:
         return redirect('portal:index')
-
-
-
     
 @login_required
 def ProfileView(request):
@@ -170,13 +155,10 @@ def ProfileView(request):
 
 class dashboard(View):
     template_name = 'portal/dashboard.html'
-    form_class = TeamForm
-    form_class2 = PlayerForm
     def get(self,request):
-
         profiles = None
-        team_form = self.form_class(None)
-        member_form = self.form_class2(None)
+        team_form = self.TeamForm(None)
+        member_form = self.PlayerForm(None)
         count=0
         notifications = None
         team1=None
@@ -195,8 +177,8 @@ class dashboard(View):
 
         return render(request, self.template_name,{'captain':captain,'profiles':profiles,'players':players,'count':count,'notifications':notifications,'team1':team1,'team_form':team_form,'member_form':member_form})
     def post(self,request):
-        team_form = self.form_class(request.POST)
-        member_form = self.form_class2(request.POST)
+        team_form = self.TeamForm(request.POST)
+        member_form = self.PlayerForm(request.POST)
         profiles = None
         count=0
         captain=None
