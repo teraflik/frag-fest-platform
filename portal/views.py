@@ -65,7 +65,7 @@ def signup(request):
             return redirect('portal:home')
     else:
         form = SignUpForm()
-    return render(request, 'portal/register.html', {'form': form})
+    return render(request, 'portal/signup.html', {'form': form})
 
 def activate(request, uidb64, token):
     try:
