@@ -23,11 +23,18 @@ class UserForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ('username',)
+        widgets = {
+            'username': TextInput(attrs={'class':'form-control'}),
+        }
 
-class ProfileForm(Form):
+class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ('location', 'user_avatar')
+        fields = ('avatar', 'location', 'steam_id',)
+        widgets = {
+            'steam_id': TextInput(attrs={'class': 'form-control'}),
+            'location': TextInput(attrs={'class': 'form-control'}),
+        }
 
 class forgetpass(Form):
     usernamee = forms.CharField(label='Username', max_length=100, required=True, widget=forms.TextInput(attrs={'placeholder': 'enter username', 'class':'form-control'}))
