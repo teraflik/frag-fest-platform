@@ -21,8 +21,7 @@ from . import views
 app_name = 'portal'
 
 urlpatterns = [ 
-    url(r'^$', views.IndexView, name='index'),
-    #url(r'^register/$', views.Register.as_view(), name='register'),
+    url(r'^$', views.index, name='index'),
     url(r'^signup/$', views.signup, name='signup'),
     url(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
         views.activate, name='activate'),

@@ -16,6 +16,7 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.http import HttpResponseRedirect
+from django.utils.translation import ugettext as _
 import requests
 import string
 import random
@@ -23,9 +24,22 @@ import random
 def id_generator(size=6, chars=string.ascii_uppercase + string.digits):  # randon id generator for e-mail password funtionality
     return ''.join(random.choice(chars) for _ in range(size))
 
-def IndexView(request):
+def index(request):
     template_name = 'portal/index.html'
     return render(request, template_name)
+
+@login_required
+def send_verification_email(request):
+    user = request.user
+    current_site = get_current_site(request)
+    subject = 'Your ' + current_site.name + ' account has been created. Please verify your email.'
+    message = render_to_string('portal/account_activation_email.html', {
+        'user': user,
+        'domain': current_site.domain,
+        'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+        'token': account_activation_token.make_token(user),
+    })
+    user.email_user(subject, message)
 
 def signup(request):
     if request.method == 'POST':
@@ -35,12 +49,11 @@ def signup(request):
             user.refresh_from_db()  # load the profile instance created by the signal
             user.profile.is_subscribed = form.cleaned_data.get('subscribe')
             user.save()
-            terms_agreed = form.cleaned_data.get('agree_terms')
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=user.username, password=raw_password)
             login(request, user)
             current_site = get_current_site(request)
-            subject = 'Activate Your MySite Account'
+            subject = 'Your ' + current_site.name + ' account has been created. Please verify your email.'
             message = render_to_string('portal/account_activation_email.html', {
                 'user': user,
                 'domain': current_site.domain,
@@ -48,6 +61,7 @@ def signup(request):
                 'token': account_activation_token.make_token(user),
             })
             user.email_user(subject, message)
+            messages.success(request, _('Successfully registered! We have sent you a verification email.'))
             return redirect('portal:home')
     else:
         form = SignUpForm()
@@ -64,9 +78,13 @@ def activate(request, uidb64, token):
         user.profile.email_confirmed = True
         user.save()
         login(request, user)
+        messages.success(request, _('Email verified successfully.'))
         return redirect('portal:index')
+    elif user is not None and user.profile.email_confirmed == True:
+        messages.success(request, _('Email already verified!'))
     else:
-        return render(request, 'portal:account_activation_invalid.html')
+        messages.error(request, _('Email verification error!'))
+    return render(request, 'portal/index.html')
 
 '''
 login(request, user2)
@@ -102,19 +120,22 @@ def profile(request):
                 return redirect('portal:profile')
             else:
                 messages.error(request, _('Could not update Profile.'))
+                password_form = PasswordChangeForm(request.user)
         elif 'changePassword' in request.POST:
             password_form = PasswordChangeForm(request.user, request.POST)
             if password_form.is_valid():
                 user = password_form.save()
                 update_session_auth_hash(request, user)
-                messages.success(request, 'Your password was successfully updated!')
+                messages.success(request, _('Your password was successfully updated!'))
                 return redirect('portal:profile')
             else:
-                messages.error(request, 'Could not change password. ')
+                messages.error(request, _('Could not change password. '))
+                user_form = UserForm(instance=request.user)
+                profile_form = ProfileForm(instance=request.user.profile)
     else:
         user_form = UserForm(instance=request.user)
         profile_form = ProfileForm(instance=request.user.profile)
-        password_form = PasswordChangeForm()
+        password_form = PasswordChangeForm(request.user)
     return render(request, 'portal/profile.html', {
         'user_form': user_form,
         'profile_form': profile_form,

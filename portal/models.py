@@ -13,9 +13,10 @@ class Tournament(models.Model):
         return self.tournament_name
 
 class Team(models.Model):
-    team_head = models.ForeignKey(User,default=None,null=True)
+    team_head = models.ForeignKey(User,default=None, null=True)
     team_name = models.CharField(max_length=200)
-    #tournament = models.ForeignKey(Tournament,default=None,null=True)
+    team_info = models.TextField(default=None, null=True)
+    team_link = models.CharField(max_length=255, default=None, null=True)
     tournament = models.CharField(max_length=200, default=None, null=True)
     number_of_players = models.IntegerField(default=0)
     game_on = models.IntegerField(default=0)
@@ -37,7 +38,7 @@ class Profile(models.Model):
     is_subscribed = models.BooleanField(default=True)
 
     def __str__(self):
-        return self.user
+        return self.user.username
 
 @receiver(post_save, sender=User)
 def update_user_profile(sender, instance, created, **kwargs):
