@@ -30,7 +30,7 @@
         <div class="mb-3">
           <label for="{{ user_form.username.id_for_label }}">Username</label>
             {{ user_form.username }}
-            <div class="invalid-feedback">{{ user_form.username.errors }}</div>
+            <div class="invalid-feedback d-block">{{ user_form.username.errors }}</div>
         </div>
     
         {% if user.profile.steam_id is none %}
@@ -50,9 +50,25 @@
         <button class="btn btn-primary btn-lg btn-block" name="updateProfile" type="submit">Update Details</button>
       </form>
       <hr class="mb-4">
+      <div>
+        {% if password_form.errors %}
+          {% for field in password_form %}
+            {% for error in field.errors %}
+            <div class="alert alert-danger">
+              <strong>{{ error|escape }}</strong>
+            </div>
+            {% endfor %}
+          {% endfor %}
+          {% for error in password_form.non_field_errors %}
+          <div class="alert alert-danger">
+            <strong>{{ error|escape }}</strong>
+          </div>
+          {% endfor %}
+        {% endif %}
+      </div>
       <div class="text-right">
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#passwordModal">
-          Change Password
+          Change Password 
         </button>
       </div>
     </div><!--Edit profile ends -->
