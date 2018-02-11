@@ -21,11 +21,13 @@ from . import views
 app_name = 'portal'
 
 urlpatterns = [ 
-    # /portal/
     url(r'^$', views.IndexView, name='index'),
-    url(r'^register/$', views.Register.as_view(), name='register'),
+    #url(r'^register/$', views.Register.as_view(), name='register'),
+    url(r'^signup/$', views.signup, name='signup'),
+    url(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
+        views.activate, name='activate'),
     url(r'^home/$', views.home, name='home'),
-    url(r'^profile/$', views.ProfileView, name='profile'),
+    url(r'^profile/$', views.profile, name='profile'),
     url(r'^login/$', auth_views.login, {'template_name': 'portal/login.html'}, name='login'),
     url(r'^logout/$', views.logout_view, name='logout'),
     url(r'^team/(?P<team_id>\d+)/$', views.SingleTeam, name='single_team'),

@@ -1,19 +1,20 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-from django.conf import settings
+from django.contrib.sites.shortcuts import get_current_site
+from django.shortcuts import render, redirect, render_to_response, get_object_or_404
+from django.utils.encoding import force_bytes, force_text
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.template.loader import render_to_string
+from portal.forms import SignUpForm, UserForm, TeamForm, ProfileForm, PlayerForm, DeleteTeamForm, forgetpass
+from portal.tokens import account_activation_token
 from django.contrib import messages
 from django.core.mail import send_mail
-from django.shortcuts import render, redirect, render_to_response, get_object_or_404
-from django.contrib.sites.shortcuts import get_current_site
-from .models import Team, Tournament, Profile, TeamNotification
-from django.core.urlresolvers import reverse_lazy
+from portal.models import Team, Tournament, Profile, TeamNotification
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.views.generic import View
-from .forms import UserForm,TournamentForm,TeamForm,UpdateForm,ProfileForm,PlayerForm,DeleteTeamForm, changepass, forgetpass, subscriptionform
+
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import PasswordChangeForm
-from django.views import generic
 from django.contrib.auth.decorators import login_required
+from django.db import transaction
 from django.http import HttpResponseRedirect
 import requests
 import string
@@ -26,130 +27,117 @@ def IndexView(request):
     template_name = 'portal/index.html'
     return render(request, template_name)
 
-class Register(View):
-    template_name = 'portal/register.html'
-    def get(self, request):
-        if request.user.is_authenticated:
-            return redirect('portal:home')  
-        else:
-            form = UserForm(None)
-            form2 = forgetpass(None)
-            form3 = subscriptionform(None)
-            return render(request, self.template_name, {'form': form, 'form2':form2,'form3':form3})
-        
-    def post(self, request):
-        form = UserForm(request.POST)
-        form2 = forgetpass(request.POST)
-        form3 = subscriptionform(request.POST)
-        
+def signup(request):
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
         if form.is_valid():
-            user1 = User.objects.create_user(username=form.cleaned_data['username'],email=form.cleaned_data['email'],first_name=form.cleaned_data['first_name'],last_name=form.cleaned_data['last_name'])
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password']
-            user1.set_password(password)
-            user1.save()
-            profile = Profile.objects.create(user=user1,steam_id=None,location=None)
-            profile.id = user1.id
-            profile.save()
+            user = form.save()
+            user.refresh_from_db()  # load the profile instance created by the signal
+            user.profile.is_subscribed = form.cleaned_data.get('subscribe')
+            user.save()
+            terms_agreed = form.cleaned_data.get('agree_terms')
+            raw_password = form.cleaned_data.get('password1')
+            user = authenticate(username=user.username, password=raw_password)
+            login(request, user)
+            current_site = get_current_site(request)
+            subject = 'Activate Your MySite Account'
+            message = render_to_string('portal/account_activation_email.html', {
+                'user': user,
+                'domain': current_site.domain,
+                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                'token': account_activation_token.make_token(user),
+            })
+            user.email_user(subject, message)
+            return redirect('portal:home')
+    else:
+        form = SignUpForm()
+    return render(request, 'portal/register.html', {'form': form})
 
-            if form3.is_valid():
-                profile.is_subscription=form3.cleaned_data['is_subscribe']
-                profile.save()
+def activate(request, uidb64, token):
+    try:
+        uid = force_text(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, user.DoesNotExist):
+        user = None
 
-            user2 = authenticate(username = username, password= password)
-            if user2 is not None:
-                login(request, user2)
-                subject = 'Thank you for registering'
-                message = 'Welcome to fragfest 2018.'
-                from_email = settings.EMAIL_HOST_USER
-                to_list = [user2.email,settings.EMAIL_HOST_USER]
-                send_mail(subject,message,from_email,to_list,fail_silently=True)
-                return redirect('portal:index')
+    if user is not None and account_activation_token.check_token(user, token):
+        user.profile.email_confirmed = True
+        user.save()
+        login(request, user)
+        return redirect('portal:index')
+    else:
+        return render(request, 'portal:account_activation_invalid.html')
+
+'''
+login(request, user2)
+subject = 'Thank you for registering'
+message = 'Welcome to fragfest 2018.'
+from_email = settings.EMAIL_HOST_USER
+to_list = [user2.email,settings.EMAIL_HOST_USER]
+send_mail(subject,message,from_email,to_list,fail_silently=True)
+return redirect('portal:index')
+
+password = id_generator()
+user.set_password(password)
+user.save()
+subject = 'Password change'
+message = 'You forgot your passwordso we are sending new password. Change this password once you log in. Your username = ' + username123 + ' Your new password = ' + password
+from_email = settings.EMAIL_HOST_USER
+to_list = [user.email]
+send_mail(subject,message,from_email,to_list,fail_silently=True)
+
+messages.success(request, 'Your password was successfully sent!')'''
+
+@login_required
+@transaction.atomic
+def profile(request):
+    if request.method == 'POST':
+        if 'updateProfile' in request.POST:
+            user_form = UserForm(request.POST, instance=request.user)
+            profile_form = ProfileForm(request.POST, instance=request.user.profile)
+            if user_form.is_valid() and profile_form.is_valid():
+                user_form.save()
+                profile_form.save()
+                messages.success(request, _('Your profile was successfully updated!'))
+                return redirect('portal:profile')
             else:
-                return render(request, self.template_name, {'form': form, 'form2':form2,'form3':form3})
-
-        if form2.is_valid():
-            username123 = form2.cleaned_data['usernamee']
-
-            usercount = User.objects.filter(username=form2.cleaned_data['usernamee']).count()
-            if usercount==1:
-                user = User.objects.get(username=username123)
-                password = id_generator()
-                user.set_password(password)
-                user.save()
-
-                subject = 'Password change'
-                message = 'You forgot your passwordso we are sending new password. Change this password once you log in. Your username = ' + username123 + ' Your new password = ' + password
-                from_email = settings.EMAIL_HOST_USER
-                to_list = [user.email]
-                send_mail(subject,message,from_email,to_list,fail_silently=True)
-
-                messages.success(request, 'Your password was successfully sent!')
-                return redirect('portal:login')
+                messages.error(request, _('Could not update Profile.'))
+        elif 'changePassword' in request.POST:
+            password_form = PasswordChangeForm(request.user, request.POST)
+            if password_form.is_valid():
+                user = password_form.save()
+                update_session_auth_hash(request, user)
+                messages.success(request, 'Your password was successfully updated!')
+                return redirect('portal:profile')
             else:
-                return render(request, self.template_name, {'form': form, 'form2':form2,'form3':form3})
+                messages.error(request, 'Could not change password. ')
+    else:
+        user_form = UserForm(instance=request.user)
+        profile_form = ProfileForm(instance=request.user.profile)
+        password_form = PasswordChangeForm()
+    return render(request, 'portal/profile.html', {
+        'user_form': user_form,
+        'profile_form': profile_form,
+        'password_form': password_form
+    })
 
-        return render(request, self.template_name, {'form': form, 'form2':form2,'form3':form3})
-        
+
 class TeamView(View):
     template_name = 'portal/teams.html'
+
     def get(self, request):
         cs = Team.objects.filter(tournament="CS")
         return render(request, self.template_name, {'cs': cs})
 
-def SingleTeam(request,team_id):
+
+def SingleTeam(request, team_id):
     template_name = 'portal/single_team.html'
-    if Team.objects.filter(id=team_id).count()!=0:
+    if Team.objects.filter(id=team_id).count() != 0:
         team = Team.objects.get(id=team_id)
         players = Profile.objects.filter(team_cs=team)
-        return render(request,template_name,{'team':team,'players':players})
+        return render(request, template_name, {'team': team, 'players': players})
     else:
         return redirect('portal:index')
-    
-@login_required
-def ProfileView(request):
-    template_name = 'portal/profile.html'
-
-    if request.method == "POST":
-        detail = User.objects.get(id=request.user.id)
-        profile = Profile.objects.get(id=request.user.id)
-        user_form = UpdateForm(request.POST)
-        profile_form = ProfileForm(request.POST)
-        changepassword_form = PasswordChangeForm(request.user, request.POST)
-            
-        if changepassword_form.is_valid():
-            user = changepassword_form.save()
-            update_session_auth_hash(request, user)
-            messages.success(request, 'Your password was successfully updated!')
-            return redirect('portal:profile')
-
-        else:
-            if user_form.is_valid() and user_form.cleaned_data['username']!='' :
-                uniqueUser = User.objects.filter(username=user_form.cleaned_data['username'])
-                if uniqueUser.count() > 0:
-                    uniqueUser2 = User.objects.get(username=user_form.cleaned_data['username'])
-                    if uniqueUser2.id != request.user.id:
-                        return render(request, template_name,{'detail':detail,'profile':profile,'user_form':user_form,'profile_form':profile_form, 'changepassword_form':changepassword_form})
-            
-                detail.username = user_form.cleaned_data['username']
-                detail.save()
-
-            if profile_form.is_valid():
-                if profile_form.cleaned_data['steam_id']!=None and profile_form.cleaned_data['steam_id']!='':
-                    profile.steam_id = profile_form.cleaned_data['steam_id']
-
-                if profile_form.cleaned_data['location']!=None:
-                    profile.location = profile_form.cleaned_data['location']
-                profile.save()
-            else:
-                messages.failure(request, 'Error!')
-    else:
-        detail = User.objects.get(id=request.user.id)
-        profile = Profile.objects.get(id=request.user.id)
-        user_form = UpdateForm(None)
-        profile_form = ProfileForm(None)
-        changepassword_form = PasswordChangeForm(request.user)
-    return render(request, template_name,{'detail':detail,'profile':profile,'user_form':user_form,'profile_form':profile_form, 'changepassword_form':changepassword_form})
 
 class dashboard(View):
     template_name = 'portal/dashboard.html'

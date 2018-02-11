@@ -11,16 +11,15 @@
       <div class="card">
         <img class="card-img-top" src="http://placehold.it/300x200" alt="Card image cap">
         <div class="card-body">
-          <h5 class="card-title">{{ detail.first_name }} {{ detail.last_name }}</h5>
-          <h6 class="card-subtitle mb-2 text-muted">{{ detail.username }}</h6>
+          <h5 class="card-title">{{ user.get_full_name }}</h5>
+          <h6 class="card-subtitle mb-2 text-muted">{{ user.username }}</h6>
         </div>
         <ul class="list-group list-group-flush">
-          <li class="list-group-item">{{ profile.location }}</li>
-          <li class="list-group-item">{{ detail.email }}</li>
-          <li class="list-group-item">Vestibulum at eros</li>
+          <li class="list-group-item">{{ user.profile.location }}</li>
+          <li class="list-group-item">{{ user.email }}</li>
         </ul>
         <div class="card-body">
-          <a href="#" class="card-link">{{ profile.steam_id }}</a>
+          <a href="#" class="card-link">{{ user.profile.steam_id }}</a>
         </div>
       </div>
     </div>
@@ -56,7 +55,7 @@
           {{ profile_form.location }}
         </div>
         <hr class="mb-4">
-        <button class="btn btn-primary btn-lg btn-block" type="submit">Update Details</button>
+        <button class="btn btn-primary btn-lg btn-block" name="updateProfile" type="submit">Update Details</button>
       </form>
       <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#passwordModal">
         Change Password
@@ -80,7 +79,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-            <input type="submit" class="btn btn-primary" value="Submit" />
+            <input type="submit" name="changePassword" class="btn btn-primary" value="Submit" />
           </div>
         </form>
       </div>
