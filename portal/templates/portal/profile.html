@@ -7,15 +7,25 @@
       <h2>Profile</h2>
   </div>
   <div class="row">
-        <label>Username: </label>{{ detail.username }}
-        <label>Name:</label>{{ detail.first_name }} {{detail.last_name}}
-        <label>Email:</label>{{ detail.email }}
-        <label>Steam ID:</label>{{ profile.steam_id }}
-         <label>Location: </label>{{ profile.location }}
-  </div>
-  <div class="row">
     <div class="col-md-6">
-        <h5>Edit Profile</h5>
+      <div class="card">
+        <img class="card-img-top" src="http://placehold.it/300x200" alt="Card image cap">
+        <div class="card-body">
+          <h5 class="card-title">{{ detail.first_name }} {{ detail.last_name }}</h5>
+          <h6 class="card-subtitle mb-2 text-muted">{{ detail.username }}</h6>
+        </div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">{{ profile.location }}</li>
+          <li class="list-group-item">{{ detail.email }}</li>
+          <li class="list-group-item">Vestibulum at eros</li>
+        </ul>
+        <div class="card-body">
+          <a href="#" class="card-link">{{ profile.steam_id }}</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <h5>Edit Profile</h5>
       <form action="#" method="POST" class="needs-validation" novalidate>
         {% csrf_token %}
         <div class="mb-3">
@@ -26,39 +36,55 @@
             </div>
             {{ user_form.username }}
             <div class="invalid-feedback" style="width: 100%;">
-            {{ user_form.username.errors }}
+              {{ user_form.username.errors }}
             </div>
           </div>
         </div>
-
+    
         {% if profile.steam_id is none %}
         <div class="mb-3">
-            <label for="{{ profile_form.steam_id.id_for_label }}">SteamID64</label>
-            {{ profile_form.steam_id }}
-            <small class="text-muted">SteamID is required to signup for CS:GO. Find your steamID64 <a href="https://steamidfinder.com/">here</a>.</small>
+          <label for="{{ profile_form.steam_id.id_for_label }}">SteamID64</label>
+          {{ profile_form.steam_id }}
+          <small class="text-muted">SteamID is required to signup for CS:GO. Find your steamID64
+            <a href="https://steamidfinder.com/">here</a>.</small>
         </div>
         {% endif %}
         <div class="mb-3">
-          <label for="{{ profile_form.location.id_for_label }}">Location <span class="text-muted">(Optional)</span></label>
+          <label for="{{ profile_form.location.id_for_label }}">Location
+            <span class="text-muted">(Optional)</span>
+          </label>
           {{ profile_form.location }}
         </div>
         <hr class="mb-4">
         <button class="btn btn-primary btn-lg btn-block" type="submit">Update Details</button>
       </form>
-    </div><!--Edit profile ends -->
-
-
-	  <div class="col-md-6">
-      <form action="#" method="POST">
-        <h5 class="mt-5">Change Password</h5>
-          {% csrf_token %}
-          {{ changepassword_form.as_p }}
-        <input class="btn btn-primary btn-lg btn-block" type="submit" value="submit" />
-        <hr class="my-4">
-      </form>
-    </div> 
-
-    
+      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#passwordModal">
+        Change Password
+      </button>
+    </div>
+    <!--Edit profile ends -->
+  </div>
+  <!--Password Change Modal -->
+  <div class="modal fade" id="passwordModal" tabindex="-1" role="dialog" aria-labelledby="passwordModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="passwordModalLabel">Change Password</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form action="#" method="POST">{% csrf_token %}
+          <div class="modal-body">
+            {{ changepassword_form.as_p }}
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            <input type="submit" class="btn btn-primary" value="Submit" />
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
 </div>
 {% endblock %}
