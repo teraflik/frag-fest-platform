@@ -129,7 +129,10 @@ def SingleTeam(request, team_id):
     else:
         return redirect('portal:index')
 
+
 class dashboard(View):
+    #if request.user.is_authenticated():
+    #   return render(request, 'logged_out.html')
     template_name = 'portal/dashboard.html'
     def get(self,request):
         profiles = None
@@ -152,6 +155,7 @@ class dashboard(View):
                     notifications=None
 
         return render(request, self.template_name,{'captain':captain,'profiles':profiles,'players':players,'count':count,'notifications':notifications,'team1':team1,'team_form':team_form,'member_form':member_form})
+        
     def post(self,request):
         team_form = TeamForm(request.POST)
         member_form = PlayerForm(request.POST)
@@ -259,12 +263,4 @@ def RemovePlayer(request,team_id,user_id):
         profiles.team_cs=None
         return redirect('portal:dashboard')
 
-    return redirect('portal:index')    
-
-def logout_view(request):
-    logout(request)
     return redirect('portal:index')
-
-def home(request):
-    template_name = 'portal/index.html'
-    return render(request, template_name)
