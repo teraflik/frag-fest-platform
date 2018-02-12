@@ -17,7 +17,9 @@
 				</li>
 				{% if user.is_authenticated %}
 				<li class="nav-item">
-					<a class="nav-link" href="{% url 'portal:profile'  %}">{{ user.username }}</a>
+					<a class="nav-link" href="{% url 'portal:profile'  %}">
+						{% if user.profile.username %}{{ user.profile.username }} {% else %} Profile {% endif %}
+					</a>
 				</li>
 				<li class="nav-item">
 					<a class="nav-link" href="{% url 'portal:logout' %}">Logout</a>

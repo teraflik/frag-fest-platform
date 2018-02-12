@@ -1,5 +1,4 @@
 {% extends 'portal/base.html' %}
-{% load crispy_forms_tags %}
 
 {% block content %}
 
@@ -13,7 +12,7 @@
       <img class="card-img-top" src="http://placehold.it/300x200" alt="Card image cap">
       <div class="card-body">
         <h5 class="card-title">{{ user.get_full_name }}</h5>
-        <h6 class="card-subtitle mb-2 text-muted">{{ user.username }}</h6>
+        <h6 class="card-subtitle mb-2 text-muted">{{ user.profile.username }}</h6>
       </div>
       <ul class="list-group list-group-flush">
         <li class="list-group-item">{{ user.profile.location }}</li>
@@ -28,25 +27,16 @@
     <h5>Edit Profile</h5>
     <form action="#" method="POST" class="needs-validation" novalidate>{% csrf_token %}
 
-      {% if not user.first_name.strip or not user.last_name.strip %}
-      <div class="row">
-        <div class="col-md-6 mb-3">
-          <label for="{{ user_form.first_name.id_for_label }}">First name</label>
-          {{ user_form.first_name }}
-          <div class="invalid-feedback d-block">{{ user_form.first_name.errors }}</div>
-        </div>
-        <div class="col-md-6 mb-3">
-          <label for="{{ user_form.last_name.id_for_label }}">Last Name</label>
-          {{ user_form.last_name }}
-          <div class="invalid-feedback d-block">{{ user_form.last_name.errors }}</div>
-        </div>
+      <div class="mb-3">
+        <label for="{{ profile_form.avatar.id_for_label }}">Avatar</label>
+        {{ profile_form.avatar }}
+        <div class="invalid-feedback d-block">{{ profile_form.avatar.errors }}</div>
       </div>
-        {% endif %}
 
       <div class="mb-3">
-        <label for="{{ user_form.username.id_for_label }}">Change Username</label>
-          {{ user_form.username }}
-          <div class="invalid-feedback d-block">{{ user_form.username.errors }}</div>
+        <label for="{{ profile_form.username.id_for_label }}">Change Username</label>
+          {{ profile_form.username }}
+          <div class="invalid-feedback d-block">{{ profile_form.username.errors }}</div>
       </div>
       
       {% if not user.profile.steam_id.strip %}

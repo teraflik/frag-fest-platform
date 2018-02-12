@@ -43,7 +43,7 @@ class UserManager(BaseUserManager):
 class MyUser(AbstractUser):
     """User model."""
 
-    username = models.CharField(_('username'), max_length=150, unique=False)
+    username = None
     email = models.EmailField(
         _('email address'), 
         max_length=255,
@@ -52,13 +52,10 @@ class MyUser(AbstractUser):
             'unique': _("A user with that email already exists."),
         },)
 
-    objects = UserManager()
-
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username']
+    REQUIRED_FIELDS = []
 
-    def __str__(self):
-        return self.email
+    objects = UserManager()
 
 
 class Team(models.Model):
@@ -78,6 +75,7 @@ class Team(models.Model):
 class Profile(models.Model):
     user = models.OneToOneField(MyUser, on_delete=models.CASCADE)
     email_confirmed = models.BooleanField(default=False)
+    username = models.CharField(max_length=255, blank=True)
     steam_id = models.CharField(max_length=200, blank=True)
     location = models.CharField(max_length=200, default='India', blank=True)
     avatar = models.ImageField(upload_to="profile_image", null=True, blank=True)
