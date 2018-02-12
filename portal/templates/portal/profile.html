@@ -2,100 +2,115 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-<div class="container">
-  <div class="pt-md-5 pb-md-4">
-      <h2>Profile</h2>
-  </div>
 
-  <div class="row">
-    <div class="col-md-6">
-      <div class="card">
-        <img class="card-img-top" src="http://placehold.it/300x200" alt="Card image cap">
-        <div class="card-body">
-          <h5 class="card-title">{{ user.get_full_name }}</h5>
-          <h6 class="card-subtitle mb-2 text-muted">{{ user.username }}</h6>
+<div class="pt-md-5 pb-md-4">
+    <h2>Profile</h2>
+</div>
+
+<div class="row">
+  <div class="col-md-6">
+    <div class="card">
+      <img class="card-img-top" src="http://placehold.it/300x200" alt="Card image cap">
+      <div class="card-body">
+        <h5 class="card-title">{{ user.get_full_name }}</h5>
+        <h6 class="card-subtitle mb-2 text-muted">{{ user.username }}</h6>
+      </div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">{{ user.profile.location }}</li>
+        <li class="list-group-item">{{ user.email }}</li>
+        {% if user.profile.steam_id.strip %}
+        <li class="list-group-item">{{ user.profile.steam_id }}</li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <h5>Edit Profile</h5>
+    <form action="#" method="POST" class="needs-validation" novalidate>{% csrf_token %}
+
+      {% if not user.first_name.strip or not user.last_name.strip %}
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label for="{{ user_form.first_name.id_for_label }}">First name</label>
+          {{ user_form.first_name }}
+          <div class="invalid-feedback d-block">{{ user_form.first_name.errors }}</div>
         </div>
-        <ul class="list-group list-group-flush">
-          <li class="list-group-item">{{ user.profile.location }}</li>
-          <li class="list-group-item">{{ user.email }}</li>
-        </ul>
-        <div class="card-body">
-          <a href="#" class="card-link">{{ user.profile.steam_id }}</a>
+        <div class="col-md-6 mb-3">
+          <label for="{{ user_form.last_name.id_for_label }}">Last Name</label>
+          {{ user_form.last_name }}
+          <div class="invalid-feedback d-block">{{ user_form.last_name.errors }}</div>
         </div>
       </div>
-    </div>
-    <div class="col-md-6">
-      <h5>Edit Profile</h5>
-      <form action="#" method="POST" class="needs-validation" novalidate>{% csrf_token %}
-        <div class="mb-3">
-          <label for="{{ user_form.username.id_for_label }}">Username</label>
-            {{ user_form.username }}
-            <div class="invalid-feedback d-block">{{ user_form.username.errors }}</div>
-        </div>
-    
-        {% if user.profile.steam_id is none %}
-        <div class="mb-3">
-          <label for="{{ profile_form.steam_id.id_for_label }}">SteamID64</label>
-          {{ profile_form.steam_id }}
-          <small class="text-muted">
-            SteamID is required to signup for CS:GO. Find your steamID64 <a href="https://steamidfinder.com/">here</a>.
-          </small>
-        </div>
         {% endif %}
-        <div class="mb-3">
-          <label for="{{ profile_form.location.id_for_label }}">Location<span class="text-muted">(Optional)</span> </label>
-          {{ profile_form.location }}
-          <div class="invalid-feedback">{{ profile_form.location.errors }}</div>
-        </div>
-        <button class="btn btn-primary btn-lg btn-block" name="updateProfile" type="submit">Update Details</button>
-      </form>
-      <hr class="mb-4">
-      <div>
-        {% if password_form.errors %}
-          {% for field in password_form %}
-            {% for error in field.errors %}
-            <div class="alert alert-danger">
-              <strong>{{ error|escape }}</strong>
-            </div>
-            {% endfor %}
-          {% endfor %}
-          {% for error in password_form.non_field_errors %}
+
+      <div class="mb-3">
+        <label for="{{ user_form.username.id_for_label }}">Change Username</label>
+          {{ user_form.username }}
+          <div class="invalid-feedback d-block">{{ user_form.username.errors }}</div>
+      </div>
+      
+      {% if not user.profile.steam_id.strip %}
+      <div class="mb-3">
+        <label for="{{ profile_form.steam_id.id_for_label }}">SteamID64</label>
+        {{ profile_form.steam_id }}
+        <small class="text-muted">
+          SteamID is required to signup for CS:GO. Find your steamID64 <a href="https://steamidfinder.com/">here</a>.
+        </small>
+      </div>
+      {% endif %}
+      <div class="mb-3">
+        <label for="{{ profile_form.location.id_for_label }}">Location <span class="text-muted">(Optional)</span> </label>
+        {{ profile_form.location }}
+        <div class="invalid-feedback">{{ profile_form.location.errors }}</div>
+      </div>
+      <button class="btn btn-primary btn-lg btn-block" name="updateProfile" type="submit">Update Details</button>
+    </form>
+    <hr class="mb-4">
+    <div>
+      {% if password_form.errors %}
+        {% for field in password_form %}
+          {% for error in field.errors %}
           <div class="alert alert-danger">
             <strong>{{ error|escape }}</strong>
           </div>
           {% endfor %}
-        {% endif %}
-      </div>
-      <div class="text-right">
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#passwordModal">
-          Change Password 
+        {% endfor %}
+        {% for error in password_form.non_field_errors %}
+        <div class="alert alert-danger">
+          <strong>{{ error|escape }}</strong>
+        </div>
+        {% endfor %}
+      {% endif %}
+    </div>
+    <div class="text-right">
+      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#passwordModal">
+        Change Password 
+      </button>
+    </div>
+  </div><!--Edit profile ends -->
+</div>
+
+
+<!--Password Change Modal -->
+<div class="modal fade" id="passwordModal" tabindex="-1" role="dialog" aria-labelledby="passwordModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="passwordModalLabel">Change Password</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
         </button>
       </div>
-    </div><!--Edit profile ends -->
-  </div>
-
-  
-  <!--Password Change Modal -->
-  <div class="modal fade" id="passwordModal" tabindex="-1" role="dialog" aria-labelledby="passwordModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="passwordModalLabel">Change Password</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+      <form action="#" method="POST">{% csrf_token %}
+        <div class="modal-body">
+          {{ password_form.as_p }}
         </div>
-        <form action="#" method="POST">{% csrf_token %}
-          <div class="modal-body">
-            {{ password_form.as_p }}
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-            <input type="submit" name="changePassword" class="btn btn-primary" value="Submit" />
-          </div>
-        </form>
-      </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          <input type="submit" name="changePassword" class="btn btn-primary" value="Submit" />
+        </div>
+      </form>
     </div>
-  </div><!--End Modal-->
-</div>
+  </div>
+</div><!--End Modal-->
 {% endblock %}

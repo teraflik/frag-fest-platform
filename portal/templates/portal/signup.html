@@ -1,70 +1,71 @@
 {% extends 'portal/base.html' %}
 {% load crispy_forms_tags %}
 {% block content %}
-<div class="container">
-    <div class="px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
-        <h3>Welcome to Frag-Fest
-            <small class="text-muted">Sign-Up for an account.</small>
-    </div>
-    <form action="#" method="POST" class="needs-validation" novalidate>{% csrf_token %}
-        <div class="row">
-            <div class="col-md-6 mb-3">
-                <label for="{{ form.first_name.id_for_label }}">First name</label>
-                {{ form.first_name }}
-                <div class="invalid-feedback d-block">{{ form.first_name.errors }}</div>
-            </div>
-            <div class="col-md-6 mb-3">
-                <label for="{{ form.last_name.id_for_label }}">Last Name</label>
-                {{ form.last_name }}
-                <div class="invalid-feedback d-block">{{ form.last_name.errors }}</div>
-            </div>
-        </div>
-
-        <div class="mb-3">
-            <label for="{{ form.username.id_for_label }}">Username</label>
-            {{ form.username }}
-            <div class="invalid-feedback d-block">
-                {{ form.username.errors }}
-            </div>
-        </div>
-
-        <div class="mb-3">
-            <label for="{{ form.email.id_for_label }}">Email</label>
-            {{ form.email }}
-            <div class="invalid-feedback d-block">
-                {{ form.email.errors }}
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-6 mb-3">
-                <label for="{{ form.password1.id_for_label }}">Password</label>
-                {{ form.password1 }}
-                <div class="invalid-feedback d-block">
-                    {{ form.password1.errors }}
-                </div>
-            </div>
-            <div class="col-md-6 mb-3">
-                <label for="{{ form.password2.id_for_label }}">Confirm Password</label>
-                {{ form.password2 }}
-                <div class="invalid-feedback d-block">
-                    {{ form.password2.errors }}
-                </div>
-            </div>
-        </div>
-
-        <hr class="mb-4">
-        <div class="custom-control custom-checkbox">
-            {{ form.subscribe }}
-            <label class="custom-control-label" for="{{ form.subscribe.id_for_label }}">Subscribe to Frag-Fest newsletter.</label>
-        </div>
-        <div class="custom-control custom-checkbox">
-            {{ form.agree_terms }}
-            <label class="custom-control-label" for="{{ form.agree_terms.id_for_label }}">I agree to the terms &amp; conditions.</label>
-        </div>
-        <hr class="mb-4">
-        <button class="btn btn-primary btn-lg btn-block" type="submit">Sign Up</button>
-    </form>
+<div class="px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+    <h3>Welcome to Frag-Fest
+        <small class="text-muted">Sign-Up for an account.</small>
 </div>
+<form action="#" method="POST" class="needs-validation" novalidate>{% csrf_token %}
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label for="{{ form.first_name.id_for_label }}">First name</label>
+            {{ form.first_name }}
+            <div class="invalid-feedback d-block">{{ form.first_name.errors }}</div>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label for="{{ form.last_name.id_for_label }}">Last Name</label>
+            {{ form.last_name }}
+            <div class="invalid-feedback d-block">{{ form.last_name.errors }}</div>
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label for="{{ form.username.id_for_label }}">Username</label>
+        {{ form.username }}
+        <div class="invalid-feedback d-block">
+            {{ form.username.errors }}
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label for="{{ form.email.id_for_label }}">Email</label>
+        {{ form.email }}
+        <div class="invalid-feedback d-block">
+            {{ form.email.errors }}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label for="{{ form.password1.id_for_label }}">Password</label>
+            {{ form.password1 }}
+            <div class="invalid-feedback d-block">
+                {{ form.password1.errors }}
+            </div>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label for="{{ form.password2.id_for_label }}">Confirm Password</label>
+            {{ form.password2 }}
+            <div class="invalid-feedback d-block">
+                {{ form.password2.errors }}
+            </div>
+        </div>
+    </div>
+
+    <hr class="mb-4">
+    <div class="custom-control custom-checkbox">
+        {{ form.subscribe }}
+        <label class="custom-control-label" for="{{ form.subscribe.id_for_label }}">Subscribe to Frag-Fest newsletter.</label>
+    </div>
+    <div class="custom-control custom-checkbox">
+        {{ form.agree_terms }}
+        <label class="custom-control-label" for="{{ form.agree_terms.id_for_label }}">I agree to the terms &amp; conditions.</label>
+        <div class="invalid-feedback d-block">
+            {{ form.agree_terms.errors }}
+        </div>
+    </div>
+    <hr class="mb-4">
+    <button class="btn btn-primary btn-lg btn-block" type="submit">Sign Up</button>
+</form>
 
 {% endblock %}

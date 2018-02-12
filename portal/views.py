@@ -7,22 +7,15 @@ from portal.forms import SignUpForm, UserForm, TeamForm, ProfileForm, PlayerForm
 from portal.tokens import account_activation_token
 from django.contrib import messages
 from django.core.mail import send_mail
-from portal.models import Team, Tournament, Profile, TeamNotification
-from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
+from portal.models import MyUser, Team, Profile, TeamNotification
+from django.contrib.auth import authenticate, login, logout, update_session_auth_hash, get_user_model
 from django.views.generic import View
 
-from django.contrib.auth.models import User
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.http import HttpResponseRedirect
 from django.utils.translation import ugettext as _
-import requests
-import string
-import random
-
-def id_generator(size=6, chars=string.ascii_uppercase + string.digits):  # randon id generator for e-mail password funtionality
-    return ''.join(random.choice(chars) for _ in range(size))
 
 def index(request):
     template_name = 'portal/index.html'
@@ -50,7 +43,7 @@ def signup(request):
             user.profile.is_subscribed = form.cleaned_data.get('subscribe')
             user.save()
             raw_password = form.cleaned_data.get('password1')
-            user = authenticate(username=user.username, password=raw_password)
+            user = authenticate(email=user.email, password=raw_password)
             login(request, user)
             current_site = get_current_site(request)
             subject = 'Your ' + current_site.name + ' account has been created. Please verify your email.'
@@ -109,6 +102,7 @@ messages.success(request, 'Your password was successfully sent!')'''
 @login_required
 @transaction.atomic
 def profile(request):
+    email_confirmed = request.user.profile.email_confirmed
     if request.method == 'POST':
         if 'updateProfile' in request.POST:
             user_form = UserForm(request.POST, instance=request.user)
@@ -116,10 +110,10 @@ def profile(request):
             if user_form.is_valid() and profile_form.is_valid():
                 user_form.save()
                 profile_form.save()
-                messages.success(request, _('Your profile was successfully updated!'))
+                messages.add_message(request, messages.SUCCESS, _('Your profile was successfully updated!'))
                 return redirect('portal:profile')
             else:
-                messages.error(request, _('Could not update Profile.'))
+                messages.add_message(request, messages.ERROR, _('Could not update Profile.'))
                 password_form = PasswordChangeForm(request.user)
         elif 'changePassword' in request.POST:
             password_form = PasswordChangeForm(request.user, request.POST)
@@ -139,9 +133,9 @@ def profile(request):
     return render(request, 'portal/profile.html', {
         'user_form': user_form,
         'profile_form': profile_form,
-        'password_form': password_form
+        'password_form': password_form,
+        'email_confirmed': email_confirmed
     })
-
 
 class TeamView(View):
     template_name = 'portal/teams.html'
@@ -149,7 +143,6 @@ class TeamView(View):
     def get(self, request):
         cs = Team.objects.filter(tournament="CS")
         return render(request, self.template_name, {'cs': cs})
-
 
 def SingleTeam(request, team_id):
     template_name = 'portal/single_team.html'
@@ -222,10 +215,10 @@ class dashboard(View):
 
 
         if member_form.is_valid():
-            uniqueUser = User.objects.filter(username=member_form.cleaned_data['player'])
+            uniqueUser = MyUser.objects.filter(username=member_form.cleaned_data['player'])
             if uniqueUser.count()!=0:
                 profiles = Profile.objects.get(id=request.user.id)
-                user1 = User.objects.get(username=member_form.cleaned_data['player'])
+                user1 = MyUser.objects.get(username=member_form.cleaned_data['player'])
                 uniqueUser = Profile.objects.get(user=user1)
                 team1 = profiles.team_cs
                 if uniqueUser.status_CS==0:
@@ -257,7 +250,7 @@ def CSTeamConfirmView(request,team_id,user_id):
     team1 = Team.objects.get(id=team_id)
     if request.method == "GET" and request.user==team1.team_head and Profile.objects.get(id=user_id).status_CS==0 and Profile.objects.filter(team_cs=team1).count()<5:
         uniqueTeam = Team.objects.get(id=team_id)
-        user1 = User.objects.get(id=user_id)
+        user1 = MyUser.objects.get(id=user_id)
         profiles = Profile.objects.get(id=user_id)
         profiles.status_CS=1
         profiles.team_cs=uniqueTeam
@@ -291,10 +284,6 @@ def RemovePlayer(request,team_id,user_id):
         return redirect('portal:dashboard')
 
     return redirect('portal:index')    
-    
-
-
-    
 
 def logout_view(request):
     logout(request)
