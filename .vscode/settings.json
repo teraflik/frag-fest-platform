@@ -4,4 +4,5 @@
 		//"--errors-only",
 		"--load-plugins pylint_django"
 	],
+	"python.pythonPath": "C:\\Users\\RTC\\Documents\\venvs\\rtc\\Scripts\\python.exe",
 }

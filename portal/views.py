@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect, render_to_response, get_object_or
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
-from portal.forms import SignUpForm, UserForm, TeamForm, ProfileForm, PlayerForm, DeleteTeamForm, forgetpass
+from portal.forms import SignUpForm, TeamForm, ProfileForm, PlayerForm, DeleteTeamForm, forgetpass
 from portal.tokens import account_activation_token
 from django.contrib import messages
 from django.core.mail import send_mail
@@ -22,7 +22,7 @@ def index(request):
     return render(request, template_name)
 
 @login_required
-def send_verification_email(request):
+def send_verification_email(request, user):
     user = request.user
     current_site = get_current_site(request)
     subject = 'Your ' + current_site.name + ' account has been created. Please verify your email.'
@@ -45,15 +45,7 @@ def signup(request):
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(email=user.email, password=raw_password)
             login(request, user)
-            current_site = get_current_site(request)
-            subject = 'Your ' + current_site.name + ' account has been created. Please verify your email.'
-            message = render_to_string('portal/account_activation_email.html', {
-                'user': user,
-                'domain': current_site.domain,
-                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-                'token': account_activation_token.make_token(user),
-            })
-            user.email_user(subject, message)
+            send_verification_email(request, user)
             messages.success(request, _('Successfully registered! We have sent you a verification email.'))
             return redirect('portal:home')
     else:
@@ -80,17 +72,6 @@ def activate(request, uidb64, token):
     return render(request, 'portal/index.html')
 
 '''
-login(request, user2)
-subject = 'Thank you for registering'
-message = 'Welcome to fragfest 2018.'
-from_email = settings.EMAIL_HOST_USER
-to_list = [user2.email,settings.EMAIL_HOST_USER]
-send_mail(subject,message,from_email,to_list,fail_silently=True)
-return redirect('portal:index')
-
-password = id_generator()
-user.set_password(password)
-user.save()
 subject = 'Password change'
 message = 'You forgot your passwordso we are sending new password. Change this password once you log in. Your username = ' + username123 + ' Your new password = ' + password
 from_email = settings.EMAIL_HOST_USER
@@ -105,10 +86,8 @@ def profile(request):
     email_confirmed = request.user.profile.email_confirmed
     if request.method == 'POST':
         if 'updateProfile' in request.POST:
-            user_form = UserForm(request.POST, instance=request.user)
             profile_form = ProfileForm(request.POST, instance=request.user.profile)
-            if user_form.is_valid() and profile_form.is_valid():
-                user_form.save()
+            if profile_form.is_valid():
                 profile_form.save()
                 messages.add_message(request, messages.SUCCESS, _('Your profile was successfully updated!'))
                 return redirect('portal:profile')
@@ -124,14 +103,11 @@ def profile(request):
                 return redirect('portal:profile')
             else:
                 messages.error(request, _('Could not change password. '))
-                user_form = UserForm(instance=request.user)
                 profile_form = ProfileForm(instance=request.user.profile)
     else:
-        user_form = UserForm(instance=request.user)
         profile_form = ProfileForm(instance=request.user.profile)
         password_form = PasswordChangeForm(request.user)
     return render(request, 'portal/profile.html', {
-        'user_form': user_form,
         'profile_form': profile_form,
         'password_form': password_form,
         'email_confirmed': email_confirmed
