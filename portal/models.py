@@ -80,9 +80,6 @@ class PlayerManager(models.Manager):
     def remove_player(self, user, team):
         pass
 
-    def transfer_player(self, user, team):
-        pass
-
 class Player(models.Model):
     user = models.ForeignKey(MyUser)
     team = models.ForeignKey(Team)
