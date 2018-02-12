@@ -20,8 +20,11 @@
 		{% include 'portal/nav.html' %}
 	</header>
 	<main>
-		{% block content %}
-		{% endblock %}
+		<div class="container">
+			{% include 'portal/messages.html' %}
+			{% block content %}
+			{% endblock %}
+		</div>
 	</main>
 	
 	<footer class="container pt-4 my-md-5 pt-md-5 border-top">

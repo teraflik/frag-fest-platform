@@ -1,21 +1,20 @@
 {% extends 'portal/base.html' %}
 
 {% block content %}
-<div class="container">
-	<div class="px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
-		<h3>Registered Teams <small class="text-muted">Counter Strike: Global Offensive</small>
-	</div>
-	</h3>
-	<p class="lead">Following teams are signup for the tournament.</p>
-	<div class="list-group">
-			{% for team in cs %}
-			<a href="{% url 'portal:index' %}" class="list-group-item list-group-item-action active">
-					{{ team.team_name }}
-			</a>
-			{% endfor %}
-		</div>
-	<p>Keep in mind this list is not final. You can modify your team or remove your team from this list.
-		Teams will be automatically locked on 1st March'2018 00:01 Hrs	.</p>
+
+<div class="px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+	<h3>Registered Teams <small class="text-muted">Counter Strike: Global Offensive</small>
 </div>
+</h3>
+<p class="lead">Following teams are signup for the tournament.</p>
+<div class="list-group">
+		{% for team in cs %}
+		<a href="{% url 'portal:index' %}" class="list-group-item list-group-item-action active">
+				{{ team.team_name }}
+		</a>
+		{% endfor %}
+	</div>
+<p>Keep in mind this list is not final. You can modify your team or remove your team from this list.
+	Teams will be automatically locked on 1st March'2018 00:01 Hrs	.</p>
 
 {% endblock %}

@@ -23,6 +23,5 @@ from django.views.generic import TemplateView
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^portal/', include('portal.urls')),
-    url(r'^$', TemplateView.as_view(template_name="portal/before_login.html"),name='home'),
+    url(r'^', include('portal.urls')),
 ]

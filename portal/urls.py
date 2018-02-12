@@ -17,6 +17,7 @@ from django.conf.urls import url
 
 from django.contrib.auth import views as auth_views
 from . import views
+from portal.forms import LoginForm
 
 app_name = 'portal'
 
@@ -27,7 +28,8 @@ urlpatterns = [
         views.activate, name='activate'),
     url(r'^home/$', views.home, name='home'),
     url(r'^profile/$', views.profile, name='profile'),
-    url(r'^login/$', auth_views.login, {'template_name': 'portal/login.html'}, name='login'),
+    url(r'^login/$', auth_views.login, {'template_name': 'portal/login.html',
+                                        'authentication_form': LoginForm}, name='login'),
     url(r'^logout/$', views.logout_view, name='logout'),
     url(r'^team/(?P<team_id>\d+)/$', views.SingleTeam, name='single_team'),
     url(r'^teams/$', views.TeamView.as_view(), name='teams'),
