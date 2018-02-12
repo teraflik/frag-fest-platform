@@ -2,10 +2,9 @@
 
 ### Setting up on your local machine 
 ```
-git clone https://github.com/Frag-Fest/event-platform/
-cd event-platform
-virtualenv venv 
-source venv/bin/activate
-pip install -r requirements.txt
-```
+Activate virtual environment  
+git clone https://github.com/Frag-Fest/event-platform/  
+pip install -r requirements.txt  
+python manage.py runserver  
+``` 
 And, there you go!
