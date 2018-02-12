@@ -59,9 +59,9 @@ class forgetpass(forms.Form):
     usernamee = forms.CharField(label='Username', max_length=100, required=True, widget=forms.TextInput(attrs={'placeholder': 'enter username', 'class':'form-control'}))
     
 class TeamForm(forms.ModelForm):
-     class Meta:
-         model = Team
-         fields = ['team_name']
+    class Meta:
+        model = Team
+        fields = ('name', 'info')
 
 class PlayerForm(forms.Form):
     player = forms.CharField(label='player', max_length=100, required=True, widget=forms.TextInput(attrs={'placeholder': 'Player', 'class':'form-control'}))

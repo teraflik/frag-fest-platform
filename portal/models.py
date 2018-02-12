@@ -57,20 +57,36 @@ class MyUser(AbstractUser):
 
     objects = UserManager()
 
-
 class Team(models.Model):
-    team_head = models.ForeignKey(MyUser, default=None, null=True)
-    team_name = models.CharField(max_length=200, blank=False)
-    team_info = models.TextField(default=None, blank=True)
-    team_link = models.CharField(max_length=255, blank=True)
-    number_of_players = models.IntegerField(default=0)
+    captain = models.ForeignKey(
+        MyUser, related_name="teams_created", on_delete=models.CASCADE)
+    name = models.CharField(max_length=64, blank=False)
+    info = models.TextField(default=None, blank=True)
+    link = models.CharField(max_length=255, blank=True)
+    logo = models.ImageField(upload_to="portal/team_logo", null=True, blank=True)
     game_on = models.IntegerField(default=0)
-    team_lock = models.BooleanField(default=False)
-    team_avatar = models.ImageField(upload_to="team_image", null=True, blank=True)
+    locked = models.BooleanField(default=False)
+    players = models.ManyToManyField(MyUser, through='Player')
 
     def __str__(self):
         return self.team_name
 
+class PlayerManager(models.Manager):
+    use_for_related_fields = True
+
+    def add_player(self, user, team):
+        pass
+
+    def remove_player(self, user, team):
+        pass
+
+    def transfer_player(self, user, team):
+        pass
+
+class Player(models.Model):
+    user = models.ForeignKey(MyUser)
+    team = models.ForeignKey(Team)
+    objects = PlayerManager()
 
 class Profile(models.Model):
     user = models.OneToOneField(MyUser, on_delete=models.CASCADE)
@@ -79,9 +95,6 @@ class Profile(models.Model):
     steam_id = models.CharField(max_length=200, blank=True)
     location = models.CharField(max_length=200, default='India', blank=True)
     avatar = models.ImageField(upload_to="profile_image", null=True, blank=True)
-    status_CS = models.IntegerField(default=0)
-    status_FIFA = models.IntegerField(default=0)
-    team_cs = models.ForeignKey(Team, default=None, null=True, blank=True)
     is_subscribed = models.BooleanField(default=True)
 
     def __str__(self):
