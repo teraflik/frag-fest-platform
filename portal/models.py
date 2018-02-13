@@ -1,10 +1,20 @@
 """Declare models for portal app."""
 
+import os
+
+from django.conf import settings
 from django.db import models
+from django.contrib.auth.models import AbstractUser
 from django.utils.translation import ugettext_lazy as _
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.utils import timezone
 from .managers import UserManager
+
+def avatar_upload(instance, filename):
+    ext = filename.split(".")[-1]
+    filename = "%s.%s" % (uuid.uuid4(), ext)
+    return os.path.join("avatars", filename)
 
 class MyUser(AbstractUser):
     """User model."""
@@ -24,37 +34,61 @@ class MyUser(AbstractUser):
     objects = UserManager()
 
 class Team(models.Model):
-    captain = models.ForeignKey(
-        MyUser, related_name="teams_created", on_delete=models.CASCADE)
-    name = models.CharField(max_length=64, blank=False)
-    info = models.TextField(default=None, blank=True)
-    link = models.CharField(max_length=255, blank=True)
-    logo = models.ImageField(upload_to="portal/team_logo", null=True, blank=True)
-    game_on = models.IntegerField(default=0)
+    slug = models.SlugField(unique=True)
+    name = models.CharField(max_length=100, verbose_name=_("name"))
+    avatar = models.ImageField(upload_to=avatar_upload, blank=True, verbose_name=_("avatar"))
+    creator = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="teams_created", verbose_name=_("creator"), on_delete=models.CASCADE)
+    created = models.DateTimeField(
+        default=timezone.now, editable=False, verbose_name=_("created"))
+    info = models.TextField(blank=True, verbose_name=_("description"))
+    link = models.CharField(max_length=255, blank=True, verbose_name=_("social_link"))
     locked = models.BooleanField(default=False)
-    players = models.ManyToManyField(MyUser, through='Player')
+
+    class Meta:
+        verbose_name = _("Team")
+        verbose_name_plural = _("Teams")
 
     def __str__(self):
-        return self.team_name
+        return self.name
+    
+    def save(self):
+        if not self.id:
+            self.slug = create_slug(self.name)
+        self.save()
 
     def lock(self):
         if self.locked:
             raise ValueError('Team is already locked!')
         self.locked = 1
+
+    def can_apply(self, user):
+        state = self.state_for(user)
+        return state is None
     
+    @property
+    def applicants(self):
+        return self.memberships.filter(state=BaseMembership.STATE_APPLIED)
+
+    def for_user(self, user):
+        try:
+            return self.memberships.get(user=user)
+        except ObjectDoesNotExist:
+            pass
+
+    def state_for(self, user):
+        membership = self.for_user(user=user)
+        if membership:
+            return membership.state
+
+    def role_for(self, user):
+        membership = self.for_user(user)
+        if membership:
+            return membership.role
+
     def no_of_players(self):
         return self.players.count()
 
-class PlayerManager(models.Manager):
-    use_for_related_fields = True
-
-    def add_player(self, user, team):
-        pass
-
-    def remove_player(self, user, team):
-        pass
-
-class Player(models.Model):
+class Membership(models.Model):
     STATE_APPLIED = "applied"
     STATE_REJECTED = "rejected"
     STATE_ACCEPTED = "accepted"
@@ -67,22 +101,68 @@ class Player(models.Model):
         (STATE_REJECTED, _("rejected")),
         (STATE_ACCEPTED, _("accepted")),
     ]
-    
+
     ROLE_CHOICES = [
         (ROLE_MEMBER, _("member")),
-        (ROLE_MANAGER, _("manager")),
         (ROLE_OWNER, _("owner"))
     ]
 
-    user = models.ForeignKey(MyUser, related_name='membership')
-    team = models.ForeignKey(Team, related_name='membership')
-    role = models.ChoiceField()
-    objects = PlayerManager()
+    state = models.CharField(max_length=20, choices=STATE_CHOICES, verbose_name=_("state"))
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES,default=ROLE_MEMBER, verbose_name=_("role"))
+    created = models.DateTimeField(default=timezone.now, verbose_name=_("created"))
 
+    user = models.ForeignKey(MyUser, related_name='memberships', null=True, blank=True, verbose_name=_("user"), on_delete=models.SET_NULL)
+    team = models.ForeignKey(Team, related_name='memberships', verbose_name=_("team"), on_delete=models.CASCADE)
+
+    def __str__(self):
+        return "{0} in {1}".format(self.user, self.team)
+    
+    class Meta:
+        unique_together=[("team", "user")]
+        verbose_name=_("Membership")
+        verbose_name_plural=_("Memberships")
+    
+    def is_owner(self):
+        return self.role == BaseMembership.ROLE_OWNER
+
+    def is_member(self):
+        return self.role == BaseMembership.ROLE_MEMBER
+
+    def accept(self, by):
+        role = self.team.role_for(by)
+        if role in [Membership.ROLE_OWNER]:
+            if self.state == Membership.STATE_APPLIED:
+                self.state = Membership.STATE_ACCEPTED
+                self.save()
+                signals.accepted_membership.send(sender=self, membership=self)
+                return True
+        return False
+
+    def reject(self, by):
+        role = self.team.role_for(by)
+        if role in [Membership.ROLE_OWNER]:
+            if self.state == Membership.STATE_APPLIED:
+                self.state = Membership.STATE_REJECTED
+                self.save()
+                signals.rejected_membership.send(sender=self, membership=self)
+                return True
+        return False
+
+    def status(self):
+        if self.user:
+            return self.get_state_display()
+        return "Unknown"
+
+    def remove(self, by=None):
+        self.delete()
+        signals.removed_membership.send(
+            sender=Membership, team=self.team, user=self.user, invitee=self.invitee, by=by)
+
+    
 class Profile(models.Model):
     user = models.OneToOneField(MyUser, on_delete=models.CASCADE)
     email_confirmed = models.BooleanField(default=False)
-    username = models.CharField(max_length=255, blank=True)
+    display_name = models.CharField(max_length=255, blank=True)
     steam_id = models.CharField(max_length=200, blank=True)
     location = models.CharField(max_length=200, default='India', blank=True)
     avatar = models.ImageField(upload_to="profile_image", null=True, blank=True)
