@@ -21,10 +21,10 @@ from portal.forms import LoginForm
 
 app_name = 'portal'
 
-urlpatterns = [ 
+urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^signup/$', views.signup, name='signup'),
-    
+
     url(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
         views.activate, name='activate'),
     url(r'^login/$', auth_views.login, {'template_name': 'portal/login.html',
@@ -38,5 +38,7 @@ urlpatterns = [
     url(r'^team/(?P<team_id>\d+)/$', views.SingleTeam, name='single_team'),
     url(r'^CSConfirm123/2/(?P<team_id>\d+)/4/21/(?P<user_id>\d+)/32/$', views.CSTeamConfirmView, name='CSTeamConfirmView'),
     url(r'^RemovePlayer123/32/21/(?P<team_id>\d+)/4/21/(?P<user_id>\d+)/5/$', views.RemovePlayer, name='RemovePlayer'),
+    url(r'^events/$', views.events, name='events'),
+    url(r'^schedule/$', views.schedule, name='schedule'),
     url(r'^DeleteTeam123/32/21/(?P<team_id>\d+)/$', views.DeleteTeam, name='DeleteTeam'),
 ]

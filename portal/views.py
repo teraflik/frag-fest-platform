@@ -165,7 +165,7 @@ class dashboard(View):
                     notifications=None
 
         return render(request, self.template_name,{'captain':captain,'profiles':profiles,'players':players,'count':count,'notifications':notifications,'team1':team1,'team_form':team_form,'member_form':member_form})
-        
+
     def post(self,request):
         team_form = TeamForm(request.POST)
         member_form = PlayerForm(request.POST)
@@ -215,7 +215,7 @@ class dashboard(View):
                     uniqueUser.status_CS = 1
                     uniqueUser.team_cs = team1
                     uniqueUser.save()
-        
+
         profiles = None
         notifications = None
         count=0
@@ -283,4 +283,12 @@ def fifa(request):
 
 def csgo(request):
     template_name = 'portal/csgo.html'
+    return render(request, template_name)
+
+def events(request):
+    template_name = 'portal/events.html'
+    return render(request, template_name)
+
+def schedule(request):
+    template_name = 'portal/schedule.html'
     return render(request, template_name)

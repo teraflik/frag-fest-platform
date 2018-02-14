@@ -1,5 +1,8 @@
 @import url('https://fonts.googleapis.com/css?family=Anton|Dosis|Arvo');
 
+.nav {
+	background: #C0392B;
+}
 .product-device {
 	position: absolute;
 	right: 10%;
