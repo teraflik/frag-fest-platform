@@ -1,6 +1,6 @@
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, UsernameField
 from django import forms
-from portal.models import MyUser, Team, Profile
+from .models import MyUser, Team, Profile
 from django.contrib.auth import get_user_model
 from django.utils.translation import ugettext_lazy as _
 
@@ -59,19 +59,7 @@ class forgetpass(forms.Form):
     usernamee = forms.CharField(label='Username', max_length=100, required=True, widget=forms.TextInput(attrs={'placeholder': 'enter username', 'class':'form-control'}))
     
 class TeamForm(forms.ModelForm):
-    def clean_name(self):
-        slug = create_slug(self.cleaned_data["name"])
-        if self.instance.pk is None and Team.objects.filter(slug=slug).exists():
-            raise forms.ValidationError(MESSAGE_STRINGS["slug-exists"])
-        return self.cleaned_data["name"]
 
     class Meta:
         model = Team
-        fields = ('name', 'avatar', 'info', 'link')
-
-class PlayerForm(forms.Form):
-    player = forms.CharField(label='player', max_length=100, required=True, widget=forms.TextInput(attrs={'placeholder': 'Player', 'class':'form-control'}))
-
-class DeleteTeamForm(forms.Form):
-    team = forms.CharField(label='team', max_length=100, required=True, widget=forms.TextInput(
-        attrs={'placeholder': 'Team Name', 'class': 'forms.Form-control'}))
+        fields = ('name',  'info', 'link')

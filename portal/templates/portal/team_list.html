@@ -3,14 +3,14 @@
 {% block content %}
 
 <div class="px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
-	<h3>Registered Teams <small class="text-muted">Counter Strike: Global Offensive</small>
+	<h3>Registered Teams <small class="text-muted">Counter Strike: Global Offensive</small></h3>
 </div>
-</h3>
+
 <p class="lead">Following teams are signup for the tournament.</p>
 <div class="list-group"> {# If no team in teams, add something #}
 		{% for team in teams %}
-		<a href="{% url 'portal:index' %}" class="list-group-item list-group-item-action active">
-				{{ team.team_name }}
+		<a href="#" class="list-group-item list-group-item-action active">
+			{{ team.name }}
 		</a>
 		{% endfor %}
 	</div>

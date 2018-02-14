@@ -9,16 +9,12 @@ from django.utils.translation import ugettext_lazy as _
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils import timezone
-from slugify import slugify
 from .managers import UserManager
 
 def avatar_upload(instance, filename):
     ext = filename.split(".")[-1]
     filename = "%s.%s" % (uuid.uuid4(), ext)
     return os.path.join("avatars", filename)
-
-def create_slug(name):
-    return slugify(name)[:50]
 
 class MyUser(AbstractUser):
     """User model."""
@@ -38,12 +34,10 @@ class MyUser(AbstractUser):
     objects = UserManager()
 
 class Team(models.Model):
-    slug = models.SlugField(unique=True)
     name = models.CharField(max_length=100, verbose_name=_("name"))
     avatar = models.ImageField(upload_to=avatar_upload, blank=True, verbose_name=_("avatar"))
     creator = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="teams_created", verbose_name=_("creator"), on_delete=models.CASCADE)
-    created = models.DateTimeField(
-        default=timezone.now, editable=False, verbose_name=_("created"))
+    created = models.DateTimeField(default=timezone.now, editable=False, verbose_name=_("created"))
     info = models.TextField(blank=True, verbose_name=_("description"))
     link = models.CharField(max_length=255, blank=True, verbose_name=_("social_link"))
     locked = models.BooleanField(default=False)
@@ -54,12 +48,6 @@ class Team(models.Model):
 
     def __str__(self):
         return self.name
-    
-    def save(self):
-        if not self.id:
-            self.slug = create_slug(self.name)
-        self.full_clean()
-        self.save()
 
     def lock(self):
         if self.locked:
@@ -143,7 +131,7 @@ class Membership(models.Model):
     ]
 
     state = models.CharField(max_length=20, choices=STATE_CHOICES, verbose_name=_("state"))
-    role = models.CharField(max_length=20, choices=ROLE_CHOICES,default=ROLE_MEMBER, verbose_name=_("role"))
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default=ROLE_MEMBER, verbose_name=_("role"))
     created = models.DateTimeField(default=timezone.now, verbose_name=_("created"))
 
     user = models.ForeignKey(MyUser, related_name='memberships', null=True, blank=True, verbose_name=_("user"), on_delete=models.SET_NULL)

@@ -3,20 +3,19 @@ from django.shortcuts import render, redirect, render_to_response, get_object_or
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
-from portal.forms import SignUpForm, TeamForm, ProfileForm, PlayerForm, DeleteTeamForm, forgetpass
+from django.views.generic import View, FormView, ListView
 from portal.tokens import account_activation_token
 from django.contrib import messages
 from django.core.mail import send_mail
-from portal.models import MyUser, Team, Profile, TeamNotification
-from django.contrib.auth import authenticate, login, logout, update_session_auth_hash, get_user_model
-from django.views.generic import View
+from portal.models import MyUser, Team, Profile, Membership, TeamNotification
+from django.contrib.auth import authenticate, login, update_session_auth_hash
 
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
-from django.http import HttpResponseRedirect
 from django.utils.translation import ugettext as _
 
+from portal.forms import SignUpForm, TeamForm, ProfileForm, forgetpass
 def index(request):
     template_name = 'portal/index.html'
     return render(request, template_name)
@@ -55,7 +54,7 @@ def signup(request):
 def activate(request, uidb64, token):
     try:
         uid = force_text(urlsafe_base64_decode(uidb64))
-        user = User.objects.get(pk=uid)
+        user = MyUser.objects.get(pk=uid)
     except (TypeError, ValueError, OverflowError, user.DoesNotExist):
         user = None
 
@@ -73,7 +72,7 @@ def activate(request, uidb64, token):
 
 '''
 subject = 'Password change'
-message = 'You forgot your passwordso we are sending new password. Change this password once you log in. Your username = ' + username123 + ' Your new password = ' + password
+message = 'You forgot your password so we are sending new password. Change this password once you log in. Your username = ' + username123 + ' Your new password = ' + password
 from_email = settings.EMAIL_HOST_USER
 to_list = [user.email]
 send_mail(subject,message,from_email,to_list,fail_silently=True)
@@ -113,22 +112,49 @@ def profile(request):
         'email_confirmed': email_confirmed
     })
 
-
-
-def create_team(request): #Needs work was class
-    form = TeamForm
+class TeamListView(ListView):
     model = Team
-    template_name = "portal/team_form.html"
+    context_object_name = "teams"
+    template_name = "portal/team_list.html"
 
-    def form_valid(self, form):
-        self.object = form.save(commit=False)
-        self.object.creator = self.request.user
-        self.object.save()
-        return HttpResponseRedirect(self.get_success_url())
+@login_required
+def manage_team(request):
+    teams = Team.objects.filter(memberships=request.user.memberships.all())
 
-def team_list(request):
-    teams = Team.objects.all()
-    return render(request, 'portal/team_list.html', {'teams': teams})
+    return render(request, 'portal/dashboard.html', {'teams': teams})
+
+@login_required
+def create_or_join(request):
+    if request.method == 'POST':
+        create_team_form = TeamForm(request.POST)
+        if create_team_form.is_valid():
+            team = create_team_form.save(commit=False)
+            team.creator = request.user
+            team.save()
+            membership = Membership.objects.create(team=team, user=request.user, role=Membership.ROLE_OWNER, state=Membership.STATE_ACCEPTED)
+            membership.save()
+            messages.success(request, _('Your team was succesfully created!'))
+            return redirect('portal:team_list')
+    else:
+        create_team_form = TeamForm()
+    return render(request, 'portal/create_or_join.html', {'create_form': create_team_form})
+
+def dashboard(request):
+    if not request.user.is_authenticated():
+        message = 'You need to be logged in to access your Team Dashboard.'
+        return render(request, 'portal/no_access.html', {'title': 'Team Dashboard', 'message': message})
+    
+    if request.user.profile.get_steam_id is None:
+        message = 'You need to be signed into Steam to join a Team.'
+        return render(request, 'portal/no_access.html', {'title': 'Steam Error', 'message': message})
+
+    memberships = request.user.memberships.all()
+
+    if memberships.exists():
+        result = manage_team(request)
+    else:
+        result = create_or_join(request)
+    return result
 
 def SingleTeam(request, team_id):
     template_name = 'portal/single_team.html'
@@ -138,117 +164,6 @@ def SingleTeam(request, team_id):
         return render(request, template_name, {'team': team, 'players': players})
     else:
         return redirect('portal:index')
-
-
-class dashboard(View):
-    #if request.user.is_authenticated():
-    #   return render(request, 'logged_out.html')
-    template_name = 'portal/dashboard.html'
-    def get(self,request):
-        profiles = None
-        team_form = TeamForm(None)
-        member_form = PlayerForm(None)
-        count=0
-        notifications = None
-        team1=None
-        captain=None
-        players = None
-        if request.user.is_authenticated():
-            profiles = Profile.objects.get(id=request.user.id)
-            if profiles.status_CS==1:
-                team1 = profiles.team_cs
-                captain=team1.team_head.username
-                notifications = TeamNotification.objects.filter(team=team1)
-                players = Profile.objects.filter(team_cs=team1)
-                count=players.count()
-                if notifications.count()==0:
-                    notifications=None
-
-        return render(request, self.template_name,{'captain':captain,'profiles':profiles,'players':players,'count':count,'notifications':notifications,'team1':team1,'team_form':team_form,'member_form':member_form})
-        
-    def post(self,request):
-        team_form = TeamForm(request.POST)
-        member_form = PlayerForm(request.POST)
-        profiles = None
-        count=0
-        captain=None
-        if team_form.is_valid():
-            uniqueTeam = Team.objects.filter(team_name=team_form.cleaned_data['team_name'],tournament='CS')
-            if uniqueTeam.count() > 0:
-                uniqueTeam = Team.objects.get(team_name=team_form.cleaned_data['team_name'],tournament='CS')
-                if TeamNotification.objects.filter(team=uniqueTeam,user=request.user).count()==0:
-                    notification = TeamNotification.objects.create(team=uniqueTeam,user=request.user)
-                    notification.save()
-                return redirect('portal:profile', user_id=request.user.id)
-            else:
-                newTeam = Team.objects.create(team_head=request.user,team_name=team_form.cleaned_data['team_name'],tournament='CS')
-                uniqueUser = Profile.objects.get(id=request.user.id)
-                uniqueUser.status_CS = 1
-                newTeam.save()
-                uniqueUser.team_cs = newTeam
-                uniqueUser.save()
-                notifications = None
-                team1=None
-                count=0
-                players = None
-                if request.user.is_authenticated():
-                    profiles = Profile.objects.get(id=request.user.id)
-                    if profiles.status_CS==1:
-                        team1 = profiles.team_cs
-                        captain=team1.team_head.username
-                        notifications = TeamNotification.objects.filter(team=team1)
-                        players = Profile.objects.filter(team_cs=team1)
-                        count=players.count();
-                        if notifications.count()==0:
-                            notifications=None
-                return render(request, self.template_name,{'captain':captain,'profiles':profiles,'players':players,'count':count,'notifications':notifications,'team1':team1,'team_form':team_form,'member_form':member_form})
-
-
-        if member_form.is_valid():
-            uniqueUser = MyUser.objects.filter(username=member_form.cleaned_data['player'])
-            if uniqueUser.count()!=0:
-                profiles = Profile.objects.get(id=request.user.id)
-                user1 = MyUser.objects.get(username=member_form.cleaned_data['player'])
-                uniqueUser = Profile.objects.get(user=user1)
-                team1 = profiles.team_cs
-                if uniqueUser.status_CS==0:
-                    uniqueUser.status_CS = 1
-                    uniqueUser.team_cs = team1
-                    uniqueUser.save()
-        
-        profiles = None
-        notifications = None
-        count=0
-        team1=None
-        players = None
-        if request.user.is_authenticated():
-            profiles = Profile.objects.get(id=request.user.id)
-            if profiles.status_CS==1:
-                team1 = profiles.team_cs
-                captain=team1.team_head.username
-                notifications = TeamNotification.objects.filter(team=team1)
-                players = Profile.objects.filter(team_cs=team1)
-                count=players.count();
-                if notifications.count()==0:
-                    notifications=None
-
-        return render(request, self.template_name,{'captain':captain,'profiles':profiles,'players':players,'count':count,'notifications':notifications,'team1':team1,'team_form':team_form,'member_form':member_form})
-
-
-def CSTeamConfirmView(request,team_id,user_id):
-    team_id1 = team_id
-    team1 = Team.objects.get(id=team_id)
-    if request.method == "GET" and request.user==team1.team_head and Profile.objects.get(id=user_id).status_CS==0 and Profile.objects.filter(team_cs=team1).count()<5:
-        uniqueTeam = Team.objects.get(id=team_id)
-        user1 = MyUser.objects.get(id=user_id)
-        profiles = Profile.objects.get(id=user_id)
-        profiles.status_CS=1
-        profiles.team_cs=uniqueTeam
-        profiles.save()
-        notification = TeamNotification.objects.get(team=uniqueTeam,user=user1)
-        notification.delete()
-        return redirect('portal:dashboard',team_id = team_id1)
-
 
 def DeleteTeam(request, team_id):
     team1 = Team.objects.get(id=team_id)
