@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css?family=Anton|Dosis|Arvo');
+
 .product-device {
 	position: absolute;
 	right: 10%;
@@ -28,3 +30,14 @@
 	left: 5%;
 	background-color: #e5e5e5;
   }
+
+.bold {
+	font-weight: bold;
+	text-transform: uppercase;
+	font-size: 1.2em;
+	font-family: 'Dosis', sans-serif;
+}
+
+.font-style {
+	font-family: 'Dosis', sans-serif;
+}
