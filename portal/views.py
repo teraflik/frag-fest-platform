@@ -189,21 +189,3 @@ def RemovePlayer(request,team_id,user_id):
         return redirect('portal:dashboard')
 
     return redirect('portal:index')
-
-
-def fifa(request):
-    template_name = 'portal/fifa.html'
-    return render(request, template_name)
-
-
-def csgo(request):
-    template_name = 'portal/csgo.html'
-    return render(request, template_name)
-
-def events(request):
-    template_name = 'portal/events.html'
-    return render(request, template_name)
-
-def schedule(request):
-    template_name = 'portal/schedule.html'
-    return render(request, template_name)

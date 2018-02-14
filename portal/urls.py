@@ -16,26 +16,28 @@ Including another URLconf
 from django.conf.urls import url
 
 from django.contrib.auth import views as auth_views
-from . import views
+from django.views.generic import TemplateView
 from portal.forms import LoginForm
+from . import views
 
 app_name = 'portal'
 
 urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^signup/$', views.signup, name='signup'),
-
     url(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
         views.activate, name='activate'),
     url(r'^login/$', auth_views.login, {'template_name': 'portal/login.html',
                                         'authentication_form': LoginForm}, name='login'),
     url(r'^logout/$', auth_views.logout, {'next_page': '/'}, name='logout'),
-    url(r'^profile/$', views.profile, name='profile'),
-    url(r'^dashboard/', views.dashboard, name='dashboard'),
-    url(r'^teams/$', views.TeamListView.as_view(), name='team_list'),
-    url(r'^fifa/$', views.fifa, name='fifa'),
-    url(r'^csgo/$', views.csgo, name='csgo'),
     url(r'^team/(?P<team_id>\d+)/$', views.SingleTeam, name='single_team'),
-    url(r'^events/$', views.events, name='events'),
-    url(r'^schedule/$', views.schedule, name='schedule'),
+    url(r'^profile$', views.profile, name='profile'),
+    url(r'^dashboard', views.dashboard, name='dashboard'),
+    url(r'^teams$', views.TeamListView.as_view(), name='team_list'),
+    url(r'^other_games$', TemplateView.as_view(template_name="stat/other_games.html"), name='other_games'),
+    url(r'^fifa$', TemplateView.as_view(template_name="stat/fifa.html"), name='fifa'),
+    url(r'^csgo$', TemplateView.as_view(template_name="stat/csgo.html"), name='csgo'),
+    url(r'^event$', TemplateView.as_view(template_name="stat/event.html"), name='event'),
+    url(r'^schedule$', TemplateView.as_view(template_name="stat/schedule.html"), name='schedule'),
+    url(r'^cs_matches$', TemplateView.as_view(template_name="stat/cs_matches.html"), name='cs_matches'),
 ]

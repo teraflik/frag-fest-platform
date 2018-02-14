@@ -7,47 +7,27 @@
 		<div class="col-6 col-md">
 			<h5>About Frag-Fest</h5>
 			<ul class="list-unstyled text-small">
-				<li>
-					<a class="text-muted" href="#">The Event</a>
-				</li>
-				<li>
-					<a class="text-muted" href="#">Aparoksha, IIIT Allahabad</a>
-				</li>
-				<li>
-					<a class="text-muted" href="#">Sponsors</a>
-				</li>
-				<li>
-					<a class="text-muted" href="#">Contact Us</a>
-				</li>
-				<li>
-					<a class="text-muted" href="#">Privacy Policy</a>
-				</li>
+				<li><a class="text-muted" href="{% url 'portal:event' %}">The Event</a></li>
+				<li><a class="text-muted" href="#">Sponsors</a></li>
+				<li><a class="text-muted" href="{% url 'portal:schedule' %}">Schedule</a></li>
+				<li><a class="text-muted" href="https://aparoksha.org/">Aparoksha, IIIT Allahabad</a></li>
 			</ul>
 		</div>
 		<div class="col-6 col-md">
 			<h5>Counter-Strike:
 				<br>Global Offensive</h5>
 			<ul class="list-unstyled text-small">
-				<li>
-					<a class="text-muted" href="#">Info</a>
-				</li>
-				<li>
-					<a class="text-muted" href="#">Prizes</a>
-				</li>
-				<li>
-					<a class="text-muted" href="#">Schedule</a>
-				</li>
+				<li><a class="text-muted" href="{% url 'portal:csgo' %}">Info</a></li>
+				<li><a class="text-muted" href="{% url 'portal:cs_matches' %}">Matches</a></li>
 			</ul>
 		</div>
 		<div class="col-6 col-md">
-			<h5>Gaming Arena</h5>
+			<h5>Others</h5>
 			<ul class="list-unstyled text-small">
-				<li>
-					<a class="text-muted" href="#">FIFA</a>
-				</li>
-				<li>
-					<a class="text-muted" href="#">Other Games</a>
-				</li>
+			<li><a class="text-muted" href="{% url 'portal:fifa' %}">FIFA</a></li>
+			<li><a class="text-muted" href="{% url 'portal:other_games' %}">Other Games</a></li>
+			<li><a class="text-muted" href="mailto:fragfest@aparoksha.org">Contact Us</a></li>
+			<li><a class="text-muted" href="#">Privacy Policy</a></li>
 			</ul>
 		</div>
 	</div>
