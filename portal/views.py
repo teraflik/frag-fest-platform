@@ -199,3 +199,11 @@ def fifa(request):
 def csgo(request):
     template_name = 'portal/csgo.html'
     return render(request, template_name)
+
+def events(request):
+    template_name = 'portal/events.html'
+    return render(request, template_name)
+
+def schedule(request):
+    template_name = 'portal/schedule.html'
+    return render(request, template_name)
