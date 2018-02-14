@@ -1,3 +1,5 @@
+import requests
+import json
 from django.core.mail import send_mail
 from django.db import transaction
 from django.shortcuts import render, redirect, render_to_response, get_object_or_404
@@ -13,8 +15,9 @@ from django.contrib.auth import authenticate, login, update_session_auth_hash
 from django.contrib import messages
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.decorators import login_required
+from social_core.backends.steam import SteamOpenId
 
-from .models import MyUser, Team, Profile, Membership, TeamNotification
+from .models import MyUser, Team, Profile, Membership
 from .forms import SignUpForm, TeamForm, ProfileForm, forgetpass
 
 @login_required
@@ -118,19 +121,30 @@ def manage_team(request):
 
 @login_required
 def create_or_join(request):
+    teams_available = []
+    for team in Team.objects.all():
+         if team.can_apply(request.user):
+            teams_available.append(team)
+
     if request.method == 'POST':
-        create_team_form = TeamForm(request.POST)
-        if create_team_form.is_valid():
-            team = create_team_form.save(commit=False)
-            team.creator = request.user
-            team.save()
-            membership = Membership.objects.create(team=team, user=request.user, role=Membership.ROLE_OWNER, state=Membership.STATE_ACCEPTED)
-            membership.save()
-            messages.success(request, _('Your team was succesfully created!'))
-            return redirect('portal:team_list')
+        if 'join' in request.POST:
+            team = request.POST['join']
+        elif 'create' in request.POST:
+            create_team_form = TeamForm(request.POST)
+            if create_team_form.is_valid():
+                team = create_team_form.save(commit=False)
+                team.creator = request.user
+                team.save()
+                membership = Membership.objects.create(team=team, user=request.user, role=Membership.ROLE_OWNER, state=Membership.STATE_ACCEPTED)
+                membership.save()
+                messages.success(request, _('Your team was succesfully created. You are now its manager.'))
+                return redirect('portal:team_list')
+            else:
+                messages.error(request, _('Could not create team.'))
     else:
         create_team_form = TeamForm()
-    return render(request, 'portal/create_or_join.html', {'create_form': create_team_form})
+
+    return render(request, 'portal/create_or_join.html', {'create_form': create_team_form, 'teams_available': teams_available})
 
 def dashboard(request):
     if not request.user.is_authenticated():

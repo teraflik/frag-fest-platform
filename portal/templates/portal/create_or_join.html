@@ -9,19 +9,30 @@
 <div class="row">
   <div class="col-md-6">
 	<h5>Join Team</h5>
-	<div class="list-group"> {# If no team in teams, add something #} 
-		{% for team in teams %}
-		<a href="{% url 'portal:index' %}" class="list-group-item list-group-item-action active">
-			{{ team.team_name }}
-		</a>
-		{% endfor %}
-	</div>
+	<table class="table table-hover">
+		<thead>
+			<tr>
+				<th scope="col">Team</th>
+				<th scope="col">Social</th>
+				<th scope="col">Apply</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for team in teams_available %}
+			<tr>
+				<td>{{ team.name }}</td>
+				<td>{{ team.link }}</td>
+				<td><button class="btn" type="submit" name="join" value="{{ team.pk }}">Here</button></td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
   </div>
   <div class="col-md-6">
     <h5>Create Team</h5>
     <form action="#" method="POST">{% csrf_token %}
 			{{ create_form }}
-      <button class="btn btn-primary btn-lg btn-block" type="submit">Update Details</button>
+      <button class="btn btn-primary btn-lg btn-block" name="create" type="submit">Update Details</button>
     </form>
     <hr class="mb-4">
   </div><!--Edit profile ends -->

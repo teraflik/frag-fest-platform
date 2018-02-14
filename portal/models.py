@@ -1,15 +1,15 @@
-"""Declare models for portal app."""
-
 import os
-
+import uuid
+from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth.models import AbstractUser
 from django.conf import settings
 from django.db import models
-from django.contrib.auth.models import AbstractUser
-from django.utils.translation import ugettext_lazy as _
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils import timezone
-from .managers import UserManager
+from django.utils.translation import ugettext_lazy as _
+
+from .managers import UserManager, PlayerManager
 
 def avatar_upload(instance, filename):
     ext = filename.split(".")[-1]
@@ -61,7 +61,7 @@ class Team(models.Model):
 
     def can_apply(self, user):
         state = self.state_for(user)
-        return not locked and state is None
+        return not self.locked and state is None
     
     @property
     def applicants(self):
@@ -191,6 +191,7 @@ class Profile(models.Model):
     avatar = models.ImageField(upload_to="profile_image", null=True, blank=True)
     is_subscribed = models.BooleanField(default=True)
 
+
     def __str__(self):
         return self.user.email
 
@@ -205,12 +206,3 @@ def update_user_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance)
     instance.profile.save()
-
-
-class TeamNotification(models.Model):
-    team = models.ForeignKey(Team,default=None,null=True)
-    user = models.ForeignKey(MyUser,default=None,null=True)
-
-    def __str__(self):
-        return self.team
-    
