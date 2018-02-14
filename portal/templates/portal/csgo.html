@@ -1,63 +1,134 @@
 {% extends 'portal/base.html' %}
 {% block content %}
 
-<h1 class="display-3">CSGO</h1>
-<h5>Rules</h5>
-<ul>
-  <li>Competition Format
-    <ul>
-      <li>Team 5 vs 5</li>
-      <li>All the teams will be divided into different groups like Group A, B, C, D etc.</li>
-      <li>For the first round top 2 clans from each groups will go into the quarters.</li>
-    </ul>
-  </li>
-  <li>General Information and Rules
-    <ul>
-      <li>Servers will be setup with Warmod, which require teams to ready up. Once both teams are ready, the game begins.</li>
-      <li>The game winning conditions is first to have a score of 16. Teams with the highest score at the end wins. In the event of a tie, the game will be reset and overtime will commence.</li>
-      <li>n Semi- Finals and Finals the match will contain of 3 maps, here the winner will be decided according to the number of maps win or in case to ties.</li>
-      <li>All teams must join their allocated server within 10 minutes of announcement or the team will forfeit.</li>
-      <li>Use of third party cheats or hacks to gain an unfair advantage is strictly not allowed.</li>
-      <li>Teams found to be using hacks or cheats will be disqualified from the competition.</li>
-    </ul>
-  </li>
-  <li>Schedule and Bracket Release
-    <ul>
-      <li>Will be update on our facebook page  <a href="https://www.facebook.com/FragFestIIITA">FragFestIIITA</a></li>
-    </ul>
-  </li>
-  <li>Map Format
-    <ul>
-      <li>All maps will be played in the game mode Bomb. The aim of the game is the Terrorists to plant the bomb at either A or B bombsite and successfully detonate the device OR kill all members of the enemy team.</li>
-      <li>The map pool consists of following maps: de_train, de_inferno, de_mirage, de_cobblestone, de_dust2, de_nuke, de_overpass, de_cache</li>
-      <li>
-        There will be a knife round to select the ingame teams i.e Counter terrorist or Terrorist.
-      </li>
-    </ul>
-  </li>
-  <li>Server Specific Settings
-    <ul>
-      <li>Warmup time: 240 sec</li>
-      <li>Round time: 115 sec.</li>
-      <li>Bomb timer: 40 sec</li>
-      <li>Start Money: $800</li>
-    </ul>
-  </li>
-  <li>Client Specific Settings
-    <ul>
-      <li>The use of custom content including sprites, skins, score boards, crosshairs are not allowed.</li>
-      <li>All content must be of the game provided by Valve.</li>
-      <li>Team must set their ingame team names to the same name.</li>
-      <li>Teams will be penalized if their rule is not followed.</li>
-    </ul>
-  </li>
-  <li>Match Interrupt / Technical Issue Resolution
-    <ul>
-      <li>If the match is interrupted due to server crash or player connection issue in the first three rounds of play then the game admin will restart the server resetting the score to 0 and previous round / cash / score will be discarded.</li>
-      <li>If this occurs after 3 rounds then the game will be restarted as it left off but start money for both teams will be set to $5000 for that half, and round continued to be played until a winner is determined or a overtime situation occurs.</li>
-      <li>Or else for any other kind of interrupt the game caption should immediately inform to the admin.</li>
-    </ul>
-  </li>      
-</ul>
-<p><a class="btn btn-primary btn-lg" href="#" role="button">Register Here &raquo;</a></p>
+<img src="../../static/portal/img/cscover.jpg" alt="" class="img-fluid mt-5" style="height: 410px; width: 100%; display: block;">
+
+      <!-- <div class="row mb-2">
+        <div class="col-md-6">
+          <div class="card flex-md-row mb-4 box-shadow h-md-250">
+            <div class="card-body d-flex flex-column align-items-start">
+              <strong class="d-inline-block mb-2 text-primary">World</strong>
+              <h3 class="mb-0">
+                <a class="text-dark" href="#">Featured post</a>
+              </h3>
+              <div class="mb-1 text-muted">Nov 12</div>
+              <p class="card-text mb-auto">This is a wider card with supporting text below as a natural lead-in to additional content.</p>
+              <a href="#">Continue reading</a>
+            </div>
+            <img class="card-img-right flex-auto d-none d-md-block" data-src="holder.js/200x250?theme=thumb" alt="Card image cap">
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card flex-md-row mb-4 box-shadow h-md-250">
+            <div class="card-body d-flex flex-column align-items-start">
+              <strong class="d-inline-block mb-2 text-success">Design</strong>
+              <h3 class="mb-0">
+                <a class="text-dark" href="#">Post title</a>
+              </h3>
+              <div class="mb-1 text-muted">Nov 11</div>
+              <p class="card-text mb-auto">This is a wider card with supporting text below as a natural lead-in to additional content.</p>
+              <a href="#">Continue reading</a>
+            </div>
+            <img class="card-img-right flex-auto d-none d-md-block" data-src="holder.js/200x250?theme=thumb" alt="Card image cap">
+          </div>
+        </div>
+      </div>
+    </div> -->
+
+
+<h2 class="display-3 text-center mt-3">Counter Strike: Global Offensive</h2>
+<main role="main" class="container">
+      <div class="row">
+        <div class="col-md-8 blog-main">
+
+          <div class="blog-post">
+            <h4 class="blog-post-title">Competition Format</h4>
+
+            <ul>
+              <li>Team 5 vs 5</li>
+              <li>All the teams will be divided into different groups like Group A, B, C, D etc.</li>
+              <li>For the first round top 2 clans from each groups will go into the quarters.</li>
+            </ul>
+          </div><!-- /.blog-post -->
+
+          <div class="blog-post">
+            <h4 class="blog-post-title">General Information and Rules</h4>
+            <ul>
+              <li>Servers will be setup with Warmod, which require teams to ready up. Once both teams are ready, the game begins.</li>
+              <li>The game winning conditions is first to have a score of 16. Teams with the highest score at the end wins. In the event of a tie, the game will be reset and overtime will commence.</li>
+              <li>n Semi- Finals and Finals the match will contain of 3 maps, here the winner will be decided according to the number of maps win or in case to ties.</li>
+              <li>All teams must join their allocated server within 10 minutes of announcement or the team will forfeit.</li>
+              <li>Use of third party cheats or hacks to gain an unfair advantage is strictly not allowed.</li>
+              <li>Teams found to be using hacks or cheats will be disqualified from the competition.</li>
+            </ul>
+
+            </div><!-- /.blog-post -->
+
+          <div class="blog-post">
+          <h4 class="blog-post-title">Schedule and Bracket Release</h4>
+          <ul>
+            <li>Will be update on our facebook page  <a href="https://www.facebook.com/FragFestIIITA">FragFestIIITA</a></li>
+          </ul>
+
+
+          </div><!-- /.blog-post -->
+
+
+        <div class="blog-post">
+          <h4 class="blog-post-title">Map Format</h4>
+            <ul>
+              <li>All maps will be played in the game mode Bomb. The aim of the game is the Terrorists to plant the bomb at either A or B bombsite and successfully detonate the device OR kill all members of the enemy team.</li>
+              <li>The map pool consists of following maps: de_train, de_inferno, de_mirage, de_cobblestone, de_dust2, de_nuke, de_overpass, de_cache</li>
+              <li>
+                There will be a knife round to select the ingame teams i.e Counter terrorist or Terrorist.
+              </li>
+            </ul>
+          </div><!-- /.blog-post -->
+
+          <div class="blog-post">
+            <h4 class="blog-post-title">Server Specific Settings</h4>
+              <ul>
+                <li>Warmup time: 240 sec</li>
+                <li>Round time: 115 sec.</li>
+                <li>Bomb timer: 40 sec</li>
+                <li>Start Money: $800</li>
+              </ul>
+            </div><!-- /.blog-post -->
+
+            <div class="blog-post">
+              <h4 class="blog-post-title">Client Specific Settings</h4>
+                <ul>
+                  <li>The use of custom content including sprites, skins, score boards, crosshairs are not allowed.</li>
+                  <li>All content must be of the game provided by Valve.</li>
+                  <li>Team must set their ingame team names to the same name.</li>
+                  <li>Teams will be penalized if their rule is not followed.</li>
+                </ul>
+              </div><!-- /.blog-post -->
+
+              <div class="blog-post">
+                <h4 class="blog-post-title">Match Interrupt / Technical Issue Resolution</h4>
+                  <ul>
+                    <li>If the match is interrupted due to server crash or player connection issue in the first three rounds of play then the game admin will restart the server resetting the score to 0 and previous round / cash / score will be discarded.</li>
+                    <li>If this occurs after 3 rounds then the game will be restarted as it left off but start money for both teams will be set to $5000 for that half, and round continued to be played until a winner is determined or a overtime situation occurs.</li>
+                    <li>Or else for any other kind of interrupt the game caption should immediately inform to the admin.</li>
+                  </ul>
+                </div><!-- /.blog-post -->
+
+
+            <p><a class="btn btn-primary btn-lg " href="#" role="button">Register Here &raquo;</a></p>
+
+
+          </div>
+          <div class="col-md-4">
+            <img src="../../static/portal/img/Csgothumbnail.jpg" alt="" class="img-fluid m-3" style="height: 200px; width: 100%; display: block;">
+            <img src="../../static/portal/img/csgothumbnail2.jpg" alt="" class="img-fluid m-3" style="height: 200px; width: 100%; display: block;">
+            <img src="../../static/portal/img/csgothumbnail3.jpeg" alt="" class="img-fluid m-3" style="height: 200px; width: 100%; display: block;">
+            <img src="../../static/portal/img/csgothumbnail4.jpeg" alt="" class="img-fluid m-3" style="height: 200px; width: 100%; display: block;">
+            <img src="../../static/portal/img/csgothumbnail5.jpeg" alt="" class="img-fluid m-3" style="height: 200px; width: 100%; display: block;">
+
+          </div>
+
+
+
+
 {% endblock %}

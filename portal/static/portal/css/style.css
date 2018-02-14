@@ -9,7 +9,7 @@
 	-webkit-transform: rotate(30deg);
 	transform: rotate(30deg);
   }
-  
+
   .product-device::before {
 	position: absolute;
 	top: 10%;
@@ -20,7 +20,7 @@
 	background-color: rgba(255, 255, 255, .1);
 	border-radius: 5px;
   }
-  
+
   .product-device-2 {
 	top: -25%;
 	right: auto;
