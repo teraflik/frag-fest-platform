@@ -40,4 +40,5 @@ urlpatterns = [
     url(r'^event$', TemplateView.as_view(template_name="stat/event.html"), name='event'),
     url(r'^schedule$', TemplateView.as_view(template_name="stat/schedule.html"), name='schedule'),
     url(r'^cs_matches$', TemplateView.as_view(template_name="stat/cs_matches.html"), name='cs_matches'),
+    url(r'^organizers$', TemplateView.as_view(template_name="stat/organizers.html"), name='organizers'),
 ]
