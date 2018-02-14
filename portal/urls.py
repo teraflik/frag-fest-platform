@@ -30,10 +30,9 @@ urlpatterns = [
                                         'authentication_form': LoginForm}, name='login'),
     url(r'^logout/$', auth_views.logout, {'next_page': '/'}, name='logout'),
     url(r'^profile/$', views.profile, name='profile'),
-    
-    url(r'^team/(?P<team_id>\d+)/$', views.SingleTeam, name='single_team'),
-    url(r'^teams/$', views.TeamView.as_view(), name='teams'),
     url(r'^dashboard/', views.dashboard.as_view(), name='dashboard'),
+    url(r'^teams/$', views.team_list, name='team_list'),
+    url(r'^team/(?P<team_id>\d+)/$', views.SingleTeam, name='single_team'),
     url(r'^CSConfirm123/2/(?P<team_id>\d+)/4/21/(?P<user_id>\d+)/32/$', views.CSTeamConfirmView, name='CSTeamConfirmView'),
     url(r'^RemovePlayer123/32/21/(?P<team_id>\d+)/4/21/(?P<user_id>\d+)/5/$', views.RemovePlayer, name='RemovePlayer'),
     url(r'^DeleteTeam123/32/21/(?P<team_id>\d+)/$', views.DeleteTeam, name='DeleteTeam'),
