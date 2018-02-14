@@ -113,12 +113,20 @@ def profile(request):
         'email_confirmed': email_confirmed
     })
 
-class TeamView(View):
-    template_name = 'portal/teams.html'
+def create_team(request): #Needs work was class
+    form = TeamForm
+    model = Team
+    template_name = "pinax/teams/team_form.html"
 
-    def get(self, request):
-        cs = Team.objects.filter(tournament="CS")
-        return render(request, self.template_name, {'cs': cs})
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.creator = self.request.user
+        self.object.save()
+        return HttpResponseRedirect(self.get_success_url())
+
+def team_list(request):
+    teams = Team.objects.all()
+    return render(request, 'portal/team_list.html', {'teams': teams})
 
 def SingleTeam(request, team_id):
     template_name = 'portal/single_team.html'
