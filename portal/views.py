@@ -1,24 +1,21 @@
-from django.contrib.sites.shortcuts import get_current_site
+from django.core.mail import send_mail
+from django.db import transaction
 from django.shortcuts import render, redirect, render_to_response, get_object_or_404
+from django.template.loader import render_to_string
+from portal.tokens import account_activation_token
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.template.loader import render_to_string
+from django.utils.translation import ugettext as _
 from django.views.generic import View, FormView, ListView
-from portal.tokens import account_activation_token
-from django.contrib import messages
-from django.core.mail import send_mail
-from portal.models import MyUser, Team, Profile, Membership, TeamNotification
-from django.contrib.auth import authenticate, login, update_session_auth_hash
 
+from django.contrib.sites.shortcuts import get_current_site
+from django.contrib.auth import authenticate, login, update_session_auth_hash
+from django.contrib import messages
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.decorators import login_required
-from django.db import transaction
-from django.utils.translation import ugettext as _
 
-from portal.forms import SignUpForm, TeamForm, ProfileForm, forgetpass
-def index(request):
-    template_name = 'portal/index.html'
-    return render(request, template_name)
+from .models import MyUser, Team, Profile, Membership, TeamNotification
+from .forms import SignUpForm, TeamForm, ProfileForm, forgetpass
 
 @login_required
 def send_verification_email(request, user):
@@ -112,10 +109,6 @@ def profile(request):
         'email_confirmed': email_confirmed
     })
 
-class TeamListView(ListView):
-    model = Team
-    context_object_name = "teams"
-    template_name = "portal/team_list.html"
 
 @login_required
 def manage_team(request):
@@ -178,7 +171,6 @@ def DeleteTeam(request, team_id):
     else:
         return redirect('portal:dashboard')
 
-
 def RemovePlayer(request,team_id,user_id):
     team_id1=team_id
     team1=Team.objects.get(id=team_id)
@@ -189,3 +181,12 @@ def RemovePlayer(request,team_id,user_id):
         return redirect('portal:dashboard')
 
     return redirect('portal:index')
+
+class TeamListView(ListView):
+    model = Team
+    context_object_name = "teams"
+    template_name = "portal/team_list.html"
+
+def index(request):
+    template_name = 'portal/index.html'
+    return render(request, template_name)
