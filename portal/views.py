@@ -47,7 +47,7 @@ def signup(request):
             login(request, user)
             send_verification_email(request, user)
             messages.success(request, _('Successfully registered! We have sent you a verification email.'))
-            return redirect('portal:home')
+            return redirect('portal:index')
     else:
         form = SignUpForm()
     return render(request, 'portal/signup.html', {'form': form})
@@ -113,12 +113,22 @@ def profile(request):
         'email_confirmed': email_confirmed
     })
 
-class TeamView(View):
-    template_name = 'portal/teams.html'
 
-    def get(self, request):
-        cs = Team.objects.filter(tournament="CS")
-        return render(request, self.template_name, {'cs': cs})
+
+def create_team(request): #Needs work was class
+    form = TeamForm
+    model = Team
+    template_name = "portal/team_form.html"
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.creator = self.request.user
+        self.object.save()
+        return HttpResponseRedirect(self.get_success_url())
+
+def team_list(request):
+    teams = Team.objects.all()
+    return render(request, 'portal/team_list.html', {'teams': teams})
 
 def SingleTeam(request, team_id):
     template_name = 'portal/single_team.html'
@@ -150,7 +160,7 @@ class dashboard(View):
                 captain=team1.team_head.username
                 notifications = TeamNotification.objects.filter(team=team1)
                 players = Profile.objects.filter(team_cs=team1)
-                count=players.count();
+                count=players.count()
                 if notifications.count()==0:
                     notifications=None
 
@@ -264,3 +274,13 @@ def RemovePlayer(request,team_id,user_id):
         return redirect('portal:dashboard')
 
     return redirect('portal:index')
+
+
+def fifa(request):
+    template_name = 'portal/fifa.html'
+    return render(request, template_name)
+
+
+def csgo(request):
+    template_name = 'portal/csgo.html'
+    return render(request, template_name)

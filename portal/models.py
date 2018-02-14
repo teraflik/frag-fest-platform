@@ -9,12 +9,16 @@ from django.utils.translation import ugettext_lazy as _
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils import timezone
+from slugify import slugify
 from .managers import UserManager
 
 def avatar_upload(instance, filename):
     ext = filename.split(".")[-1]
     filename = "%s.%s" % (uuid.uuid4(), ext)
     return os.path.join("avatars", filename)
+
+def create_slug(name):
+    return slugify(name)[:50]
 
 class MyUser(AbstractUser):
     """User model."""
@@ -54,6 +58,7 @@ class Team(models.Model):
     def save(self):
         if not self.id:
             self.slug = create_slug(self.name)
+        self.full_clean()
         self.save()
 
     def lock(self):
@@ -61,13 +66,43 @@ class Team(models.Model):
             raise ValueError('Team is already locked!')
         self.locked = 1
 
+    def can_leave(self, user):
+        # owners can't leave at the moment
+        role = self.role_for(user)
+        return role == BaseMembership.ROLE_MEMBER
+
     def can_apply(self, user):
         state = self.state_for(user)
-        return state is None
+        return not locked and state is None
     
     @property
     def applicants(self):
         return self.memberships.filter(state=BaseMembership.STATE_APPLIED)
+    
+    @property
+    def rejections(self):
+        return self.memberships.filter(state=BaseMembership.STATE_REJECTED)
+    
+    @property
+    def acceptances(self):
+        return self.memberships.filter(state=BaseMembership.STATE_ACCEPTED)
+    
+    @property
+    def members(self):
+        return self.acceptances.filter(role=BaseMembership.ROLE_MEMBER)
+    
+    @property
+    def owners(self):
+        return self.acceptances.filter(role=BaseMembership.ROLE_OWNER)
+
+    def is_member(self, user):
+        return self.members.filter(user=user).exists()
+
+    def is_owner(self, user):
+        return self.owners.filter(user=user).exists()
+
+    def is_on_team(self, user):
+        return self.acceptances.filter(user=user).exists()
 
     def for_user(self, user):
         try:
@@ -90,7 +125,7 @@ class Team(models.Model):
 
 class Membership(models.Model):
     STATE_APPLIED = "applied"
-    STATE_REJECTED = "rejected"
+    STATE_REJECTED = "rejected" #When team rejects an application
     STATE_ACCEPTED = "accepted"
 
     ROLE_MEMBER = "member"
