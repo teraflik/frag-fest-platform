@@ -9,7 +9,7 @@ from django.dispatch import receiver
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
-from .managers import UserManager, PlayerManager
+from .managers import UserManager
 
 def avatar_upload(instance, filename):
     ext = filename.split(".")[-1]
@@ -190,7 +190,6 @@ class Profile(models.Model):
     location = models.CharField(max_length=200, default='India', blank=True)
     avatar = models.ImageField(upload_to="profile_image", null=True, blank=True)
     is_subscribed = models.BooleanField(default=True)
-
 
     def __str__(self):
         return self.user.email

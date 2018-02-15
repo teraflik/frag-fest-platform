@@ -16,6 +16,8 @@ from django.contrib import messages
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.decorators import login_required
 from social_core.backends.steam import SteamOpenId
+from social_core.backends.open_id import OpenIdAuth
+from social_auth.models import UserSocialAuth
 
 from .models import MyUser, Team, Profile, Membership
 from .forms import SignUpForm, TeamForm, ProfileForm, forgetpass
@@ -82,6 +84,8 @@ messages.success(request, 'Your password was successfully sent!')'''
 @login_required
 @transaction.atomic
 def profile(request):
+    #steam_id = request.user.social_auth.get(provider='steam').uid
+    steam_id = UserSocialAuth.get_username(request.user)
     email_confirmed = request.user.profile.email_confirmed
     if request.method == 'POST':
         if 'updateProfile' in request.POST:
@@ -109,7 +113,8 @@ def profile(request):
     return render(request, 'portal/profile.html', {
         'profile_form': profile_form,
         'password_form': password_form,
-        'email_confirmed': email_confirmed
+        'email_confirmed': email_confirmed,
+        'steam_id': steam_id,
     })
 
 

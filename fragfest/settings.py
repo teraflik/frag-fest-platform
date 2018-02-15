@@ -106,8 +106,8 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 AUTHENTICATION_BACKENDS = (
-    'social_core.backends.steam.SteamOpenId',
     'django.contrib.auth.backends.ModelBackend',
+    'social_core.backends.steam.SteamOpenId',
 )
 
 SOCIAL_AUTH_STEAM_API_KEY = '1DDC31D9895EECD3E118159A1FB3FE3B'
