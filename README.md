@@ -4,7 +4,8 @@
 ```
 Activate virtual environment  
 git clone https://github.com/Frag-Fest/event-platform/  
-pip install -r requirements.txt  
+pip install -r requirements.txt 
+pip install social-auth-app-django
 python manage.py runserver  
 ``` 
 And, there you go!
