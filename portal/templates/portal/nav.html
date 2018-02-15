@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+<nav class="navbar navbar-expand-lg navbar-dark bg-danger">
 	<div class="container">
 		<div class="navbar-header">
 			<a class="nav-btn btn-dark btn-lg accordion-toggle pull-left" title="Follow Us" role="tab" id="social-collapse" data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne"></a>
@@ -17,18 +17,17 @@
 				<li class="nav-item">
 					<a class="nav-link" href="{% url 'portal:event' %}">The Event</a>
 				</li>
-				
 				{% comment %} <li class="nav-item">
 					<a class="nav-link" href="{% url 'portal:team_list' %}">Registered Teams</a>
 				</li>
 				<li class="nav-item">
 					<a class="nav-link" href="{% url 'portal:dashboard' %}">Team Dashboard</a>
 				</li> {% endcomment %}
+			</ul>
+			<ul class="navbar-nav ml-auto">
 				{% if user.is_authenticated %}
 				<li class="nav-item">
-					<a class="nav-link" href="{% url 'portal:profile'  %}">
-						{% if user.profile.username %}{{ user.profile.username }} {% else %} Profile {% endif %}
-					</a>
+					<a class="nav-link" href="{% url 'portal:profile'  %}">Profile</a>
 				</li>
 				<li class="nav-item">
 					<a class="nav-link" href="{% url 'portal:logout' %}">Logout</a>
@@ -42,26 +41,18 @@
 				</li>
 				{% endif %}
 			</ul>
-				<ul class="navbar-nav ml-auto">
-					<li class="nav-item"><a class="nav-link" target="blank" href="https://www.facebook.com/FragFestIIITA/"><i class="fa fa-facebook"></i></a></li>
-					<li class="nav-item"><a class="nav-link" target="blank" href="https://twitter.com/FragFestIIITA/"><i class="fa fa-twitter"></i></a></li>
-					<li class="nav-item"><a class="nav-link" target="blank" href="https://www.youtube.com/channel/UCsuoNyw1L8W58mXAsXZ90ZA?"><i class="fa fa-youtube-play"></i></a></li>
-					<li class="nav-item"><a class="nav-link" target="blank" href="https://plus.google.com/+FragFest"><i class="fa fa-google-plus"></i></a></li>
-					<li class="nav-item"><a class="nav-link" target="blank" href="https://steamcommunity.com/groups/Frag-Fest"><i class="fa fa-steam"></i></a></li>
-			</ul>
 		</div>
 	</div>
 </nav>
 <aside id="accordion" class="social text-vertical-center">
 	<div class="accordion-social">
 		<ul class="panel-collapse collapse in nav nav-stacked" role="tabpanel" aria-labelledby="social-collapse" id="collapseOne">
-			<li><a href="https://www.facebook.com/soldierupdesigns" target="_blank"><i class="fa fa-lg fa-facebook"></i></a></li>
-			<li><a href="https://twitter.com/soldierupdesign" target="_blank"><i class="fa fa-lg fa-twitter"></i></a></li>
-			<li><a href="https://www.plus.google.com/+soldierupdesigns" target="_blank"><i class="fa fa-lg fa-google-plus"></i></a></li>
-			<li><a href="https://github.com/blayderunner123" target="_blank"><i class="fa fa-lg fa-github"></i></a></li>
-			<li><a href="https://linkedin.com/in/blayderunner123" target="_blank"><i class="fa fa-lg fa-linkedin"></i></a></li>
-			<li><a href="skype:live:soldierupdesigns?call"><i class="fa fa-lg fa-skype" target="_blank"></i></a></li>
-			<li><a href="http://stackexchange.com/users/4992378/blayderunner123" target="_blank"><i class="fa fa-lg fa-stack-exchange"></i></a></li>
+			<li><a href="https://www.facebook.com/FragFestIIITA/" target="_blank"><i class="fa fa-lg fa-facebook"></i></a></li>
+			<li><a href="https://twitter.com/FragFestIIITA/" target="_blank"><i class="fa fa-lg fa-twitter"></i></a></li>
+			<li><a href="https://www.youtube.com/channel/UCsuoNyw1L8W58mXAsXZ90ZA?" target="_blank"><i class="fa fa-lg fa-youtube-play"></i></a></li>
+			<li><a href="https://plus.google.com/+FragFest" target="_blank"><i class="fa fa-lg fa-google-plus"></i></a></li>
+			<li><a href="https://www.twitch.tv/fragfestiiita//" target="_blank"><i class="fa fa-lg fa-twitch"></i></a></li>
+			<li><a href="https://steamcommunity.com/groups/Frag-Fest" target="_blank"><i class="fa fa-lg fa-steam"></i></a></li>
 		</ul>
 	</div>
 </aside>
