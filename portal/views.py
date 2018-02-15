@@ -209,7 +209,7 @@ class TeamListView(ListView):
     template_name = "portal/team_list.html"
 
 def index(request):
-    template_name = 'portal/index.html'
+    template_name = 'stat/index.html'
     return render(request, template_name)
 
 def steam_connect(request):
