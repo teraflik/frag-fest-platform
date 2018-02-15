@@ -2,6 +2,7 @@ import requests
 import json
 from django.core.mail import send_mail
 from django.db import transaction
+from django.http import Http404
 from django.shortcuts import render, redirect, render_to_response, get_object_or_404
 from django.template.loader import render_to_string
 from portal.tokens import account_activation_token
@@ -17,7 +18,6 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.decorators import login_required
 from social_core.backends.steam import SteamOpenId
 from social_core.backends.open_id import OpenIdAuth
-from social_auth.models import UserSocialAuth
 
 from .models import MyUser, Team, Profile, Membership
 from .forms import SignUpForm, TeamForm, ProfileForm, forgetpass
@@ -84,9 +84,10 @@ messages.success(request, 'Your password was successfully sent!')'''
 @login_required
 @transaction.atomic
 def profile(request):
-    #steam_id = request.user.social_auth.get(provider='steam').uid
-    steam_id = UserSocialAuth.get_username(request.user)
+    steam_id = request.user.social_auth.get(provider='steam').uid
+    steam = request.user.social_auth.get(provider='steam').extra_data['player'] #All player details.
     email_confirmed = request.user.profile.email_confirmed
+
     if request.method == 'POST':
         if 'updateProfile' in request.POST:
             profile_form = ProfileForm(request.POST, instance=request.user.profile)
@@ -115,6 +116,7 @@ def profile(request):
         'password_form': password_form,
         'email_confirmed': email_confirmed,
         'steam_id': steam_id,
+        'steam': steam,
     })
 
 
@@ -156,8 +158,8 @@ def dashboard(request):
         message = 'You need to be logged in to access your Team Dashboard.'
         return render(request, 'portal/no_access.html', {'title': 'Team Dashboard', 'message': message})
     
-    if request.user.profile.get_steam_id is None:
-        message = 'You need to be signed into Steam to join a Team.'
+    if not request.user.profile.steam_connected:
+        message = 'You need to be signed-in to Steam to join a Team.'
         return render(request, 'portal/no_access.html', {'title': 'Steam Error', 'message': message})
 
     memberships = request.user.memberships.all()
@@ -209,3 +211,11 @@ class TeamListView(ListView):
 def index(request):
     template_name = 'portal/index.html'
     return render(request, template_name)
+
+def steam_connect(request):
+    if request.user.is_authenticated():
+        request.user.steam_connected = 1
+        messages.success(request, _('Steam authentication successful!'))
+        return redirect('portal:profile')
+    else:
+        raise Http404("Invalid Request!")

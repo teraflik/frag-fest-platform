@@ -61,7 +61,7 @@ class Team(models.Model):
 
     def can_apply(self, user):
         state = self.state_for(user)
-        return not self.locked and state is None
+        return not self.locked and state is None and user.profile.valid()
     
     @property
     def applicants(self):
@@ -108,8 +108,8 @@ class Team(models.Model):
         if membership:
             return membership.role
 
-    def no_of_players(self):
-        return self.players.count()
+    def size(self):
+        return self.acceptances.count()
 
 class Membership(models.Model):
     STATE_APPLIED = "applied"
@@ -181,24 +181,18 @@ class Membership(models.Model):
         signals.removed_membership.send(
             sender=Membership, team=self.team, user=self.user, invitee=self.invitee, by=by)
 
-    
 class Profile(models.Model):
     user = models.OneToOneField(MyUser, on_delete=models.CASCADE)
     email_confirmed = models.BooleanField(default=False)
+    steam_connected = models.BooleanField(default=False)
     display_name = models.CharField(max_length=255, blank=True)
-    steam_id = models.CharField(max_length=200, blank=True)
-    location = models.CharField(max_length=200, default='India', blank=True)
-    avatar = models.ImageField(upload_to="profile_image", null=True, blank=True)
     is_subscribed = models.BooleanField(default=True)
 
     def __str__(self):
         return self.user.email
 
-    @property
-    def get_steam_id(self):
-        if self.steam_id is not None and self.steam_id != "":
-            return self.steam_id
-        return None
+    def valid(self):
+        return self.steam_connected and self.email_confirmed
 
 @receiver(post_save, sender=MyUser)
 def update_user_profile(sender, instance, created, **kwargs):

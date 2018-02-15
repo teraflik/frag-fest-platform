@@ -48,11 +48,9 @@ class ProfileForm(forms.ModelForm):
     """Update Profile related fields on edit profile page."""
     class Meta:
         model = Profile
-        fields = ('avatar', 'display_name', 'location', 'steam_id',)
+        fields = ('display_name',)
         widgets = {
-            'username': forms.TextInput(attrs={'placeholder': 'Display name does not need to be unique.', 'class': 'form-control'}),
-            'steam_id': forms.TextInput(attrs={'class': 'form-control'}),
-            'location': forms.TextInput(attrs={'class': 'form-control'}),
+            'display_name': forms.TextInput(attrs={'placeholder': 'Display name does not need to be unique.', 'class': 'form-control'}),
         }
 
 class forgetpass(forms.Form):
