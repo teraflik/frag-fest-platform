@@ -226,7 +226,3 @@ def steam_connect(request):
         return redirect('portal:profile')
     else:
         raise Http404("Invalid Request!")
-
-def terms(request):
-    template_name = 'portal/terms.html'
-    return render(request, template_name)

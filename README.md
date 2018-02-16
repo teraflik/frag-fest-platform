@@ -7,20 +7,22 @@
 - [x] Profile View and Edit  
 - [x] Frontend - Home, CS:GO, FIFA, All Games, Organizers  
 - [ ] Front-end - The Event, Schedule, Sponsors, Sponsor-Strip, Privacy Policy  
-- [ ] Team Dashboard (Join, or Create)  
-- [ ] Team Dashboard (Edit Description, Remove Player, Join Notification)  
+- [ ] Back-end - Team Dashboard (Join, or Create)  
+- [ ] Back-end - Team Dashboard (Edit Description, Remove Player, Join Notification)  
 
 ### To run on your system
 
 - Install Python 3.6
 - (for windows) Add Python installation to your PATH
+- Run the following in terminal:
 
 ```
-cd frag-fest-platform
-pip install -r requirements.txt
-python manage.py collectstatic
-python manage.py migrate
-python manage.py runserver
+    cd frag-fest-platform
+    mv .env.EXAMPLE .env
+    pip install -r requirements.txt
+    python manage.py collectstatic
+    python manage.py migrate
+    python manage.py runserver
 ```
 
 Navigate to 127.0.0.1:8000 in your browser. Linux users may need to use `python3` instead of `python`.
@@ -36,10 +38,10 @@ Navigate to 127.0.0.1:8000 in your browser. Linux users may need to use `python3
 ### To update the webserver (Not applicable)
 
 ```
-source bin/activate
-cd frag-fest-platform
-git pull origin master
-python manage.py collectstatic
-python manage.py migrate
-sudo supervisorctl restart urban-train
+    source bin/activate
+    cd frag-fest-platform
+    git pull origin master
+    python manage.py collectstatic
+    python manage.py migrate
+    sudo supervisorctl restart urban-train
 ```
