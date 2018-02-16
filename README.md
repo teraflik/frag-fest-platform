@@ -10,7 +10,30 @@
 - [ ] Team Dashboard (Join, or Create)  
 - [ ] Team Dashboard (Edit Description, Remove Player, Join Notification)  
 
-### To update the webserver with latest commit
+### To run on your system
+
+- Install Python 3.6
+- (for windows) Add Python installation to your PATH
+
+```
+cd frag-fest-platform
+pip install -r requirements.txt
+python manage.py collectstatic
+python manage.py migrate
+python manage.py runserver
+```
+
+Navigate to 127.0.0.1:8000 in your browser. Linux users may need to use `python3` instead of `python`.
+
+### Contributing to front-end
+
+ - You can open the folder in a text editor like Sublime-text, Atom, Visual Studio Code, etc.
+ - To make changes in front-end, make sure you first go through [Django Templating Language] (https://docs.djangoproject.com/en/1.11/ref/templates/language/) and have a knowledge of [Bootstrap v4](https://getbootstrap.com/).
+ - Navigate to `portal/templates/..` to find out the template to modify.
+ - You can put all static files to `portal/static/portal/...` relevant directory.
+
+
+### To update the webserver (Not applicable)
 
 ```
 source bin/activate
