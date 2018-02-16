@@ -33,6 +33,7 @@ urlpatterns = [
     url(r'^steam_connect/$', views.steam_connect, name='steam_connect'),
     url(r'^team/(?P<team_id>\d+)/$', views.SingleTeam, name='single_team'),
     url(r'^profile$', views.profile, name='profile'),
+    url(r'^terms$', views.terms, name='terms'),
     url(r'^dashboard', views.dashboard, name='dashboard'),
     url(r'^teams$', views.TeamListView.as_view(), name='team_list'),
     url(r'^other_games$', TemplateView.as_view(template_name="stat/other_games.html"), name='other_games'),

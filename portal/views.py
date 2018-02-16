@@ -161,7 +161,7 @@ def dashboard(request):
     if not request.user.is_authenticated():
         message = 'You need to be logged in to access your Team Dashboard.'
         return render(request, 'portal/no_access.html', {'title': 'Team Dashboard', 'message': message})
-    
+
     if not request.user.profile.steam_connected:
         message = 'You need to be signed-in to Steam to join a Team.'
         return render(request, 'portal/no_access.html', {'title': 'Steam Error', 'message': message})
@@ -226,3 +226,7 @@ def steam_connect(request):
         return redirect('portal:profile')
     else:
         raise Http404("Invalid Request!")
+
+def terms(request):
+    template_name = 'portal/terms.html'
+    return render(request, template_name)
