@@ -17,7 +17,7 @@ from django.conf.urls import url
 
 from django.contrib.auth import views as auth_views
 from django.views.generic import TemplateView
-from portal.forms import LoginForm
+from .forms import LoginForm
 from . import views
 
 app_name = 'portal'
