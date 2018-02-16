@@ -70,7 +70,7 @@ def activate(request, uidb64, token):
         messages.success(request, _('Email already verified!'))
     else:
         messages.error(request, _('Email verification error!'))
-    return render(request, 'portal/index.html')
+    return render(request, 'stat/index.html')
 
 '''
 subject = 'Password change'
@@ -84,8 +84,12 @@ messages.success(request, 'Your password was successfully sent!')'''
 @login_required
 @transaction.atomic
 def profile(request):
-    steam_id = request.user.social_auth.get(provider='steam').uid
-    steam = request.user.social_auth.get(provider='steam').extra_data['player'] #All player details.
+    if request.user.profile.steam_connected:
+        steam_id = request.user.social_auth.get(provider='steam').uid
+        steam = request.user.social_auth.get(provider='steam').extra_data['player'] #All player details.
+    else:
+        steam_id = None
+        steam = None
     email_confirmed = request.user.profile.email_confirmed
 
     if request.method == 'POST':
@@ -214,7 +218,10 @@ def index(request):
 
 def steam_connect(request):
     if request.user.is_authenticated():
-        request.user.steam_connected = 1
+        user = request.user
+        #user.refresh_from_db()  # load the profile instance created by the signal
+        user.profile.steam_connected = True
+        user.save()
         messages.success(request, _('Steam authentication successful!'))
         return redirect('portal:profile')
     else:

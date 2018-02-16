@@ -3,3 +3,4 @@ venv
 *.sqlite3
 .vscode
 .ini
+/static

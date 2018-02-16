@@ -8,7 +8,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = config('SECRET_KEY')
 
 DEBUG = config('DEBUG', default=False, cast=bool)
-TEMPLATE_DEBUG = DEBUG
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=Csv())
 
@@ -37,6 +36,7 @@ EMAIL_MAIN = config('EMAIL_MAIN', default='noreply@frag-fest.in')
 #SteamOpenId Authentication
 SOCIAL_AUTH_STEAM_API_KEY = config('SOCIAL_AUTH_STEAM_API_KEY')
 SOCIAL_AUTH_STEAM_EXTRA_DATA = ['player']
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/steam_connect/'
 
 # Application definition
 INSTALLED_APPS = [
@@ -71,6 +71,7 @@ TEMPLATES = [
         'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
+            'debug': DEBUG,
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',

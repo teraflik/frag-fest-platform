@@ -30,7 +30,7 @@ urlpatterns = [
     url(r'^login/$', auth_views.login, {'template_name': 'portal/login.html',
                                         'authentication_form': LoginForm}, name='login'),
     url(r'^logout/$', auth_views.logout, {'next_page': '/'}, name='logout'),
-    url(r'^steam/connect/$', views.steam_connect, name='steam_connect'),
+    url(r'^steam_connect/$', views.steam_connect, name='steam_connect'),
     url(r'^team/(?P<team_id>\d+)/$', views.SingleTeam, name='single_team'),
     url(r'^profile$', views.profile, name='profile'),
     url(r'^dashboard', views.dashboard, name='dashboard'),
