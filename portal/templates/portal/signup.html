@@ -51,7 +51,7 @@
     </div>
     <div class="custom-control custom-checkbox">
         {{ form.agree_terms }}
-        <label class="custom-control-label" for="{{ form.agree_terms.id_for_label }}">I agree to the <a href="#">Terms &amp; Conditions.</a></label>
+        <label class="custom-control-label" for="{{ form.agree_terms.id_for_label }}">I agree to the <a href="{% url 'portal:terms' %}">Terms &amp; Conditions.</a></label>
         <div class="invalid-feedback d-block">
             {{ form.agree_terms.errors }}
         </div>
