@@ -28,7 +28,7 @@ Navigate to 127.0.0.1:8000 in your browser. Linux users may need to use `python3
 ### Contributing to front-end
 
  - You can open the folder in a text editor like Sublime-text, Atom, Visual Studio Code, etc.
- - To make changes in front-end, make sure you first go through [Django Templating Language] (https://docs.djangoproject.com/en/1.11/ref/templates/language/) and have a knowledge of [Bootstrap v4](https://getbootstrap.com/).
+ - To make changes in front-end, make sure you first go through [Django Templating Language](https://docs.djangoproject.com/en/1.11/ref/templates/language/) and have a knowledge of [Bootstrap v4](https://getbootstrap.com/).
  - Navigate to `portal/templates/..` to find out the template to modify.
  - You can put all static files to `portal/static/portal/...` relevant directory.
 
