@@ -35,13 +35,13 @@ Navigate to 127.0.0.1:8000 in your browser. Linux users may need to use `python3
  - You can put all static files to `portal/static/portal/...` relevant directory.
 
 
-### To update the webserver (Not applicable)
+### Updating webserver
 
 ```
-    source bin/activate
-    cd frag-fest-platform
-    git pull origin master
-    python manage.py collectstatic
-    python manage.py migrate
-    sudo supervisorctl restart urban-train
+source bin/activate
+cd frag-fest-platform
+git pull origin master
+python manage.py collectstatic
+python manage.py migrate
+sudo supervisorctl restart frag-fest
 ```
