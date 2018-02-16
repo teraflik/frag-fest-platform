@@ -26,10 +26,10 @@ DATABASES = {
 
 #Email settings
 EMAIL_BACKEND = config('EMAIL_BACKEND', default='django.core.mail.backends.console.EmailBackend')
-EMAIL_HOST = config('EMAIL_HOST')
-EMAIL_PORT = config('EMAIL_PORT', cast=int)
-EMAIL_HOST_USER = config('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+EMAIL_HOST = config('EMAIL_HOST', default='smtp.gmail.com')
+EMAIL_PORT = config('EMAIL_PORT', default='25', cast=int)
+EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='no')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='MyS3CR3T')
 EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
 EMAIL_MAIN = config('EMAIL_MAIN', default='noreply@frag-fest.in')
 
