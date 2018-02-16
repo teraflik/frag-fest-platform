@@ -1,2 +1,4 @@
 Django==1.11.6
-pytz==2017.2
+psycopg2
+python-decouple
+dj-database-url

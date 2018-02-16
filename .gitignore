@@ -2,4 +2,4 @@ venv
 *.pyc
 *.sqlite3
 .vscode
-avatars/
+.ini
