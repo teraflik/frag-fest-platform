@@ -63,7 +63,7 @@ def activate(request, uidb64, token):
     if user is not None and account_activation_token.check_token(user, token):
         user.profile.email_confirmed = True
         user.save()
-        login(request, user)
+        login(request, user, backend='django.contrib.auth.backends.ModelBackend')
         messages.success(request, _('Email verified successfully.'))
         return redirect('portal:index')
     elif user is not None and user.profile.email_confirmed == True:

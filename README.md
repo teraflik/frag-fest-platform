@@ -1,11 +1,20 @@
-# event-platform
+# Frag-Fest Event Platform
 
-### Setting up on your local machine 
+## Things to complete
+[x] Register and Login for users
+[x] Sign in with Steam
+[x] Profile View and Edit
+[x] Frontend - Home, CS:GO, FIFA, All Games, Organizers
+[ ] Front-end - The Event, Schedule, Sponsors, Sponsor-Strip, Privacy Policy 
+[ ] Team Dashboard (Join, or Create)
+[ ] Team Dashboard (Edit Description, Remove Player, Join Notification)
+
+### To update the webserver with latest commit
 ```
-Activate virtual environment  
-git clone https://github.com/Frag-Fest/event-platform/  
-pip install -r requirements.txt 
-pip install social-auth-app-django
-python manage.py runserver  
-``` 
-And, there you go!
+source bin/activate
+cd urban-train
+git pull origin master
+python manage.py collectstatic
+python manage.py migrate
+sudo supervisorctl restart urban-train
+```

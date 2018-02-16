@@ -3,10 +3,11 @@
 {% block content %}
 
 <div class="pt-md-5 pb-md-4">
-    <h2>Profile</h2>
+    <h2>Profile <small class="text-muted">{{ user.email }}</small></h2>
 </div>
 
 <div class="row">
+  {% if user.profile.steam_connected %}
   <div class="col-md-2">
     <div class="card">
       <img class="card-img-top" src="{{ steam.avatarfull }}" alt="Profile Image">
@@ -16,18 +17,25 @@
     <div class="card">
       <div class="card-body">
         <h5 class="card-title">{{ steam.personaname }}</h5>
-        <h6 class="card-subtitle mb-2 text-muted">{{ steam.profileurl }}</h6>
+        <h6 class="card-subtitle mb-2 text-muted"><a href="{{ steam.profileurl }}">{{ steam.profileurl }}</a></h6>
       </div>
       <ul class="list-group list-group-flush">
         <li class="list-group-item">{{ steam.realname }}</li>
-        <li class="list-group-item">{{ user.email }}</li>
         <li class="list-group-item">{{ steam_id }}</li>
-        {% if not user.profile.steam_connected %}
-        <li class="list-group-item"> <small class="text-muted">SteamID is required to signup for CS:GO. </small>
-        {% endif %}
       </ul>
     </div>
   </div>
+  {% else %}
+  <div class="col-md-6 my-auto mx-auto text-center">
+    <div class="px-3 py-3 pt-md-5 pb-md-4">
+      <a href="{% url 'social:begin' 'steam' %}">
+          <img src="https://steamcommunity-a.akamaihd.net/public/images/signinthroughsteam/sits_01.png" width="180" height="35" border="0">
+      </a>
+    </div>
+    <small class="text-danger">SteamID is required to signup for CS:GO. </small>
+  </div>    
+  {% endif %}
+
   <div class="col-md-4 offset-md-2">
     <form action="#" method="POST" class="needs-validation" novalidate>{% csrf_token %}
       <div class="mb-3">
@@ -55,9 +63,6 @@
       {% endif %}
     </div>
     <div class="text-right">
-      <a href="{% url 'social:begin' 'steam' %}">
-        <img src="https://steamcommunity-a.akamaihd.net/public/images/signinthroughsteam/sits_01.png" width="180" height="35" border="0">
-      </a>
       <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#passwordModal">
         Change Password 
       </button>
