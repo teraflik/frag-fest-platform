@@ -1,58 +1,42 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-danger">
+<nav class="navbar navbar-expand-md navbar-dark bg-danger">
 	<div class="container">
-		<div class="navbar-header">
-			<a class="nav-btn btn-dark btn-lg accordion-toggle pull-left" title="Follow Us" role="tab" id="social-collapse" data-toggle="collapse" data-parent="#accordion" data-target="#accordion" aria-expanded="false" aria-controls="accordion"></a>
-		</div>
-		
-		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+		<a class="navbar-brand mx-auto" href="{% url 'portal:index' %}">Frag-Fest' 18</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
 		</button>
 		
-		<div class="collapse navbar-collapse" id="navbarColor01">
-			<ul class="navbar-nav mr-auto">
-				<a class="navbar-brand" href="#">Frag-Fest' 18</a>
-				<li class="nav-item">
-					<a class="nav-link" href="{% url 'portal:index' %}">Home</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="{% url 'portal:event' %}">The Event</a>
-				</li>
-				{% comment %} <li class="nav-item">
-					<a class="nav-link" href="{% url 'portal:team_list' %}">Registered Teams</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="{% url 'portal:dashboard' %}">Team Dashboard</a>
-				</li> {% endcomment %}
+		<div class="navbar-collapse collapse" id="mainNavbar">
+			<ul class="navbar-nav">
+				<li class="nav-item"><a class="nav-link" href="{% url 'portal:index' %}">Home</a></li>
+				<!-- <li class="nav-item"><a class="nav-link" href="{% url 'portal:event' %}">The Event</a></li> -->
+				<li class="nav-item"><a class="nav-link" href="{% url 'portal:csgo' %}">CS:GO</a></li>
+				<li class="nav-item"><a class="nav-link" href="{% url 'portal:fifa' %}">FIFA</a></li>
+				{% comment %}
+				<li class="nav-item"><a class="nav-link" href="{% url 'portal:team_list' %}">Registered Teams</a></li>
+				<li class="nav-item"><a class="nav-link" href="{% url 'portal:dashboard' %}">Team Dashboard</a></li>
+				{% endcomment %}
 			</ul>
+			
 			<ul class="navbar-nav ml-auto">
 				{% if user.is_authenticated %}
-				<li class="nav-item">
-					<a class="nav-link" href="{% url 'portal:profile'  %}">Profile</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="{% url 'portal:logout' %}">Logout</a>
-				</li>
+				<li class="nav-item"><a class="nav-link" href="{% url 'portal:profile'  %}">Profile</a></li>
+				<li class="nav-item"><a class="nav-link" href="{% url 'portal:logout' %}">Logout</a></li>
 				{% else %}
-				<li class="nav-item">
-					<a class="nav-link" href="{% url 'portal:signup' %}">Register</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="{% url 'portal:login' %}">Login</a>
-				</li>
+				<li class="nav-item"><a class="nav-link" href="{% url 'portal:signup' %}">Register</a></li>
+				<li class="nav-item"><a class="nav-link" href="{% url 'portal:login' %}">Login</a></li>
 				{% endif %}
 			</ul>
 		</div>
 	</div>
 </nav>
-<aside id="accordion" class="social text-vertical-center">
-	<div class="accordion-social">
-		<ul class="panel-collapse collapse in nav nav-stacked" role="tabpanel" aria-labelledby="social-collapse" id="collapseOne">
-			<li><a href="https://www.facebook.com/FragFestIIITA/" target="_blank"><i class="fa fa-lg fa-facebook"></i></a></li>
-			<li><a href="https://twitter.com/FragFestIIITA/" target="_blank"><i class="fa fa-lg fa-twitter"></i></a></li>
-			<li><a href="https://www.youtube.com/channel/UCsuoNyw1L8W58mXAsXZ90ZA?" target="_blank"><i class="fa fa-lg fa-youtube-play"></i></a></li>
-			<li><a href="https://plus.google.com/+FragFest" target="_blank"><i class="fa fa-lg fa-google-plus"></i></a></li>
-			<li><a href="https://www.twitch.tv/fragfestiiita//" target="_blank"><i class="fa fa-lg fa-twitch"></i></a></li>
-			<li><a href="https://steamcommunity.com/groups/Frag-Fest" target="_blank"><i class="fa fa-lg fa-steam"></i></a></li>
-		</ul>
-	</div>
+
+<aside id="sticky-social">
+	<ul>
+		<li><a href="https://www.facebook.com/FragFestIIITA/" target="_blank"><i class="fa fa-lg fa-facebook"></i></a></li>
+		<li><a href="https://twitter.com/FragFestIIITA/" target="_blank"><i class="fa fa-lg fa-twitter"></i></a></li>
+		<li><a href="https://www.youtube.com/channel/UCsuoNyw1L8W58mXAsXZ90ZA?" target="_blank"><i class="fa fa-lg fa-youtube-play"></i></a></li>
+		<li><a href="https://plus.google.com/+FragFest" target="_blank"><i class="fa fa-lg fa-google-plus"></i></a></li>
+		<li><a href="https://www.twitch.tv/fragfestiiita//" target="_blank"><i class="fa fa-lg fa-twitch"></i></a></li>
+		<li><a href="https://steamcommunity.com/groups/Frag-Fest" target="_blank"><i class="fa fa-lg fa-steam"></i></a></li>
+	</ul>
 </aside>

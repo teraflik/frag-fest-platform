@@ -27,8 +27,8 @@ class SignUpForm(UserCreationForm):
         model = MyUser
         fields = ('first_name', 'last_name', 'email', 'password1', 'password2', 'subscribe', 'agree_terms')
         widgets = {
-            'first_name': forms.TextInput(attrs={'placeholder': '(Optional)', 'class': 'form-control'}),
-            'last_name': forms.TextInput(attrs={'placeholder': '(Optional)', 'class': 'form-control'}),
+            'first_name': forms.TextInput(attrs={'placeholder': 'John', 'class': 'form-control'}),
+            'last_name': forms.TextInput(attrs={'placeholder': 'Doe', 'class': 'form-control'}),
         }
 
 class LoginForm(AuthenticationForm):
