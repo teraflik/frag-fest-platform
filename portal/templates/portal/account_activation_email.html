@@ -1,8 +1,375 @@
 {% autoescape off %}
-Hi {{ user.username }},
+<head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Please confirm your email on Frag-Fest</title>
+      <style type="text/css">
+         /* Client-specific Styles */
+         #outlook a {padding:0;} /* Force Outlook to provide a "view in browser" menu link. */
+         body{width:100% !important; -webkit-text-size-adjust:100%; -ms-text-size-adjust:100%; margin:0; padding:0;}
+         /* Prevent Webkit and Windows Mobile platforms from changing default font sizes, while not breaking desktop design. */
+         .ExternalClass {width:100%;} /* Force Hotmail to display emails at full width */
+         .ExternalClass, .ExternalClass p, .ExternalClass span, .ExternalClass font, .ExternalClass td, .ExternalClass div {line-height: 100%;} /* Force Hotmail to display normal line spacing.*/
+         #backgroundTable {margin:0; padding:0; width:100% !important; line-height: 100% !important;}
+         img {outline:none; text-decoration:none;border:none; -ms-interpolation-mode: bicubic;}
+         a img {border:none;}
+         .image_fix {display:block;}
+         .center {
+            display:block;
+            text-align: center;
+         }
+         p {margin: 0px 0px !important;}
+         table td {border-collapse: collapse;}
+         table { border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt; }
+         a {color: #0a8cce;}
+         /*STYLES*/
+         table[class=full] { width: 100%; clear: both; }
+         br.mobile {display:none;}
+         .appleLinksBodyCopy a { color: #54392d; text-decoration:none; }
+         .appleLinksFooter a { color: #998675; text-decoration:none; }
+         /*IPAD STYLES*/
+         @media only screen and (max-width: 640px) {
+         a[href^="tel"], a[href^="sms"] {
+         text-decoration: none;
+         color: #0a8cce; /* or whatever your want */
+         pointer-events: none;
+         cursor: default;
+         }
+         .mobile_link a[href^="tel"], .mobile_link a[href^="sms"] {
+         text-decoration: default;
+         color: #0a8cce !important;
+         pointer-events: auto;
+         cursor: default;
+         }
+         table[class=devicewidth] {width: 440px!important;text-align:center!important;}
+         table[class=devicewidthwide] {width: 480px!important;text-align:center!important;}
+         table[class=devicewidthinner] {width: 420px!important;text-align:center!important;}
+         img[class=banner] {width: 440px!important;height:220px!important;}
+         img[class=logo-section] {width: 440px!important;height:102px!important;}
+         img[class=headline] {width: 440px!important;height:102px!important;}
+         img[class=wide100] {width: 100%!important;height:auto!important;}
+         img[class=tout_image] {width: 440px!important;height:293px!important;}
+         td[class="hide-me"] { display: none !important;}
 
-Please click on the link below to confirm your registration:
+         .mobile-title { white-space: normal!important}
 
-http://{{ domain }}{% url 'portal:activate' uidb64=uid token=token %}
+         }
 
+
+         /*IPHONE STYLES*/
+         @media only screen and (max-width:480px) {
+         a[href^="tel"], a[href^="sms"] {
+         text-decoration: none;
+         color: #0a8cce; /* or whatever your want */
+         pointer-events: none;
+         cursor: default;
+         }
+         .mobile_link a[href^="tel"], .mobile_link a[href^="sms"] {
+         text-decoration: default;
+         color: #0a8cce !important;
+         pointer-events: auto;
+         cursor: default;
+         }
+         table[class=devicewidth] {width: 100%!important;text-align:center!important}
+         table[class=devicewidthwide] {width: 100%!important;text-align:center!important}
+         table[class=devicewidthinner] {width: 96%!important;text-align:center!important}
+         img[class=wide100] {width: 100%!important;height:auto!important;}
+         img[class=tout_image] { width: 100%!important; height: auto!important;}
+         td[class=mobile-hide]{display:none!important;}
+         td[class="padding-bottom25"]{padding-bottom:25px!important;}
+         td[class="mobile-header"] { font-size: 22px!important; line-height: 28px!important;}
+         td[class="mobile-text"] { font-size: 18px!important; line-height: 24px!important;}
+         td[class="mobile-title"] { font-size: 36px!important; line-height: 42px!important;white-space: normal!important}
+         br[class="mobile"] { display:block; }
+         a[class="mobile-button"] {
+            font-size: 16px;
+         }
+         table[class=social-icons] {width: 60%!important;text-align:center!important; margin: 0 auto!important;}
+         }
+      </style>
+   </head>
+   <body>
+<!-- Start of preheader -->
+<table width="100%" bgcolor="#ffffff" cellpadding="0" cellspacing="0" border="0" id="backgroundTable" st-sortable="preheader">
+   <tbody>
+      <tr>
+         <td align="center">
+            <table width="650" cellpadding="0" cellspacing="0" border="0" align="center" class="devicewidth">
+               <tbody>
+                  <tr>
+                     <td width="100%" align="center">
+                        <table width="650" cellpadding="0" cellspacing="0" border="0" align="center" class="devicewidth">
+                           <tbody>
+                                    <!-- Spacing -->
+                              <tr>
+                                 <td width="100%" height="10" style="font-size: 10px; line-height: 10px">&nbsp;</td>
+                              </tr>
+                              <!-- Spacing -->
+                           </tbody>
+                        </table>
+                     </td>
+                  </tr>
+               </tbody>
+            </table>
+         </td>
+      </tr>
+   </tbody>
+</table>
+<!-- End of preheader -->
+
+
+
+<!-- Start of seperator -->
+<table width="100%" bgcolor="#ffffff" cellpadding="0" cellspacing="0" border="0" id="backgroundTable" st-sortable="seperator">
+   <tbody>
+      <tr>
+         <td>
+            <table width="650" align="center" cellspacing="0" cellpadding="0" border="0" class="devicewidth" bgcolor="#ececec">
+               <tbody>
+                  <tr>
+                     <td align="center" height="5" style="font-size:1px; line-height:1px;">&nbsp;</td>
+                  </tr>
+               </tbody>
+            </table>
+         </td>
+      </tr>
+   </tbody>
+</table>
+<!-- End of seperator -->
+
+<!-- Start Full Text -->
+<table width="100%" bgcolor="#ffffff" cellpadding="0" cellspacing="0" border="0" id="backgroundTable" st-sortable="full-text">
+   <tbody>
+      <tr>
+         <td align="center">
+            <table width="650" cellpadding="0" cellspacing="0" border="0" align="center" class="devicewidth" bgcolor="#ececec">
+               <tbody>
+                  <tr>
+                     <td width="100%" align="center">
+                        <table width="650" cellpadding="0" cellspacing="0" border="0" align="center" class="devicewidth">
+                           <tbody>
+                              <!-- Spacing -->
+                              <tr>
+                                 <td height="20" style="font-size:1px; line-height:1px; mso-line-height-rule: exactly;">&nbsp;</td>
+                              </tr>
+                              <!-- Spacing -->
+                              <tr>
+                                 <td align="center">
+                                    <table width="530" align="center" cellpadding="0" cellspacing="0" border="0" class="devicewidthinner">
+                                       <tbody>
+                                          <!-- content -->
+                                          <tr>
+                                             <td style="font-size: 20px; line-height: 24px; font-family: Arial, Helvetica, sans-serif; color: #7d7067; text-align: center" st-content="fulltext-content" align="center" class="mobile-text appleLinksBodyCopy">
+                                                Hi {{ user.get_full_name|default_if_none:"there" }}!
+                                                <br><br>
+                                                Thanks for registering on the Frag-Fest portal. 
+                                                <br>
+                                                Please click on the button below to verify your email.
+                                             </td>
+                                          </tr>
+                                          <!-- spacing -->
+                                          <tr>
+                                              <td width="100%" height="25" style="font-size:1px; line-height:1px; mso-line-height-rule: exactly;">&nbsp;</td>
+                                          </tr>
+                                          <!-- End of spacing -->
+                                          <!-- button -->
+                                          <tr>
+                                              <td align="center">
+                                                  <table height="36" align="center" valign="middle" border="0" cellpadding="0" cellspacing="0" class="tablet-button" st-button="edit">
+                                                      <tbody>
+                                                      <tr>
+                                                          <td width="auto" align="center" valign="middle" height="36" style=" background-color:#66463a; background-clip: padding-box;font-size:18px; line-height: 18px; font-family:Helvetica, arial, sans-serif; text-align:center;  color:#ffffff; font-weight: 300; padding: 5px 12px" class="mobile-text">
+                                                           <span style="color: #ffffff; font-weight: 500;">
+                                                              <a style="color: #ffffff; text-align:center;text-decoration: none; text-transform: uppercase;" href="http://{{ domain }}{% url 'portal:activate' uidb64=uid token=token %}" target="_blank" class="mobile-button">CLICK TO VERIFY</a>
+                                                           </span>
+                                                          </td>
+                                                      </tr>
+                                                      </tbody>
+                                                  </table>
+                                              </td>
+                                          </tr>
+                                          <!-- End of button -->
+                                          <!-- Spacing -->
+                                          <tr>
+                                              <td height="25" style="font-size:1px; line-height:1px; mso-line-height-rule: exactly;">&nbsp;</td>
+                                          </tr>
+                                          <!-- Spacing -->
+                                          <!-- content -->
+                                          <tr>
+                                             <td style="font-size: 12px; line-height: 18px; font-family: Arial, Helvetica, sans-serif; color: #7d7067; text-align: center" st-content="fulltext-content" align="center" class="mobile-text appleLinksBodyCopy">
+                                                You can also copy and paste this in your browser: <a href="http://{{ domain }}{% url 'portal:activate' uidb64=uid token=token %}" target="_blank" style="text-decoration: underline; color: #998675">http://{{ domain }}{% url 'portal:activate' uidb64=uid token=token %}</a>
+                                                <br>
+                                                If this email doesn't make sense to you simply ignore it and don’t click above. You will not receive any emails from us.
+                                             </td>
+                                          </tr>
+                                          <!-- End of content -->
+
+                                       </tbody>
+                                    </table>
+                                 </td>
+                              </tr>
+                              <!-- spacing -->
+
+                              <!-- Spacing -->
+                              <tr>
+                                 <td height="25" style="font-size:1px; line-height:1px; mso-line-height-rule: exactly;">&nbsp;</td>
+                              </tr>
+                              <!-- Spacing -->
+                           </tbody>
+                        </table>
+                     </td>
+                  </tr>
+               </tbody>
+            </table>
+         </td>
+      </tr>
+   </tbody>
+</table>
+<!-- end of full text -->
+
+<!-- Start of seperator -->
+<table width="100%" bgcolor="#ffffff" cellpadding="0" cellspacing="0" border="0" id="backgroundTable" st-sortable="seperator">
+   <tbody>
+      <tr>
+         <td align="center">
+            <table width="650" align="center" cellspacing="0" cellpadding="0" border="0" class="devicewidth" bgcolor="#ececec">
+               <tbody>
+                  <tr>
+                     <td align="center" height="20" style="font-size:1px; line-height:1px;">&nbsp;</td>
+                  </tr>
+               </tbody>
+            </table>
+         </td>
+      </tr>
+   </tbody>
+</table>
+<!-- End of seperator -->
+
+<!-- Start of footer -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0" id="backgroundTable" st-sortable="footer">
+   <tbody>
+      <tr>
+         <td align="center">
+            <table width="650" cellpadding="0" cellspacing="0" border="0" align="center" class="devicewidth" bgcolor="#271710">
+               <tbody>
+                  <tr>
+                     <td width="100%" align="center">
+                        <table width="650" cellpadding="0" cellspacing="0" border="0" align="center" class="devicewidth">
+                           <tbody>
+                              <tr>
+                                 <td>
+                                    <table width="650" align="center" cellspacing="0" cellpadding="0" border="0" class="devicewidth">
+                                       <tbody>
+                                          <tr>
+                                             <td align="center" height="25" style="font-size:1px; line-height:1px;">&nbsp;</td>
+                                          </tr>
+                                       </tbody>
+                                    </table>
+                                 </td>
+                              </tr>
+                              <tr>
+                                 <td align="center">
+                                    <table width="100%" align="center" border="0" cellpadding="0" cellspacing="0" class="devicewidth">
+                                        <tbody><tr>
+                                            <td class="footer-header" style="text-align: center; font-size: 16px; color: #998675; text-transform: uppercase; font-family: Arial, Helvetica, sans-serif; font-weight: bold;" align="center">
+                                                Stay Connected
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                           <td align="center" height="22" style="font-size:22px; line-height:22px;">&nbsp;</td>
+                                        </tr>
+                                        <tr>
+                                            <td bgcolor="#271710" align="center">
+                                                <table align="center" border="0" cellpadding="0" cellspacing="0" class="social-icons">
+                                                    <tbody><tr>
+                                                        <td align="center">
+                                                            <table width="60" align="center" border="0" cellpadding="0" cellspacing="0">
+                                                                <tbody><tr>
+                                                                    <td><a href="https://www.facebook.com/FragFestIIITA" target="_blank"><img src="https://raw.githubusercontent.com/encharm/Font-Awesome-SVG-PNG/master/white/png/64/facebook-square.png" alt="Facebook" border="0" width="40" class="is-Block"></a></td>
+                                                                </tr>
+                                                            </tbody></table>
+                                                        </td>
+                                                        <td align="center" height="30" width="40" style="font-size:1px; line-height:1px;" class="removeMobile">&nbsp;</td>
+                                                        <td align="center">
+                                                            <table width="60" align="center" border="0" cellpadding="0" cellspacing="0">
+                                                                <tbody><tr>
+                                                                    <td><a href="https://twitter.com/FragFestIIITA" target="_blank"><img src="https://raw.githubusercontent.com/encharm/Font-Awesome-SVG-PNG/master/white/png/64/twitter.png" alt="Twitter" border="0" width="40" class="is-Block"></a></td>
+                                                                </tr>
+                                                            </tbody></table>
+                                                        </td>
+                                                         <td align="center" height="30" width="40" style="font-size:1px; line-height:1px;" class="removeMobile">&nbsp;</td>
+                                                        <td align="center">
+                                                            <table width="60" align="center" border="0" cellpadding="0" cellspacing="0">
+                                                                <tbody><tr>
+                                                                    <td><a href="https://plus.google.com/+FragFest" target="_blank"><img src="https://raw.githubusercontent.com/encharm/Font-Awesome-SVG-PNG/master/white/png/64/google-plus.png" alt="Google+" border="0" width="40" class="is-Block"></a></td>
+                                                                </tr>
+                                                            </tbody></table>
+                                                        </td>
+                                                         <td align="center" height="30" width="40" style="font-size:1px; line-height:1px;" class="removeMobile">&nbsp;</td>
+                                                        <td align="center">
+                                                            <table width="40" align="center" border="0" cellpadding="0" cellspacing="0">
+                                                                <tbody><tr>
+                                                                    <td><a href="http://steamcommunity.com/groups/Frag-Fest" target="_blank"><img src="https://raw.githubusercontent.com/encharm/Font-Awesome-SVG-PNG/master/white/png/64/steam-square.png" alt="Steam Group" border="0" width="40" class="is-Block"></a></td>
+                                                                </tr>
+                                                            </tbody></table>
+                                                        </td>
+                                                    </tr>
+                                                </tbody></table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                           <td>
+                                              <table width="650" align="center" cellspacing="0" cellpadding="0" border="0" class="devicewidth">
+                                                 <tbody>
+                                                    <tr>
+                                                       <td align="center" height="20" style="font-size:1px; line-height:1px;">&nbsp;</td>
+                                                    </tr>
+                                                 </tbody>
+                                              </table>
+                                           </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="footer-text" align="center">
+                                                <table align="center" width="600" border="0" cellpadding="0" cellspacing="0" class="devicewidthinner">
+                                                    <tbody><tr>
+                                                        <td valign="top" style="text-align:center">
+                                                            <!-- Legal text goes here-->
+                                                            <span class="appleLinksFooter" style="color: #998675; font-size: 12px; line-height: 18px; text-align: center; font-family: Arial, Helvetica, sans-serif; margin: 0">You may contact us by sending an email to: <a href="mailto:fragfest@aparoksha.org" target="_blank" style="text-decoration: underline; color: #998675">fragfest@aparoksha.org</a><br>
+                                                            <a href="http://www.frag-fest.in" target="_blank" style="text-decoration: underline; color: #998675">www.frag-fest.in</a></span>
+                                                        </td>
+                                                    </tr>
+                                                </tbody></table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                           <td>
+                                              <table width="650" align="center" cellspacing="0" cellpadding="0" border="0" class="devicewidth">
+                                                 <tbody>
+                                                    <tr>
+                                                       <td align="center" height="20" style="font-size:1px; line-height:1px;">&nbsp;</td>
+                                                    </tr>
+                                                 </tbody>
+                                              </table>
+                                           </td>
+                                        </tr>
+                                    </tbody></table>
+                                 </td>
+                              </tr>
+                              <!-- Spacing -->
+                              <tr>
+                                 <td width="100%" height="20"></td>
+                              </tr>
+                              <!-- Spacing -->
+                           </tbody>
+                        </table>
+                     </td>
+                  </tr>
+               </tbody>
+            </table>
+         </td>
+      </tr>
+   </tbody>
+</table>
+<!-- End of footer -->
+</body>
 {% endautoescape %}
