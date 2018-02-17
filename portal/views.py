@@ -17,7 +17,7 @@ from django.contrib import messages
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.decorators import login_required
 from social_core.backends.steam import SteamOpenId
-from social_core.backends.open_id import OpenIdAuth
+from social_core.backends.open_id import OpenIdAut
 
 from .models import MyUser, Team, Profile, Membership
 from .forms import SignUpForm, TeamForm, ProfileForm, forgetpass

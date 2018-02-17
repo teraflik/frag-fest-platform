@@ -31,7 +31,8 @@ EMAIL_PORT = config('EMAIL_PORT', default='25', cast=int)
 EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='no')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='MyS3CR3T')
 EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
-EMAIL_MAIN = config('EMAIL_MAIN', default='noreply@frag-fest.in')
+DEFAULT_FROM_EMAIL = 'Frag-Fest <noreply@frag-fest.in>'
+SERVER_EMAIL = 'Frag-Fest <noreply@frag-fest.in>'
 
 #SteamOpenId Authentication
 SOCIAL_AUTH_STEAM_API_KEY = config('SOCIAL_AUTH_STEAM_API_KEY')
@@ -112,7 +113,7 @@ AUTHENTICATION_BACKENDS = (
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'Asia/Kolkata'
+TIME_ZONE = config('TIME_ZONE')
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
