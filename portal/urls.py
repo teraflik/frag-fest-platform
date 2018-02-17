@@ -35,7 +35,7 @@ urlpatterns = [
     url(r'^profile$', views.profile, name='profile'),
     url(r'^dashboard', views.dashboard, name='dashboard'),
     url(r'^teams$', views.TeamListView.as_view(), name='team_list'),
-    url(r'^other_games$', TemplateView.as_view(template_name="stat/other_games.html"), name='other_games'),
+    url(r'^all_games$', TemplateView.as_view(template_name="stat/other_games.html"), name='all_games'),
     url(r'^fifa$', TemplateView.as_view(template_name="stat/fifa.html"), name='fifa'),
     url(r'^csgo$', TemplateView.as_view(template_name="stat/csgo.html"), name='csgo'),
     url(r'^event$', TemplateView.as_view(template_name="stat/event.html"), name='event'),

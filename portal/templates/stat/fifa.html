@@ -67,7 +67,13 @@
               </ul>
             </li>
           </ul>
-          <p class="text-center"><a class="btn btn-primary btn-lg" href="#" role="button">Register Here &raquo;</a></p>
+          <p class="text-center">
+            {% if user.is_authenticated %}
+            <a class="btn btn-primary btn-lg" href="#" role="button">You are signed up!</a>
+            {% else %}
+            <a class="btn btn-primary btn-lg" href="{% url 'portal:login' %}" role="button">Sign in to Register &raquo;</a>
+            {% endif %}
+          </p>
 
           <!-- <p class="lead">And an even wittier subheading.</p> -->
 
