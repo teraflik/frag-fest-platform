@@ -46,6 +46,10 @@ def send_verification_email(request, user):
     msg.send()
 
 def signup(request):
+    if request.user.is_authenticated:
+        messages.info(request, _('You are already registered!'))
+        return redirect('portal:index')
+        
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
@@ -67,7 +71,7 @@ def activate(request, uidb64, token):
     try:
         uid = force_text(urlsafe_base64_decode(uidb64))
         user = MyUser.objects.get(pk=uid)
-    except (TypeError, ValueError, OverflowError, user.DoesNotExist):
+    except (TypeError, ValueError, OverflowError, MyUser.DoesNotExist):
         user = None
 
     if user is not None and account_activation_token.check_token(user, token):

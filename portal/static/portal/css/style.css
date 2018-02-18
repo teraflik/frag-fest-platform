@@ -3,35 +3,48 @@
 .navbar-collapse{
 	text-align: right;
 	margin-right: 1em;
+	color: white;
+}
+.navbar-dark .navbar-nav .active{
+	margin-right: 8px;
+	margin-left: 8px;
+	box-shadow: 0 0 0 8px #e64522;
+	background-color: #e64522;
+}
+
+body{
+	padding-top: 60px;
+}
+.navbar-brand{
+	font-family: 'Raleway', 'Open Sans', sans-serif;
 }
 @media (min-width: 576px) {
 	.navbar-brand.nav-centre-brand
 	{
-		font-size: 2em;
 		/*padding-top: 30px;*/
-		line-height: 60px;
 		position: absolute;
 		width: 100%;
 		left: 0;
 		text-align: center;
 		margin:0 auto;
-		z-index: inherit;
 		/*Allow click through brand div*/
 		pointer-events: none;
-		/*IE11 conditional*/
-		filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='your_transparent.png', sizingMethod='scale');
-background: none !important;
+	}
+}
+@media (max-width: 768px) {
+	#cover-image{
+		max-width: 100%;
 	}
 }
 
 /* SOCIAL LINKS
 -------------------------------------------------- */
-.facebook-link{
+.fbk-button{
 	border-color: #4060A5;
 	text-decoration: none;
 	color: white;
 }
-.facebook-link:hover, .facebook-link:active{
+.fbk-button:hover, .facebook-link:active{
 	background: #4060A5;
 	border-color: #4060A5;
 }
@@ -59,10 +72,10 @@ background: none !important;
 
 #side-toggle span {
 	line-height: 40px;
-	left:-100px;
+	left:-60px;
 	position: absolute;
 	text-align:center;
-	width:100px;
+	width:60px;
 }
 
 #side-float {
@@ -179,7 +192,7 @@ margin-left: .75rem;
   ------------------------- */
   
   .featurette-divider {
-	margin: 5rem 0; /* Space out the Bootstrap <hr> more */
+	margin: 3rem 0; /* Space out the Bootstrap <hr> more */
   }
   
   /* Thin out the marketing headings */

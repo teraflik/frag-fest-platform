@@ -1,93 +1,79 @@
 {% extends 'portal/base.html' %}
+{% load static %}
 {% block content %}
 
-<div class="position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center" style="background:url(https://media.contentapi.ea.com/content/dam/ea/easports/fifa/home/2017/june/10/fifa18-homepage-worldsgame-bg-xs.jpg); background-size:cover;">
-      <div class="col-md-5 p-lg-5 mx-auto my-5">
-        <h1 class="display-4 font-weight-normal" style="color:black;">FIFA18</h1>
-        <p class="lead font-weight-normal pt-5 pr-3 mt-5" style="color:white;">Football isn't just a game. It's a feeling. And FIFA is the purest manifestation of that feeling!</p>
-        <!-- <a class="btn btn-outline-secondary" href="#">Coming soon</a> -->
-      </div>
-      <!-- <div class="product-device box-shadow d-none d-md-block"></div> -->
-      <!-- <div class="product-device product-device-2 box-shadow d-none d-md-block"></div> -->
-    </div>
+<div class="position-relative overflow-hidden p-md-5 m-md-3" style="background:url(https://media.contentapi.ea.com/content/dam/ea/easports/fifa/home/2017/june/10/fifa18-homepage-worldsgame-bg-xs.jpg); background-size:cover;">
+  <div class="p-lg-5 mb-5 text-center">
+    <h1><img src="{% static 'portal/img/fifa/logo.png' %}" class="img-fluid"></h1>
+    <p class="lead font-weight-normal pt-2 mt-5 text-white">Football isn't just a game. It's a feeling. And FIFA is the purest manifestation of that feeling!</p>
+  </div>
+</div>
 
-    <div class="w-100 my-md-3 pl-md-3">
-      <div class="bg-dark mr-md-3 pt-3 px-3 pt-md-5 px-md-5 text-white overflow-hidden">
-        <div class="my-3 py-3">
-          <h2 class="display-5 text-center">Rules</h2>
+<div class="w-100 my-md-3 pl-md-3">
+  <div class="bg-dark mr-md-3 pt-3 px-3 pt-md-5 px-md-5 text-white overflow-hidden">
+    <div class="my-3 py-3">
+      <h2 class="display-5 text-center">Rules</h2>
+      <ul>
+        <li><h5>Competition Format</h5>
           <ul>
-            <li><h5>Competition Format</h5>
-              <ul>
-                <li>1 vs 1</li>
-              </ul>
-            </li>
-            <li><h5 class="pt-3">General Information and Rules</h5>
-              <ul>
-                <li>Matches will be two-legged ties.</li>
-                <li>Each half will be of 4 minutes.</li>
-                <li>In case two keyboard players come face to face with each other, the one playing at home will have to use the controller and vice-versa.</li>
-                <li>Each player needs to bring their own controller.</li>
-                <li>Use of third party cheats or hacks to gain an unfair advantage is strictly not allowed.</li>
-                <li>No request for changing ties will be accepted.</li>
-              </ul>
-            </li>
-            <li><h5 class="pt-3">Schedule</h5>
-              <ul>
-                <li>Will be update on our facebook page  <a href="https://www.facebook.com/FragFestIIITA">FragFestIIITA</a> and Website.</li>
-              </ul>
-            </li>
-            <li><h5 class="pt-3">Specific Game Settings Fifa</h5>
-              <ul>
-                <li>Standard Settings, 8 min match, Normal, Level:Legendary, Injuries on</li>
-                <li>All matches should be played by a ´Friendly Match</li>
-                <li>
-                    All matches has to be played with the online squads.
-                </li>
-                <li>
-                  Only tactical defense is allowed.
-                </li>
-                <li>
-                      You cannot select any fictional or All-Star teams. Any regular season teams, as installed with the original game, can be selected. Both Players can select the same team.
-                </li>
-                <li> Selecting Preset formations (4-3-3 or 4-4-2 etc) are allowed before the match starts.</li>
-                <li>Custom Formations and editing player position within a formation is not allowed.</li>
-                <li>Selecting Tactics are allowed before the match starts.</li>
-                <li>Once the match has started, players can only pause the game to change strategy, tactics and/or formation when i) a player of his team is sent off  ii) a player of his team is injured” (if injuries are allowed).</li>
-                <li>Set pieces are available. Man Marking is allowed.</li>
-              </ul>
-            </li>
-            <li><h5 class="pt-3">Match Interrupt / Technical Issue Resolution</h5>
-              <ul>
-                <li>Players not present at the designated start time for any match will be disqualified, and their opponent shall be granted a 2-0 score. Players are encouraged to be in the designated play area 15-minutes prior to game time.</li>
-                <li>Players shall be responsible for keeping track of game situation so if a game is interrupted, the situation can be restored. In all situations possible, tournament referees will monitor the game situation so that it may be restored in the event of game interruptions.</li>
-                <li>No replays or game interruptions, except for designated pauses to report scores (if any), will be allowed.</li>
-                <li> In case of any kind of unfortunate event or disconnection, disc error or electricity failure, the score will remain the same regardless of game played but the half in which the problem occurred will be played again.</li>
-                <li>You CANNOT pause game unless the game is stopped i.e. If it’s a throw in or ball is in your own keeper’s possession. If you pause the game intentionally, you may be warned or disqualified at referee’s discretion. Second warning will disqualify you automatically. You have 40 seconds after the pause.</li>
-                <li>Physical abuse, fighting or any threatening action or threatening language, directed at any Player, spectator, official or any other person is prohibited.</li>
-              </ul>
-            </li>
+            <li>1 vs 1</li>
           </ul>
-          <p class="text-center">
-            {% if user.is_authenticated %}
-            <a class="btn btn-primary btn-lg" href="#" role="button">You are signed up!</a>
-            {% else %}
-            <a class="btn btn-primary btn-lg" href="{% url 'portal:login' %}" role="button">Sign in to Register &raquo;</a>
-            {% endif %}
-          </p>
-
-          <!-- <p class="lead">And an even wittier subheading.</p> -->
-
-        </div>
-        <!-- <div class="bg-light box-shadow mx-auto" style="width: 80%; height: 300px; border-radius: 21px 21px 0 0;"></div> -->
-      </div>
-
-      <!-- <div class="bg-light mr-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center overflow-hidden">
-        <div class="my-3 p-3">
-          <h2 class="display-5">Another headline</h2>
-          <p class="lead">And an even wittier subheading.</p>
-        </div>
-        <div class="bg-dark box-shadow mx-auto" style="width: 80%; height: 300px; border-radius: 21px 21px 0 0;"></div>
-      </div> -->
+        </li>
+        <li><h5 class="pt-3">General Information and Rules</h5>
+          <ul>
+            <li>Matches will be two-legged ties.</li>
+            <li>Each half will be of 4 minutes.</li>
+            <li>In case two keyboard players come face to face with each other, the one playing at home will have to use the controller and vice-versa.</li>
+            <li>Each player needs to bring their own controller.</li>
+            <li>Use of third party cheats or hacks to gain an unfair advantage is strictly not allowed.</li>
+            <li>No request for changing ties will be accepted.</li>
+          </ul>
+        </li>
+        <li><h5 class="pt-3">Schedule</h5>
+          <ul>
+            <li>Will be updated on our <a href="{{ SOCIAL.facebook }}">Facebook</a> and website.</li>
+          </ul>
+        </li>
+        <li><h5 class="pt-3">Specific Game Settings Fifa</h5>
+          <ul>
+            <li>Standard Settings, 8 min match, Normal, Level:Legendary, Injuries on</li>
+            <li>All matches should be played by a ´Friendly Match</li>
+            <li>
+                All matches has to be played with the online squads.
+            </li>
+            <li>
+              Only tactical defense is allowed.
+            </li>
+            <li>
+                  You cannot select any fictional or All-Star teams. Any regular season teams, as installed with the original game, can be selected. Both Players can select the same team.
+            </li>
+            <li> Selecting Preset formations (4-3-3 or 4-4-2 etc) are allowed before the match starts.</li>
+            <li>Custom Formations and editing player position within a formation is not allowed.</li>
+            <li>Selecting Tactics are allowed before the match starts.</li>
+            <li>Once the match has started, players can only pause the game to change strategy, tactics and/or formation when i) a player of his team is sent off  ii) a player of his team is injured” (if injuries are allowed).</li>
+            <li>Set pieces are available. Man Marking is allowed.</li>
+          </ul>
+        </li>
+        <li><h5 class="pt-3">Match Interrupt / Technical Issue Resolution</h5>
+          <ul>
+            <li>Players not present at the designated start time for any match will be disqualified, and their opponent shall be granted a 2-0 score. Players are encouraged to be in the designated play area 15-minutes prior to game time.</li>
+            <li>Players shall be responsible for keeping track of game situation so if a game is interrupted, the situation can be restored. In all situations possible, tournament referees will monitor the game situation so that it may be restored in the event of game interruptions.</li>
+            <li>No replays or game interruptions, except for designated pauses to report scores (if any), will be allowed.</li>
+            <li> In case of any kind of unfortunate event or disconnection, disc error or electricity failure, the score will remain the same regardless of game played but the half in which the problem occurred will be played again.</li>
+            <li>You CANNOT pause game unless the game is stopped i.e. If it’s a throw in or ball is in your own keeper’s possession. If you pause the game intentionally, you may be warned or disqualified at referee’s discretion. Second warning will disqualify you automatically. You have 40 seconds after the pause.</li>
+            <li>Physical abuse, fighting or any threatening action or threatening language, directed at any Player, spectator, official or any other person is prohibited.</li>
+          </ul>
+        </li>
+      </ul>
+      <p class="text-center">
+        {% if user.is_authenticated %}
+        <a class="btn btn-primary btn-lg" href="#" role="button">You are signed up!</a>
+        {% else %}
+        <a class="btn btn-primary btn-lg" href="{% url 'portal:login' %}" role="button">Sign in to Register &raquo;</a>
+        {% endif %}
+      </p>
     </div>
+  </div>
+</div>
 
 {% endblock %}

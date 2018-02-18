@@ -10,32 +10,32 @@
    </ol>
    <div class="carousel-inner">
       <div class="carousel-item active">
-         <img class="first-slide" src="{% static 'portal/cover/slide1.jpg' %}" alt="e-Sports Redefined">
+         <img class="first-slide" src="{% static 'portal/img/event/slide1.jpg' %}" alt="e-Sports Redefined">
          <div class="container">
             <div class="carousel-caption text-left">
-               <h1>e-Sports Redefined.</h1>
+               <h1>e-Sports is here.</h1>
                <p>Experience the thrill of competing against the best. With teams participating from from all over country.</p>
-               <p><a class="btn btn-lg btn-primary" href="#" role="button">Sign up today</a></p>
+               <p><a class="btn btn-lg btn-primary" href="{% url 'portal:signup' %}" role="button">Sign up today</a></p>
             </div>
          </div>
       </div>
       <div class="carousel-item">
-         <img class="second-slide" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Second slide">
+         <img class="second-slide" src="{% static 'portal/img/event/slide2.jpg' %}" alt="Second slide">
          <div class="container">
             <div class="carousel-caption">
-               <h1>Another example headline.</h1>
-               <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
-               <p><a class="btn btn-lg btn-primary" href="#" role="button">Learn more</a></p>
+               <h1>Battle with the best.</h1>
+               <p>Compete in a best-of-1 knockout tournament to reach the top 8, and get invited to IIIT Allahabad and play.</p>
+               <p><a class="btn btn-lg btn-primary" href="{% url 'portal:csgo' %}" role="button">Learn more</a></p>
             </div>
          </div>
       </div>
       <div class="carousel-item">
-         <img class="third-slide" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Third slide">
+         <img class="third-slide" src="{% static 'portal/img/event/slide3.jpg' %}" alt="Third slide">
          <div class="container">
-            <div class="carousel-caption text-right">
-               <h1>One more for good measure.</h1>
-               <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
-               <p><a class="btn btn-lg btn-primary" href="#" role="button">Browse gallery</a></p>
+            <div class="carousel-caption text-left text-dark">
+               <h1 class="text-dark">Be the champion.</h1>
+               <p>Prizes and Goodies worth ₹1,00,000 are up for grabs.</p>
+               <p><a class="btn btn-lg btn-primary" href="https://photos.app.goo.gl/MTmjgjZM61gcER5l2" target="_blank" role="button">Browse gallery</a></p>
             </div>
          </div>
       </div>
@@ -53,55 +53,55 @@
    <!-- Three columns of text below the carousel -->
    <div class="row">
       <div class="col-lg-4">
-         <img class="rounded-circle" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Generic placeholder image" width="140" height="140">
-         <h2>Heading</h2>
-         <p>Donec sed odio dui. Etiam porta sem malesuada magna mollis euismod. Nullam id dolor id nibh ultricies vehicula ut id elit. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Praesent commodo cursus magna.</p>
-         <p><a class="btn btn-secondary" href="#" role="button">View details &raquo;</a></p>
+         <img class="rounded-circle" src="{% static 'portal/img/event/reach.png' %}" alt="Generic placeholder image" width="140" height="140">
+         <h3>Participants</h3>
+         <p>Teams from all over the country will be fighting for the title of the Champion. Thanks to all the Aparoksha Campus Ambassadors who help spread the word.</p>
+         <p><a class="btn btn-secondary" href="{% url 'portal:signup' %}" role="button">Sign Up</a></p>
       </div>
       <!-- /.col-lg-4 -->
       <div class="col-lg-4">
-         <img class="rounded-circle" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Generic placeholder image" width="140" height="140">
-         <h2>Heading</h2>
-         <p>Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Cras mattis consectetur purus sit amet fermentum. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh.</p>
-         <p><a class="btn btn-secondary" href="#" role="button">View details &raquo;</a></p>
+         <img class="rounded-circle" src="{% static 'portal/img/event/audience.png' %}" alt="Generic placeholder image" width="140" height="140">
+         <h3>Audience</h3>
+         <p>The technophiles of Aparoksha, the hackers of HackInTheNorth, and the gamers of Frag-Fest, all at the same place. Get ready for the show.</p>
+         <p><a class="btn btn-secondary" href="https://aparoksha.org" target="_blank" role="button">Visit Aparoksha &raquo;</a></p>
       </div>
       <!-- /.col-lg-4 -->
       <div class="col-lg-4">
-         <img class="rounded-circle" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Generic placeholder image" width="140" height="140">
-         <h2>Heading</h2>
-         <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
-         <p><a class="btn btn-secondary" href="#" role="button">View details &raquo;</a></p>
+         <img class="rounded-circle" src="{% static 'portal/img/event/livestream.png' %}" alt="Generic placeholder image" width="140" height="140">
+         <h3>Live</h3>
+         <p>Why keep the joy to ourselves? The matches will be streamed live, on twitch.<br /> Powered by xSplit.</p>
+         <p><a class="btn btn-secondary" href="{{ SOCIAL.twitch }}" target="_blank" role="button">Follow on twitch &raquo;</a></p>
       </div>
       <!-- /.col-lg-4 -->
    </div>
    <hr class="featurette-divider">
    <div class="row featurette">
       <div class="col-md-7">
-         <h2 class="featurette-heading">First featurette heading. <span class="text-muted">It'll blow your mind.</span></h2>
-         <p class="lead">Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.</p>
+         <h2 class="featurette-heading">Frag-Fest' 17 <span class="text-muted">The Gamers' Asylum</span></h2>
+         <p class="lead">Held from 23rd - 27th March, 2017 at IIIT Allahabad in collaboration with Circle CT Gaming and Seasonic, it was a phenomenal success with the participation of 32+ CS GO teams, 16+ DOTA teams and 100+ FIFA 1v1 matches.</p>
       </div>
       <div class="col-md-5">
-         <img class="featurette-image img-fluid mx-auto" data-src="holder.js/500x500/auto" alt="Generic placeholder image">
+         <img class="featurette-image img-fluid mx-auto" src="{% static 'portal/img/event/prev_fest.png' %}" alt="Previous Fest Images">
       </div>
    </div>
    <hr class="featurette-divider">
    <div class="row featurette">
       <div class="col-md-7 order-md-2">
-         <h2 class="featurette-heading">Oh yeah, it's that good. <span class="text-muted">See for yourself.</span></h2>
-         <p class="lead">Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.</p>
+         <h2 class="featurette-heading">Aparoksha. <span class="text-muted">IIIT Allahabad.</span></h2>
+         <p class="lead">Interact and compete in Aparoksha' 18, with all new and exciting flagship events such as <a href="https://www.grayhoundquiz.org/">GrayHound</a>, <a href="https://b00t2root.tech/">Boot2Root</a>, <a href="http://topbot.in/">Topbot</a> and <a href="https://aparoksha.org/codered/">CodeRed</a>. Also <a href="https://www.hackinthenorth.com/">HackInTheNorth</a>.</p>
       </div>
       <div class="col-md-5 order-md-1">
-         <img class="featurette-image img-fluid mx-auto" data-src="holder.js/500x500/auto" alt="Generic placeholder image">
+         <img class="featurette-image img-fluid mx-auto" src="{% static 'portal/img/event/aparoksha.jpg' %}" alt="Aparoksha, IIIT Allahabad">
       </div>
    </div>
    <hr class="featurette-divider">
    <div class="row featurette">
       <div class="col-md-7">
-         <h2 class="featurette-heading">Secure platform. <span class="text-muted">Verified by SSL Labs.</span></h2>
-         <p class="lead">SSL Labs report has assigned grade <strong>A</strong> to the security of the Frag-Fest portal. We use RSA 2048 bits encryption on TLS 1.2 Protocol. For more details visit <a href="https://www.ssllabs.com/ssltest/analyze.html?d=frag-fest.in">https://www.ssllabs.com/ssltest/analyze.html?d=frag-fest.in</a></p>
+         <h2 class="featurette-heading">The portal. <span class="text-muted">Everything is here.</span></h2>
+         <p class="lead">All the registrations and team management will be held through Frag-Fest portal which has been certified by SSL Labs. We use RSA 2048 bits encryption on TLS 1.2 Protocol. For more details visit <a href="https://www.ssllabs.com/ssltest/analyze.html?d=frag-fest.in">https://www.ssllabs.com/ssltest/analyze.html?d=frag-fest.in</a></p>
       </div>
       <div class="col-md-5">
-         <img class="featurette-image img-fluid mx-auto" src="{% static 'portal/img/main/site_report.jpg' %}" alt="Generic placeholder image">
+         <img class="featurette-image img-fluid mx-auto" src="{% static 'portal/img/event/site_report.jpg' %}" alt="Generic placeholder image">
       </div>
    </div>
    <hr class="featurette-divider">
