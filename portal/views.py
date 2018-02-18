@@ -1,12 +1,13 @@
 import requests
 import json
-from django.core.mail import send_mail
+from django.core.mail import send_mail, EmailMultiAlternatives
 from django.db import transaction
 from django.http import Http404
 from django.shortcuts import render, redirect, render_to_response, get_object_or_404
 from django.template.loader import render_to_string
 from portal.tokens import account_activation_token
 from django.utils.encoding import force_bytes, force_text
+from django.utils.html import strip_tags
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.translation import ugettext as _
 from django.views.generic import View, FormView, ListView
@@ -27,13 +28,21 @@ def send_verification_email(request, user):
     user = request.user
     current_site = get_current_site(request)
     subject = 'Your ' + current_site.name + ' account has been created. Please verify your email.'
-    message = render_to_string('portal/account_activation_email.html', {
+    html_message = render_to_string('portal/email_activation_html.html', {
         'user': user,
         'domain': current_site.domain,
         'uid': urlsafe_base64_encode(force_bytes(user.pk)),
         'token': account_activation_token.make_token(user),
     })
-    user.email_user(subject, message)
+    plain_message = render_to_string('portal/email_activation_plain.html', {
+        'user': user,
+        'domain': current_site.domain,
+        'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+        'token': account_activation_token.make_token(user),
+    })
+    msg = EmailMultiAlternatives(subject, plain_message, 'noreply@frag-fest.in', [user.email])
+    msg.attach_alternative(html_message, "text/html")
+    msg.send()
 
 def signup(request):
     if request.method == 'POST':
@@ -47,7 +56,7 @@ def signup(request):
             user = authenticate(email=user.email, password=raw_password)
             login(request, user)
             send_verification_email(request, user)
-            messages.success(request, _('Successfully registered! We have sent you a verification email.'))
+            messages.success(request, _('Successfully registered! We have sent you a verification email. Check your spam as well.'))
             return redirect('portal:index')
     else:
         form = SignUpForm()
