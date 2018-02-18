@@ -4,7 +4,7 @@ from decouple import config, Csv
 from django.contrib.messages import constants as messages
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-SITE_ID = 2
+SITE_ID = config('SITE_ID', default='2', cast=int)
 SECRET_KEY = config('SECRET_KEY')
 
 DEBUG = config('DEBUG', default=False, cast=bool)
