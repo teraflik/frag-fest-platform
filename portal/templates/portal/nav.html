@@ -1,6 +1,6 @@
-<nav class="navbar fixed-top navbar-expand-sm navbar-dark bg-danger">
+<nav class="navbar fixed-top navbar-expand-md navbar-dark bg-danger">
 	<div class="container">
-		<a class="navbar-brand nav-centre-brand" href="{% url 'portal:index' %}">Frag-Fest' 18</a>
+		<a class="navbar-brand nav-centre-brand font-weight-bold" href="{% url 'portal:index' %}"><h5>FRAG-FEST' 18</h5></a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
 		</button>
@@ -22,8 +22,8 @@
 				<li class="nav-item {% if request.resolver_match.url_name == 'profile' %}active{% endif %}"><a class="nav-link" href="{% url 'portal:profile'  %}">Profile</a></li>
 				<li class="nav-item"><a class="nav-link" href="{% url 'portal:logout' %}">Logout</a></li>
 				{% else %}
-				<li class="nav-item {% if request.resolver_match.url_name == 'signup' %}active{% endif %}"><a class="nav-link" href="{% url 'portal:signup' %}">Register</a></li>
 				<li class="nav-item {% if request.resolver_match.url_name == 'login' %}active{% endif %}"><a class="nav-link" href="{% url 'portal:login' %}">Login</a></li>
+				<li class="nav-item {% if request.resolver_match.url_name == 'signup' %}active{% endif %}" id="register"><a class="nav-link" href="{% url 'portal:signup' %}">Register</a></li>
 				{% endif %}
 			</ul>
 		</div>

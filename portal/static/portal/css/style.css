@@ -1,3 +1,7 @@
+body{
+	padding-top: 60px;
+}
+
 /* NAVBAR
 -------------------------------------------------- */
 .navbar-collapse{
@@ -5,20 +9,15 @@
 	margin-right: 1em;
 	color: white;
 }
-.navbar-dark .navbar-nav .active{
-	margin-right: 8px;
-	margin-left: 8px;
-	box-shadow: 0 0 0 8px #e64522;
-	background-color: #e64522;
+
+#register a{
+	color: white;
 }
 
-body{
-	padding-top: 60px;
-}
 .navbar-brand{
 	font-family: 'Raleway', 'Open Sans', sans-serif;
 }
-@media (min-width: 576px) {
+@media (min-width: 768px) {
 	.navbar-brand.nav-centre-brand
 	{
 		/*padding-top: 30px;*/
@@ -29,6 +28,17 @@ body{
 		margin:0 auto;
 		/*Allow click through brand div*/
 		pointer-events: none;
+	}
+	.navbar-dark .navbar-nav .active{
+		margin-right: 8px;
+		margin-left: 8px;
+		box-shadow: 0 0 0 8px rgb(146, 12, 12);
+		background-color: rgb(146, 12, 12);
+	}
+	#register{
+		margin-left: 16px;
+		box-shadow: 0 0 0 8px #7a29a3;
+		background-color: #7a29a3;
 	}
 }
 @media (max-width: 768px) {
