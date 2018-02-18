@@ -1,83 +1,136 @@
 /* NAVBAR
 -------------------------------------------------- */
-@media (min-width: 768px) {
-.navbar-brand.nav-centre-brand
+.navbar-collapse{
+	text-align: right;
+	margin-right: 1em;
+}
+@media (min-width: 576px) {
+	.navbar-brand.nav-centre-brand
 	{
+		font-size: 2em;
+		/*padding-top: 30px;*/
+		line-height: 60px;
 		position: absolute;
 		width: 100%;
 		left: 0;
 		text-align: center;
 		margin:0 auto;
+		z-index: inherit;
+		/*Allow click through brand div*/
+		pointer-events: none;
+		/*IE11 conditional*/
+		filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='your_transparent.png', sizingMethod='scale');
+background: none !important;
 	}
 }
 
 /* SOCIAL LINKS
 -------------------------------------------------- */
-
-#sticky-social a { 
+.facebook-link{
+	border-color: #4060A5;
 	text-decoration: none;
+	color: white;
+}
+.facebook-link:hover, .facebook-link:active{
+	background: #4060A5;
+	border-color: #4060A5;
+}
+
+#side-toggle{
+	left: 0;
+	position: fixed;
+	top: 60px;
+	z-index: 99;
+	text-decoration: none;
+	color: #fff;
+	background: #333;
+	display: block;
+	height: 40px;
+	line-height: 40px;
+	width: 40px;
+	text-align: center;
+}
+
+#side-toggle:hover span{
+	left: 100%;
+}
+#side-toggle:hover,
+#side-toggle:hover span { background: #1F1F1F }
+
+#side-toggle span {
+	line-height: 40px;
+	left:-100px;
+	position: absolute;
+	text-align:center;
+	width:100px;
+}
+
+#side-float {
+	left: 0;
+	position: fixed;
+	top: 100px;
+	z-index: 99;
+	margin-left: -40px;
+	transition: all 0.5s ease 0s;
+ }
+
+#side-float.visible{
+	margin-left: 0px;
+	transition: all 0.5s ease 0s;
+}
+
+#side-float a { 
+	text-decoration: none;
+	color: #fff;
  }
  
- #sticky-social ul {
+#side-float ul {
 	list-style: none;
 	margin: 0;
 	padding: 0;
- }
- 
- #sticky-social {
-	left: 0;
-	position: fixed;
-	top: 150px;
- }
- 
- #sticky-social a {
+}
+
+#side-float li{
 	background: #333;
-	color: #fff;
 	display: block;
-	height: 35px;
-	font: 16px "Open Sans", sans-serif;
-	line-height: 35px;
+	height: 40px;
+	line-height: 40px;
 	position: relative;
 	text-align: center;
-	width: 35px;
- }
- 
- #sticky-social a:hover span {
+	width: 40px;
+}
+
+
+#side-float li:hover span{
 	left: 100%;
- }
- 
- #sticky-social a span {
-	line-height: 35px;
-	left: -120px;
+}
+
+#side-float a span {
+	line-height: 40px;
+	left:-100px;
 	position: absolute;
 	text-align:center;
-	width:120px;
- }
+	width:100px;
+}
  
- #sticky-social a[class*="facebook"],
- #sticky-social a[class*="facebook"]:hover,
- #sticky-social a[class*="facebook"] span { background: #4060A5; }
- 
- #sticky-social a[class*="twitter"],
- #sticky-social a[class*="twitter"]:hover,
- #sticky-social a[class*="twitter"] span { background: #00aced; }
- 
- #sticky-social a[class*="google-plus"],
- #sticky-social a[class*="google-plus"]:hover,
- #sticky-social a[class*="google-plus"] span { background: #e64522; }	
- 
- #sticky-social a[class*="youtube-play"],
- #sticky-social a[class*="youtube-play"]:hover,
- #sticky-social a[class*="youtube-play"] span { background: #ff0000; }	
- 
- #sticky-social a[class*="twitch"],
- #sticky-social a[class*="twitch"]:hover,
- #sticky-social a[class*="twitch"] span { background: #6441A4; }	
- 
- #sticky-social a[class*="steam"],
- #sticky-social a[class*="steam"]:hover,
- #sticky-social a[class*="steam"] span { background: #144679 }	
- 
+#side-float li.facebook:hover,
+#side-float li.facebook span { background: #4060A5; }
+
+#side-float li.twitter:hover,
+#side-float li.twitter span { background: #00aced; }
+
+#side-float li.google-plus:hover,
+#side-float li.google-plus span { background: #e64522; }	
+
+#side-float li.youtube-play:hover,
+#side-float li.youtube-play span { background: #ff0000; }	
+
+#side-float li.twitch:hover,
+#side-float li.twitch span { background: #6441A4; }	
+
+#side-float li.steam:hover,
+#side-float li.steam span { background: #144679 }
+
 
 /* CAROUSEL
 -------------------------------------------------- */
@@ -107,21 +160,20 @@
   }
   
   
-  /* MARKETING CONTENT
-  -------------------------------------------------- */
-  /* Center align the text within the three columns below the carousel */
-  .marketing .col-lg-4 {
-	margin-bottom: 1.5rem;
-	text-align: center;
-  }
-  .marketing h2 {
-	font-weight: 400;
-  }
-  .marketing .col-lg-4 p {
-	margin-right: .75rem;
-	margin-left: .75rem;
-  }
-  
+/* MARKETING CONTENT
+-------------------------------------------------- */
+/* Center align the text within the three columns below the carousel */
+.marketing .col-lg-4 {
+margin-bottom: 1.5rem;
+text-align: center;
+}
+.marketing h2 {
+font-weight: 400;
+}
+.marketing .col-lg-4 p {
+margin-right: .75rem;
+margin-left: .75rem;
+}
   
   /* Featurettes
   ------------------------- */

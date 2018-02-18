@@ -197,9 +197,11 @@
                                           <!-- content -->
                                           <tr>
                                              <td style="font-size: 12px; line-height: 18px; font-family: Arial, Helvetica, sans-serif; color: #7d7067; text-align: center" st-content="fulltext-content" align="center" class="mobile-text appleLinksBodyCopy">
-                                                You can also copy and paste this in your browser: <a href="http://{{ domain }}{% url 'portal:activate' uidb64=uid token=token %}" target="_blank" style="text-decoration: underline; color: #998675">http://{{ domain }}{% url 'portal:activate' uidb64=uid token=token %}</a>
+                                                You can also copy and paste this in your browser:
                                                 <br>
-                                                If this email doesn't make sense to you simply ignore it and don’t click above. You will not receive any emails from us.
+                                                <a href="http://{{ domain }}{% url 'portal:activate' uidb64=uid token=token %}" target="_blank" style="text-decoration: underline; color: #998675">http://{{ domain }}{% url 'portal:activate' uidb64=uid token=token %}</a>
+                                                <br>
+                                                If this email doesn't make sense to you simply ignore it and don't click above. You will not receive any emails from us.
                                              </td>
                                           </tr>
                                           <!-- End of content -->
@@ -208,13 +210,6 @@
                                     </table>
                                  </td>
                               </tr>
-                              <!-- spacing -->
-
-                              <!-- Spacing -->
-                              <tr>
-                                 <td height="25" style="font-size:1px; line-height:1px; mso-line-height-rule: exactly;">&nbsp;</td>
-                              </tr>
-                              <!-- Spacing -->
                            </tbody>
                         </table>
                      </td>

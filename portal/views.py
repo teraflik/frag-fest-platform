@@ -5,13 +5,14 @@ from django.db import transaction
 from django.http import Http404
 from django.shortcuts import render, redirect, render_to_response, get_object_or_404
 from django.template.loader import render_to_string
-from portal.tokens import account_activation_token
+from portal.util import account_activation_token
 from django.utils.encoding import force_bytes, force_text
 from django.utils.html import strip_tags
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.translation import ugettext as _
 from django.views.generic import View, FormView, ListView
 
+from django.conf import settings
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth import authenticate, login, update_session_auth_hash
 from django.contrib import messages
@@ -40,7 +41,7 @@ def send_verification_email(request, user):
         'uid': urlsafe_base64_encode(force_bytes(user.pk)),
         'token': account_activation_token.make_token(user),
     })
-    msg = EmailMultiAlternatives(subject, plain_message, 'noreply@frag-fest.in', [user.email])
+    msg = EmailMultiAlternatives(subject, plain_message, settings.DEFAULT_FROM_EMAIL, [user.email])
     msg.attach_alternative(html_message, "text/html")
     msg.send()
 

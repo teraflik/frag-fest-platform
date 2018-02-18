@@ -1,10 +1,35 @@
 {% extends 'portal/base.html' %}
-
+{% load static %}
 {% block content %}
-	<div class="pt-md-5 pb-md-4 mx-auto text-center">
-		<p class="lead">Aparoksha and IIIT Allahabad presents</p>
-		<h1 class="display-4">Frag-Fest' 18</h1>
+	<div class="row pt-md-5 pb-md-4 mr-auto">
+		<div class="col-9">
+			<img src="{% static 'portal/cover/banner.png' %}" class="img-fluid" alt="Responsive image">
+		</div>
+		<div class="col">
+			<div class="card border-danger text-center mb-3" style="max-width: 18rem;">
+				<div class="card-header text-danger">
+					<i class="fa fa-exclamation-triangle" aria-hidden="true"></i> Gamer Alert
+				</div>
+				<div class="card-body">
+					<h5 class="card-title text-white">Frag-Fest' 18</h5>
+					<p class="card-text">One of the most awaited events of IIIT Allahabad.</p>
+				</div>
+				<ul class="list-group list-group-flush">
+					<li class="list-group-item"><i class="fa fa-calendar" aria-hidden="true"></i> 16th-18th March</li>
+					<li class="list-group-item"><i class="fa fa-clock-o" aria-hidden="true"></i> Prelims: 6th March</li>
+				</ul>
+				<div class="card-footer text-white">
+					<div class="btn-group">
+						<a class="btn btn-outline-danger">Learn More</a>
+					</div>
+					<div class="btn-group">
+						<a href="{{ SOCIAL.facebook }}" class="btn btn-outline-primary facebook-link" target="_blank"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
+	
 	{% include 'stat/games_overview.html' %}
   
 {% endblock %}

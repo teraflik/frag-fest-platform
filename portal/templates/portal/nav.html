@@ -1,6 +1,6 @@
-<nav class="navbar navbar-expand-md navbar-dark bg-danger">
+<nav class="navbar navbar-expand-sm navbar-dark bg-danger">
 	<div class="container">
-		<a class="navbar-brand mx-auto" href="{% url 'portal:index' %}">Frag-Fest' 18</a>
+		<a class="navbar-brand nav-centre-brand" href="{% url 'portal:index' %}">Frag-Fest' 18</a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
 		</button>
@@ -30,13 +30,13 @@
 	</div>
 </nav>
 
-<aside id="sticky-social">
-	<ul>
-		<li><a href="https://www.facebook.com/FragFestIIITA/" target="_blank"><i class="fa fa-lg fa-facebook"></i></a></li>
-		<li><a href="https://twitter.com/FragFestIIITA/" target="_blank"><i class="fa fa-lg fa-twitter"></i></a></li>
-		<li><a href="https://www.youtube.com/channel/UCsuoNyw1L8W58mXAsXZ90ZA?" target="_blank"><i class="fa fa-lg fa-youtube-play"></i></a></li>
-		<li><a href="https://plus.google.com/+FragFest" target="_blank"><i class="fa fa-lg fa-google-plus"></i></a></li>
-		<li><a href="https://www.twitch.tv/fragfestiiita//" target="_blank"><i class="fa fa-lg fa-twitch"></i></a></li>
-		<li><a href="https://steamcommunity.com/groups/Frag-Fest" target="_blank"><i class="fa fa-lg fa-steam"></i></a></li>
-	</ul>
+<aside>
+	<div id="side-float" class="visible">
+		<ul>
+			{% for name, link in SOCIAL.items %}
+			<li class="{{ name }}"><a href="{{ link }}" target="_blank"><i class="fa fa-lg fa-{{ name }}"></i><span>{{ name }}</span></a></li>
+			{% endfor %}
+		</ul>
+	</div>
+	<a id="side-toggle" href="#"><i class="fa fa-lg fa-chevron-circle-left"></i><span>hide</span></a>
 </aside>
