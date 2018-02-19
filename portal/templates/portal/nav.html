@@ -1,3 +1,4 @@
+{% load static %}
 <nav class="navbar fixed-top navbar-expand-md navbar-dark bg-danger">
 	<div class="container">
 		<a class="navbar-brand nav-centre-brand font-weight-bold" href="{% url 'portal:index' %}"><h5>FRAG-FEST' 18</h5></a>
@@ -27,6 +28,23 @@
 				{% endif %}
 			</ul>
 		</div>
+	</div>
+</nav>
+<nav class="navbar" style="opacity: 1;">
+	<div class="container">
+	<div class="row text-center" style="margin-left:50px;">
+		<div class="col-md-4"></div>
+		<div class="col-md-1">
+			<img src="{% static 'portal/img/sponsors/Circle.png' %}" style="height: 120%; width: 140%;" alt="CircleCT">
+		</div>
+		<div class="col-md-1">
+			<img src="{% static 'portal/img/sponsors/zebronics.png' %}" style="height: 120%; width: 140%;" alt="Zebronics">
+		</div>
+		<div class="col-md-1">
+			<img src="{% static 'portal/img/sponsors/xsplit.png' %}" style="height: 120%; width: 140%;" alt="Xsplit">
+		</div>
+		
+	</div>
 	</div>
 </nav>
 
