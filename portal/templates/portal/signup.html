@@ -5,59 +5,60 @@
     <h3>Welcome to Frag-Fest
         <small class="text-muted">Sign-Up for an account.</small>
 </div>
-<form action="#" method="POST" class="needs-validation" novalidate>{% csrf_token %}
-    <div class="row">
-        <div class="col-md-6 mb-3">
-            <label for="{{ form.first_name.id_for_label }}">First name</label>
-            {{ form.first_name }}
-            <div class="invalid-feedback d-block">{{ form.first_name.errors }}</div>
-        </div>
-        <div class="col-md-6 mb-3">
-            <label for="{{ form.last_name.id_for_label }}">Last Name</label>
-            {{ form.last_name }}
-            <div class="invalid-feedback d-block">{{ form.last_name.errors }}</div>
-        </div>
-    </div>
-
-    <div class="mb-3">
-        <label for="{{ form.email.id_for_label }}">Email</label>
-        {{ form.email }}
-        <div class="invalid-feedback d-block">
-            {{ form.email.errors }}
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-6 mb-3">
-            <label for="{{ form.password1.id_for_label }}">Password</label>
-            {{ form.password1 }}
-            <div class="invalid-feedback d-block">
-                {{ form.password1.errors }}
+<div class="col-md-8 mx-auto mb-4">
+    <form action="#" method="POST" class="needs-validation" novalidate>{% csrf_token %}
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="{{ form.first_name.id_for_label }}">First name</label>
+                {{ form.first_name }}
+                <div class="invalid-feedback d-block">{{ form.first_name.errors }}</div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="{{ form.last_name.id_for_label }}">Last Name</label>
+                {{ form.last_name }}
+                <div class="invalid-feedback d-block">{{ form.last_name.errors }}</div>
             </div>
         </div>
-        <div class="col-md-6 mb-3">
-            <label for="{{ form.password2.id_for_label }}">Confirm Password</label>
-            {{ form.password2 }}
+
+        <div class="mb-3">
+            <label for="{{ form.email.id_for_label }}">Email</label>
+            {{ form.email }}
             <div class="invalid-feedback d-block">
-                {{ form.password2.errors }}
+                {{ form.email.errors }}
             </div>
         </div>
-    </div>
 
-    <hr class="mb-4">
-    <div class="custom-control custom-checkbox">
-        {{ form.subscribe }}
-        <label class="custom-control-label" for="{{ form.subscribe.id_for_label }}">Send me updates and news related to Frag-Fest.</label>
-    </div>
-    <div class="custom-control custom-checkbox">
-        {{ form.agree_terms }}
-        <label class="custom-control-label" for="{{ form.agree_terms.id_for_label }}">I agree to the <a href="{% url 'portal:terms' %}">Terms &amp; Conditions.</a></label>
-        <div class="invalid-feedback d-block">
-            {{ form.agree_terms.errors }}
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="{{ form.password1.id_for_label }}">Password</label>
+                {{ form.password1 }}
+                <div class="invalid-feedback d-block">
+                    {{ form.password1.errors }}
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="{{ form.password2.id_for_label }}">Confirm Password</label>
+                {{ form.password2 }}
+                <div class="invalid-feedback d-block">
+                    {{ form.password2.errors }}
+                </div>
+            </div>
         </div>
-    </div>
-    <hr class="mb-4">
-    <button class="btn btn-primary btn-lg btn-block" type="submit">Sign Up</button>
-</form>
 
+        <hr class="mb-4">
+        <div class="custom-control custom-checkbox">
+            {{ form.subscribe }}
+            <label class="custom-control-label" for="{{ form.subscribe.id_for_label }}">Send me updates and news related to Frag-Fest.</label>
+        </div>
+        <div class="custom-control custom-checkbox">
+            {{ form.agree_terms }}
+            <label class="custom-control-label" for="{{ form.agree_terms.id_for_label }}">I agree to the <a href="{% url 'portal:terms' %}">Terms &amp; Conditions.</a></label>
+            <div class="invalid-feedback d-block">
+                {{ form.agree_terms.errors }}
+            </div>
+        </div>
+        <hr class="mb-4">
+        <button class="btn btn-primary btn-lg btn-block" type="submit">Sign Up</button>
+    </form>
+</div>
 {% endblock %}

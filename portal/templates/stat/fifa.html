@@ -10,9 +10,9 @@
 </div>
 
 <div class="w-100 my-md-3 pl-md-3">
-  <div class="bg-dark mr-md-3 pt-3 px-3 pt-md-5 px-md-5 text-white overflow-hidden">
+  <div class="bg-dark mr-md-3 pt-3 px-3 px-md-5 text-white overflow-hidden">
     <div class="my-3 py-3">
-      <h2 class="display-5 text-center">Rules</h2>
+      <h2 class="display-5 text-center">FIFA 18</h2>
       <ul>
         <li><h5>Competition Format</h5>
           <ul>
@@ -67,7 +67,7 @@
       </ul>
       <p class="text-center">
         {% if user.is_authenticated %}
-        <a class="btn btn-primary btn-lg" href="#" role="button">You are signed up!</a>
+        <h4 class="text-success text-center">You are signed up!</h4>
         {% else %}
         <a class="btn btn-primary btn-lg" href="{% url 'portal:login' %}" role="button">Sign in to Register &raquo;</a>
         {% endif %}

@@ -1,15 +1,25 @@
 {% extends 'portal/base.html' %}
 
 {% block content %}
-
-<div class="pt-md-5 pb-md-4">
-    <h2>Profile <small class="text-muted text-truncate">{{ user.email }}</small></h2>
+<div class="row pt-5 pb-md-4">
+  <div class="col-md-8">
+      <h2>Profile</h2>
+      <h5 class="text-muted">{{ user.email }}</h5>
+      {% if user.profile.email_confirmed %}
+      <p class="small text-success">You have been succesfully registered for the onsite event of Frag-Fest. See you at <a href="https://goo.gl/maps/xETkws2bgcm" target="_blank" title="Visit on Google Maps">IIIT Allahabad <i class="fa fa-lg fa-map-marker"></i></a>.</p>
+      {% else %}
+      <p class="small text-warning">Your email has not been confirmed. <a href="{% url 'portal:resend_verification' %}">Resend verification email.</a></p>
+      {% endif %}
+  </div>
+  <div class="col-md-4 pt-4 pb-4 text-white">
+    <a href="{% url 'portal:dashboard' %}" class="btn btn-info btn-block btn-lg" name="updateProfile" type="submit"><i class="fa fa-inverse fa-users"></i> &nbsp; &nbsp;Team Dashboard</a>
+  </div>
 </div>
 
 <div class="row">
   {% if user.profile.steam_connected %}
   <div class="col-md-2 pb-3">
-    <div class="card" style="max-width: 12rem;">
+    <div class="card mx-auto" style="max-width: 12rem;">
       <img class="card-img-top" src="{{ steam.avatarfull }}" alt="Profile Image">
     </div>
   </div>
@@ -37,6 +47,8 @@
   {% endif %}
 
   <div class="col-md-4 offset-md-2 pt-4">
+    
+
     <form action="#" method="POST" class="needs-validation" novalidate>{% csrf_token %}
       <div class="mb-3">
         <label for="{{ profile_form.display_name.id_for_label }}">Change Display Name</label>

@@ -25,7 +25,7 @@ from .models import MyUser, Team, Profile, Membership
 from .forms import SignUpForm, TeamForm, ProfileForm, forgetpass
 
 @login_required
-def send_verification_email(request, user):
+def send_verification_email(request):
     user = request.user
     current_site = get_current_site(request)
     subject = 'Your ' + current_site.name + ' account has been created. Please verify your email.'
@@ -56,16 +56,27 @@ def signup(request):
             user = form.save()
             user.refresh_from_db()  # load the profile instance created by the signal
             user.profile.is_subscribed = form.cleaned_data.get('subscribe')
+            user.profile.display_name = form.cleaned_data.get('first_name') + " " +form.cleaned_data.get('last_name')
             user.save()
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(email=user.email, password=raw_password)
             login(request, user)
-            send_verification_email(request, user)
+            send_verification_email(request)
             messages.success(request, _('Successfully registered! We have sent you a verification email. Check your spam as well.'))
             return redirect('portal:index')
     else:
         form = SignUpForm()
     return render(request, 'portal/signup.html', {'form': form})
+
+@login_required
+def resend_verification(request):
+    if request.user.profile.email_confirmed:
+        messages.info(request, _('Email already verified!'))
+        return redirect('portal:profile')
+    else:
+        send_verification_email(request)
+        messages.info(request, _('Verification email resent. If you can\'t find it, check your spam folder.'))
+        return redirect('portal:profile')
 
 def activate(request, uidb64, token):
     try:
@@ -104,7 +115,6 @@ def profile(request):
     else:
         steam_id = None
         steam = None
-    email_confirmed = request.user.profile.email_confirmed
 
     if request.method == 'POST':
         if 'updateProfile' in request.POST:
@@ -132,7 +142,6 @@ def profile(request):
     return render(request, 'portal/profile.html', {
         'profile_form': profile_form,
         'password_form': password_form,
-        'email_confirmed': email_confirmed,
         'steam_id': steam_id,
         'steam': steam,
     })
@@ -172,13 +181,17 @@ def create_or_join(request):
     return render(request, 'portal/create_or_join.html', {'create_form': create_team_form, 'teams_available': teams_available})
 
 def dashboard(request):
+    title = 'Team Dashboard'
+    if True:
+        message = 'Coming up soon for you to create and join teams.'
+        return render(request, 'portal/no_access.html', {'title': title, 'message': message})
     if not request.user.is_authenticated():
         message = 'You need to be logged in to access your Team Dashboard.'
-        return render(request, 'portal/no_access.html', {'title': 'Team Dashboard', 'message': message})
+        return render(request, 'portal/no_access.html', {'title': title, 'message': message})
 
     if not request.user.profile.steam_connected:
         message = 'You need to be signed-in to Steam to join a Team.'
-        return render(request, 'portal/no_access.html', {'title': 'Steam Error', 'message': message})
+        return render(request, 'portal/no_access.html', {'title': title, 'message': message})
 
     memberships = request.user.memberships.all()
 

@@ -3,7 +3,7 @@
 
 {% block content %}
 <img src="{% static 'portal/img/csgo/cscover.jpg' %}" alt="Counter-Strike Cover" class="img-fluid mt-5">
-<h2 class="display-3 text-center mt-3">Counter Strike: Global Offensive</h2>
+<h3 class="display-4 text-center mt-3">Counter Strike: Global Offensive</h2>
 <main role="main" class="container">
 <div class="row">
 <div class="col-md-8 blog-main">
@@ -75,7 +75,7 @@
       </ul>
    </div>
    <!-- /.blog-post -->
-   <p><a class="btn btn-primary btn-lg " href="#" role="button">Registrations Opening Soon!</a></p>
+   <p class="text-center"><a class="btn btn-lg btn-primary" href="{% url 'portal:dashboard' %}">Visit Team Dashboard</a></p>
 </div>
 <div class="col-md-4">
    <img src="{% static 'portal/img/csgo/csgothumbnail1.jpg' %}" class="img-fluid m-3" style="width: 100%;">
