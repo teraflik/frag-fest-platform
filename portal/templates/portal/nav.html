@@ -1,7 +1,7 @@
 {% load static %}
 <nav class="navbar fixed-top navbar-expand-md navbar-dark bg-danger">
 	<div class="container">
-		<a class="navbar-brand nav-centre-brand font-weight-bold" href="{% url 'portal:index' %}"><h5>FRAG-FEST' 18</h5></a>
+		<a class="navbar-brand nav-centre-brand frag-fest-logo" href="{% url 'portal:index' %}">FRAG-FEST' 18</a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
 		</button>
@@ -14,7 +14,6 @@
 				<li class="nav-item {% if request.resolver_match.url_name == 'fifa' %}active{% endif %}"><a class="nav-link" href="{% url 'portal:fifa' %}">FIFA</a></li>
 				{% comment %}
 				<li class="nav-item"><a class="nav-link" href="{% url 'portal:team_list' %}">Registered Teams</a></li>
-				<li class="nav-item"><a class="nav-link" href="{% url 'portal:dashboard' %}">Team Dashboard</a></li>
 				{% endcomment %}
 			</ul>
 			
@@ -30,21 +29,25 @@
 		</div>
 	</div>
 </nav>
-<nav class="navbar" style="opacity: 1;">
-	<div class="container">
-	<div class="row text-center" style="margin-left:50px;">
-		<div class="col-md-4"></div>
-		<div class="col-md-1">
-			<img src="{% static 'portal/img/sponsors/Circle.png' %}" class="shadowfilter" style="height: 120%; width: 140%;" alt="CircleCT">
+
+<nav class="container mx-auto pt-1" id="sponsors" >
+	<div class="row justify-content-center">
+		<div class="col-auto" id="CircleCT">
+			<div class="text-center">Powered By</div>
+			<div class="sponsor-logo">
+				<a target="_blank" href="http://www.circlect.com/">
+					<img src="{% static 'portal/img/sponsors/Circle.png' %}" class="img-fluid" alt="CircleCT">
+				</a>
+			</div>
 		</div>
-		<div class="col-md-1">
-			<img src="{% static 'portal/img/sponsors/zebronics.png' %}" class="shadowfilter" style="height: 120%; width: 140%;" alt="Zebronics">
+		<div class="col-auto" id="xSplit">
+			<div class="text-center">Streaming Partner</div>
+			<div class="sponsor-logo">
+				<a target="_blank" href="https://www.xsplit.com/">
+					<img src="{% static 'portal/img/sponsors/xsplit.png' %}" class="img-fluid" alt="XSplit">
+				</a>
+			</div>
 		</div>
-		<div class="col-md-1">
-			<img src="{% static 'portal/img/sponsors/xsplit.png' %}" class="shadowfilter" style="height: 120%; width: 140%;" alt="Xsplit">
-		</div>
-		
-	</div>
 	</div>
 </nav>
 

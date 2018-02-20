@@ -1,5 +1,15 @@
+@import url('https://fonts.googleapis.com/css?family=Patua+One');
+
 body{
 	padding-top: 60px;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+.frag-fest-logo{
+	font-family: 'Patua One', sans-serif;
+}
+h1, h2, h3, h4{
+	font-family: 'Patua One', sans-serif;
 }
 
 /* NAVBAR
@@ -10,16 +20,14 @@ body{
 	color: white;
 }
 
-#register a{
-	color: white;
+.navbar-brand{
+	font-size: 1.5em;
 }
 
-.navbar-brand{
-	font-family: 'Raleway', 'Open Sans', sans-serif;
-}
 @media (min-width: 768px) {
 	.navbar-brand.nav-centre-brand
-	{
+	{	
+		font-size: 2.0em;
 		/*padding-top: 30px;*/
 		position: absolute;
 		width: 100%;
@@ -35,16 +43,43 @@ body{
 		box-shadow: 0 0 0 8px rgb(146, 12, 12);
 		background-color: rgb(146, 12, 12);
 	}
-	#register{
+	.navbar #register{
 		margin-left: 16px;
 		box-shadow: 0 0 0 8px #7a29a3;
 		background-color: #7a29a3;
 	}
+	.navbar #register a{
+		color: white;
+	}	
 }
-@media (max-width: 768px) {
-	#cover-image{
-		max-width: 100%;
-	}
+
+/* SPONSORS
+-------------------------------------------------- */
+nav#sponsors{
+	margin-bottom: 10px;
+}
+nav#sponsors img
+{
+	width: 100px;
+	max-height: 100%;
+}
+nav#sponsors .sponsor-logo{
+	max-height: 120px;
+	text-align: center !important;
+	padding: 5px 0;
+	margin: 5px 10px;
+
+}
+nav#sponsors .sponsor-logo:hover{
+	background-color: #282828;
+	border-radius: 3px;
+}
+nav#sponsors .sponsor-logo img:hover {
+	-webkit-transition: all 0.3s linear;
+	-o-transition: all 0.3s linear;
+	transition: all 0.3s linear;
+	filter: drop-shadow(0px 2px 8px rgba(0, 231, 255, 0.8));
+	-webkit-filter: drop-shadow(0px 2px 8px rgba(0, 231, 255, 0.8));
 }
 
 /* SOCIAL LINKS
@@ -361,20 +396,4 @@ margin-left: .75rem;
 
 .at-social__item a:hover {
 	fill: #788D96;
-}
-
-body {
-	font-family: 'Roboto', sans-serif;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-}
-
-.shadowfilter {
-	-webkit-filter: drop-shadow(0px 0px 0px rgba(255,255,255,0.80));
-	-webkit-transition: all 0.5s linear;
-	-o-transition: all 0.5s linear;
-	transition: all 0.5s linear;
-	
-}.shadowfilter:hover {
-	-webkit-filter: drop-shadow(0px 2px 8px rgba(0, 231, 255, 0.8));
 }
