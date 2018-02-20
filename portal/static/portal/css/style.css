@@ -73,18 +73,18 @@ nav#sponsors img
 	height: 40px;
 	max-width: 100%;
 }
-nav#sponsors .sponsor-logo{
+nav#sponsors .logo{
 	max-height: 120px;
 	text-align: center !important;
 	padding: 5px 0;
 	margin: 5px 10px;
 
 }
-nav#sponsors .sponsor-logo:hover{
+nav#sponsors .logo:hover{
 	background-color: #282828;
 	border-radius: 3px;
 }
-nav#sponsors .sponsor-logo img:hover {
+nav#sponsors .logo img:hover {
 	-webkit-transition: all 0.3s linear;
 	-o-transition: all 0.3s linear;
 	transition: all 0.3s linear;
