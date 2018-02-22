@@ -40,4 +40,5 @@ urlpatterns = [
     url(r'^sitemap\.xml$', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
     url(r'^', include('portal.urls')),
     url(r'', include('social_django.urls', namespace='social')),
+    url(r'^', include('django.contrib.auth.urls')),
 ]

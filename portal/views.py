@@ -161,9 +161,7 @@ def create_or_join(request):
             teams_available.append(team)
 
     if request.method == 'POST':
-        if 'join' in request.POST:
-            team = request.POST['join']
-        elif 'create' in request.POST:
+        if 'create' in request.POST:
             create_team_form = TeamForm(request.POST)
             if create_team_form.is_valid():
                 team = create_team_form.save(commit=False)
@@ -182,13 +180,13 @@ def create_or_join(request):
 
 def dashboard(request):
     title = 'Team Dashboard'
-    if True:
-        message = 'Coming up soon for you to create and join teams.'
-        return render(request, 'portal/no_access.html', {'title': title, 'message': message})
     if not request.user.is_authenticated():
         message = 'You need to be logged in to access your Team Dashboard.'
         return render(request, 'portal/no_access.html', {'title': title, 'message': message})
-
+    if True:
+        message = 'Coming up soon for you to create and join teams.'
+        return render(request, 'portal/no_access.html', {'title': title, 'message': message})
+    
     if not request.user.profile.steam_connected:
         message = 'You need to be signed-in to Steam to join a Team.'
         return render(request, 'portal/no_access.html', {'title': title, 'message': message})
