@@ -71,7 +71,7 @@ ROOT_URLCONF = 'fragfest.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['portal/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'debug': DEBUG,
