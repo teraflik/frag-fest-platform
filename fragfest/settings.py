@@ -64,6 +64,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
     'social_django.middleware.SocialAuthExceptionMiddleware',  # <--
+    'portal.util.SteamAuthAuthAlreadyAssociatedMiddleware', # <--
 ]
 
 ROOT_URLCONF = 'fragfest.urls'
