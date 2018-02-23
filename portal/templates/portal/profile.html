@@ -1,7 +1,7 @@
 {% extends 'portal/base.html' %}
 
 {% block content %}
-<div class="row pt-5 pb-md-4">
+<div class="row pt-2 pb-md-4">
   <div class="col-md-8">
       <h2>Profile</h2>
       <h5 class="text-muted">{{ user.email }}</h5>
@@ -16,7 +16,7 @@
   </div>
 </div>
 
-<div class="row">
+<div class="row pb-4">
   {% if user.profile.steam_connected %}
   <div class="col-md-2 pb-3">
     <div class="card mx-auto" style="max-width: 12rem;">
@@ -48,7 +48,6 @@
 
   <div class="col-md-4 offset-md-2 pt-4">
     
-
     <form action="#" method="POST" class="needs-validation" novalidate>{% csrf_token %}
       <div class="mb-3">
         <label for="{{ profile_form.display_name.id_for_label }}">Change Display Name</label>
