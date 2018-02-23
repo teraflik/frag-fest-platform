@@ -39,6 +39,9 @@ SOCIAL_AUTH_STEAM_API_KEY = config('SOCIAL_AUTH_STEAM_API_KEY')
 SOCIAL_AUTH_STEAM_EXTRA_DATA = ['player']
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/steam_connect/'
 
+#Other settings
+SHOW_SPONSORS = config('SHOW_SPONSORS', default=True, cast=bool)
+
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',

@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.contrib import messages
 from django.shortcuts import redirect
@@ -26,6 +27,7 @@ class SteamAuthAuthAlreadyAssociatedMiddleware(SocialAuthExceptionMiddleware):
             raise exception
 
 def social_links(request):
+    SHOW_SPONSORS = settings.SHOW_SPONSORS
     social = [
         ('facebook', 'https://www.facebook.com/FragFestIIITA/'),
         ('twitter', 'https://twitter.com/FragFestIIITA/'),
@@ -35,4 +37,4 @@ def social_links(request):
         ('steam', 'https://steamcommunity.com/groups/Frag-Fest')
     ]
     social = OrderedDict(social)
-    return {'SOCIAL': social}
+    return {'SOCIAL': social, 'SHOW_SPONSORS':SHOW_SPONSORS}
