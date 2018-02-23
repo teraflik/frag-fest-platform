@@ -97,15 +97,6 @@ def activate(request, uidb64, token):
         messages.error(request, _('Email verification error!'))
     return render(request, 'stat/index.html')
 
-'''
-subject = 'Password change'
-message = 'You forgot your password so we are sending new password. Change this password once you log in. Your username = ' + username123 + ' Your new password = ' + password
-from_email = settings.EMAIL_HOST_USER
-to_list = [user.email]
-send_mail(subject,message,from_email,to_list,fail_silently=True)
-
-messages.success(request, 'Your password was successfully sent!')'''
-
 @login_required
 @transaction.atomic
 def profile(request):
@@ -154,7 +145,7 @@ def manage_team(request):
     return render(request, 'portal/dashboard.html', {'teams': teams})
 
 @login_required
-def create_or_join(request):
+def create_team(request):
     teams_available = []
     for team in Team.objects.all():
          if team.can_apply(request.user):
