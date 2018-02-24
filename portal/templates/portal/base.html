@@ -13,7 +13,10 @@
 	</script>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	{% block description %}
 	<meta name="description" content="Frag-Fest is an eSports Carnival to celebrate gaming as a union of communities, a conclave of emotions and to find out who is best of the best." />
+	{% endblock %}
+	<meta property="og:image" content="{% static 'portal/img/main.jpg' %}" />
     <meta name="keywords" content="Frag-Fest Aparoksha IIIT Allahabad eSports Gaming Counter Strike Global Offensive FIFA" />
 	<meta name="author" content="Team Frag-Fest">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
