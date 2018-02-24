@@ -201,11 +201,13 @@ def dashboard(request):
     title = 'Team Dashboard'
     if not request.user.is_authenticated():
         message = 'You need to be logged in to access your Team Dashboard.'
-        return render(request, 'portal/no_access.html', {'title': title, 'message': message})
+        action = 'log_in'
+        return render(request, 'portal/no_access.html', {'title': title, 'message': message, 'action': action})
 
     if not request.user.profile.steam_connected:
         message = 'You need to be signed-in to Steam to join a Team.'
-        return render(request, 'portal/no_access.html', {'title': title, 'message': message})
+        action = 'connect_steam'
+        return render(request, 'portal/no_access.html', {'title': title, 'message': message, 'action': action})
 
     team = request.user.profile.only_team()
     if team is not None:
