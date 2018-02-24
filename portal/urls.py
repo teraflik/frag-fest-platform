@@ -31,11 +31,19 @@ urlpatterns = [
     url(r'^login/$', auth_views.login, {'template_name': 'portal/login.html',
                                         'authentication_form': LoginForm}, name='login'),
     url(r'^logout/$', auth_views.logout, {'next_page': '/'}, name='logout'),
-   
     url(r'^steam_connect/$', views.steam_connect, name='steam_connect'),
-    url(r'^team/(?P<team_id>\d+)/$', views.SingleTeam, name='single_team'),
+
+    #To handle team functions
+    url(r'^team/(?P<pk>\d+)/$', views.team_view, name='team'),
+    url(r'^team/(?P<pk>\d+)/apply/$', views.team_apply, name='team_apply'),
+    url(r'^team/(?P<pk>\d+)/leave/$', views.team_leave, name='team_leave'),
+    url(r'^team/(?P<pk>\d+)/lock/$', views.team_lock, name='team_lock'),
+    url(r'^team/(?P<pk>\d+)/unlock/$', views.team_unlock, name='team_unlock'),
+    url(r'^team/accept/(?P<pk>\d+)/$', views.team_accept, name='team_accept'),
+    url(r'^team/reject/(?P<pk>\d+)/$', views.team_reject, name='team_reject'),
+
     url(r'^profile/$', views.profile, name='profile'),
-    url(r'^dashboard', views.dashboard, name='dashboard'),
+    url(r'^dashboard/$', views.dashboard, name='dashboard'),
     url(r'^teams/$', views.TeamListView.as_view(), name='team_list'),
     url(r'^all_games/$', TemplateView.as_view(template_name="stat/all_games.html"), name='all_games'),
     url(r'^fifa/$', TemplateView.as_view(template_name="stat/fifa.html"), name='fifa'),

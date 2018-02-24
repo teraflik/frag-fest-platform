@@ -6,6 +6,7 @@ from django.conf import settings
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.template.loader import render_to_string
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
@@ -52,36 +53,43 @@ class Team(models.Model):
     def lock(self):
         if self.locked:
             raise ValueError('Team is already locked!')
-        self.locked = 1
+        self.locked = True
+        self.save()
+    
+    def unlock(self):
+        if not self.locked:
+            raise ValueError('Team is already unlocked!')
+        self.locked = False
+        self.save()
 
     def can_leave(self, user):
         # owners can't leave at the moment
         role = self.role_for(user)
-        return role == BaseMembership.ROLE_MEMBER
+        return role == Membership.ROLE_MEMBER
 
     def can_apply(self, user):
         state = self.state_for(user)
-        return not self.locked and state is None and user.profile.valid()
+        return not self.locked and state is None and user.profile.is_valid() and user.profile.only_team() is None
     
     @property
     def applicants(self):
-        return self.memberships.filter(state=BaseMembership.STATE_APPLIED)
+        return self.memberships.filter(state=Membership.STATE_APPLIED)
     
     @property
     def rejections(self):
-        return self.memberships.filter(state=BaseMembership.STATE_REJECTED)
+        return self.memberships.filter(state=Membership.STATE_REJECTED)
     
     @property
     def acceptances(self):
-        return self.memberships.filter(state=BaseMembership.STATE_ACCEPTED)
+        return self.memberships.filter(state=Membership.STATE_ACCEPTED)
     
     @property
     def members(self):
-        return self.acceptances.filter(role=BaseMembership.ROLE_MEMBER)
+        return self.acceptances.filter(role=Membership.ROLE_MEMBER)
     
     @property
     def owners(self):
-        return self.acceptances.filter(role=BaseMembership.ROLE_OWNER)
+        return self.acceptances.filter(role=Membership.ROLE_OWNER)
 
     def is_member(self, user):
         return self.members.filter(user=user).exists()
@@ -146,10 +154,10 @@ class Membership(models.Model):
         verbose_name_plural=_("Memberships")
     
     def is_owner(self):
-        return self.role == BaseMembership.ROLE_OWNER
+        return self.role == Membership.ROLE_OWNER
 
     def is_member(self):
-        return self.role == BaseMembership.ROLE_MEMBER
+        return self.role == Membership.ROLE_MEMBER
 
     def accept(self, by):
         role = self.team.role_for(by)
@@ -157,7 +165,9 @@ class Membership(models.Model):
             if self.state == Membership.STATE_APPLIED:
                 self.state = Membership.STATE_ACCEPTED
                 self.save()
-                signals.accepted_membership.send(sender=self, membership=self)
+                subject = 'Hurray! Your team application was accepted.'
+                message = render_to_string('email/team_accept_application.html', {'user': self.user, 'team': self.team})
+                self.user.email_user(subject, message)
                 return True
         return False
 
@@ -167,7 +177,9 @@ class Membership(models.Model):
             if self.state == Membership.STATE_APPLIED:
                 self.state = Membership.STATE_REJECTED
                 self.save()
-                signals.rejected_membership.send(sender=self, membership=self)
+                subject = 'Your team application was rejected.'
+                message = render_to_string('email/team_reject_application.html', {'user': self.user, 'team': self.team})
+                self.user.email_user(subject, message)
                 return True
         return False
 
@@ -178,8 +190,7 @@ class Membership(models.Model):
 
     def remove(self, by=None):
         self.delete()
-        signals.removed_membership.send(
-            sender=Membership, team=self.team, user=self.user, invitee=self.invitee, by=by)
+        #signals.removed_membership.send(sender=Membership, team=self.team, user=self.user, by=by)
 
 class Profile(models.Model):
     user = models.OneToOneField(MyUser, on_delete=models.CASCADE)
@@ -191,11 +202,25 @@ class Profile(models.Model):
     def __str__(self):
         return self.user.email
 
-    def valid(self):
+    def is_valid(self):
         return self.steam_connected and self.email_confirmed
+    
+    def only_team(self):
+        try:
+            player = Membership.objects.get(user=self.user, state=Membership.STATE_ACCEPTED)
+            return player.team
+        except Membership.DoesNotExist:
+            return None
+        
+
 
 @receiver(post_save, sender=MyUser)
 def update_user_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance)
     instance.profile.save()
+
+@receiver(post_save, sender=Team)
+def handle_team_save(sender, instance, created, **kwargs):
+    if created:
+        instance.memberships.get_or_create(user=instance.creator, role=Membership.ROLE_OWNER, state=Membership.STATE_ACCEPTED)

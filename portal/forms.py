@@ -52,12 +52,24 @@ class ProfileForm(forms.ModelForm):
         widgets = {
             'display_name': forms.TextInput(attrs={'placeholder': 'Display name does not need to be unique.', 'class': 'form-control'}),
         }
-
-class forgetpass(forms.Form):
-    usernamee = forms.CharField(label='Username', max_length=100, required=True, widget=forms.TextInput(attrs={'placeholder': 'enter username', 'class':'form-control'}))
     
 class TeamForm(forms.ModelForm):
 
     class Meta:
         model = Team
         fields = ('name',  'info', 'link')
+        widgets = {
+            'name': forms.TextInput(attrs={'placeholder': 'The name for your team.', 'class': 'form-control'}),
+            'info': forms.Textarea(attrs={'placeholder': 'Something about your team.', 'class': 'form-control', 'rows':'3'}),
+            'link': forms.TextInput(attrs={'placeholder': 'Link to a team page/website. (Optional)', 'class': 'form-control'}),
+        }
+
+class TeamUpdateForm(forms.ModelForm):
+
+    class Meta:
+        model = Team
+        fields = ('info', 'link')
+        widgets = {
+            'info': forms.Textarea(attrs={'placeholder': 'If you update description, make sure to mention link as well.', 'class': 'form-control', 'rows':'3'}),
+            'link': forms.TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
+        }

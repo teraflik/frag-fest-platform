@@ -1,31 +1,42 @@
 {% extends 'portal/base.html' %}
 
 {% block content %}
-<div class="px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+<div class="px-3 py-3 pb-md-4 mx-auto text-center">
 	<h3>Team Dashboard
 		<small class="text-muted">Counter Strike: Global Offensive</small>
 	</h3>
 </div>
-<div class="col-md-6 order-md-2 mb-4">
-	<h4 class="d-flex justify-content-between align-items-center mb-3">
-		<span class="text-muted">{{ team.name }}</span>
-		<span class="badge badge-secondary badge-pill">{{ count }}</span>
-	</h4>
-	<ul class="list-group mb-3">
-		{% for team in teams %}
-		<li class="list-group-item d-flex justify-content-between lh-condensed">
-		<div>
-			<h6 class="my-0">{{ team.name }}</h6>
-			<small class="text-muted"><a href="https://www.steamcommunity.com/profiles/{{ player.steam_id }}">www.steamcommunity.com/profiles/{{ player.steam_id }}</a></small>
-		</div>
-		{% if player.user.username == captain %}
-		<span class="text-success">Captain</span>
-		{% else %}
-		<span class="text-muted">Member</span>
-		{% endif %}
-		</li>
-		{% endfor %}
-	</ul>
+<div class="row justify-content-between">
+  <div class="col-md-6">
+	<h5>Join <small class="text-muted">One of these teams</small></h5>
+	<table class="table table-hover">
+		<thead>
+			<tr>
+				<th scope="col">Team Name</th>
+				<th scope="col">No of Members</th>
+				<th scope="col">Details</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for team in teams_available %}
+			<tr>
+				<td>{{ team.name }}</td>
+				<td>{{ team.size }}</td>
+				<td><a href="{% url 'portal:team' pk=team.pk %}">Team Page</a></td>
+			</tr>
+			{% empty %}
+			<tr><td>No teams available</td></tr>
+			{% endfor %}
+		</tbody>
+	</table>
+  </div>
+  <div class="col-md-5">
+    <h5><small class="text-muted">or </small>Create <small class="text-muted">your own team.</small></h5>
+    <form action="#" method="POST">{% csrf_token %}
+			{{ team_form }}
+      <button class="btn btn-primary btn-lg btn-block" name="create" type="submit">Create Team</button>
+    </form>
+    <hr class="mb-4">
+  </div><!--Edit profile ends -->
 </div>
-
 {% endblock %}

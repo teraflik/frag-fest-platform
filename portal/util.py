@@ -5,7 +5,7 @@ from django.shortcuts import redirect
 from django.utils import six
 from django.utils.translation import ugettext as _
 from social_django.middleware import SocialAuthExceptionMiddleware
-from social_core import exceptions as social_exceptions
+from social_core.exceptions import AuthAlreadyAssociated
 
 from collections import OrderedDict
 
@@ -20,7 +20,7 @@ account_activation_token = AccountActivationTokenGenerator()
 
 class SteamAuthAuthAlreadyAssociatedMiddleware(SocialAuthExceptionMiddleware):
     def process_exception(self, request, exception):
-        if hasattr(social_exceptions, 'AuthAlreadyAssociated'):
+        if isinstance(exception, AuthAlreadyAssociated):
             messages.error(request, _('Error: Steam Account already associated with another user!'))
             return redirect('portal:profile')
         else:

@@ -1,0 +1,50 @@
+{% extends 'portal/base.html' %}
+
+{% block content %}
+<div class="px-3 py-3 pb-md-4 mx-auto text-center">
+	<h3>{{ team.name }}
+		<small class="text-muted">Team Page</small>
+	</h3>
+	<p>{{ team.info }}</p>
+	<p><i class="fa fa-link" aria-hidden="true"></i> <a href="{{ team.link }}">{{ team.link }}</a></p>
+</div>
+<div class="col-md-6 px-3 py-3 pb-md-4 mx-auto text-center">
+	<h4 class="d-flex justify-content-between align-items-center mb-3">
+		<span class="text-muted">Players</span>
+		<span class="badge badge-secondary badge-pill">{{ team.size }}</span>
+	</h4>
+	<ul class="list-group mb-3">
+		{% for member in team.owners %}
+		<li class="list-group-item d-flex justify-content-between lh-condensed">
+			<div>
+				<h6 class="my-0">{{ member.user.profile.display_name }}</h6>
+			</div>
+			<span class="text-success">Captain</span>
+		</li>
+		{% endfor %}
+		{% for member in team.members %}
+		<li class="list-group-item d-flex justify-content-between lh-condensed">
+			<div>
+				<h6 class="my-0">{{ member.user.profile.display_name }}</h6>
+			</div>
+			<span class="text-muted">Member</span>
+		</li>
+		{% endfor %}
+	</ul>
+
+	{% if user.is_authenticated %}
+		{% if team.locked %}
+			<button class="btn btn-block btn-danger"><i class="fa fa-lock" aria-hidden="true"></i> Team Locked</button>
+		{% elif can_apply %}
+		<form action="{% url 'portal:team_apply' pk=team.pk %}" method="post">{% csrf_token %}
+				<button class="btn btn-block btn-primary" type="submit">Apply</button>
+		</form>
+		{% endif %}
+	
+	{% else %}
+		<!-- <button class="btn btn-block btn-info">Login for Complete Access</button> -->
+	{% endif %}
+
+</div>
+
+{% endblock %}

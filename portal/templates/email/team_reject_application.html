@@ -1,0 +1,10 @@
+{% autoescape off %}
+Hi {{ user.get_full_name }},
+
+Your application has been rejected by {{ team.name }}. But don't worry, there are more teams available or you can create your own team.
+
+Visit <a href="https://frag-fest.in/dashboard">Team Dashboard</a> to have a look.
+
+Regards,
+Team Frag-Fest
+{% endautoescape %}

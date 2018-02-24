@@ -1,0 +1,95 @@
+{% extends 'portal/base.html' %}
+
+{% block content %}
+<div class="px-3 py-3 pb-md-4 mx-auto text-center">
+	<h3>{{ team.name }}
+		<small class="text-muted">Team Dashboard</small>
+	</h3>
+	<p>{{ team.info }}</p>
+	<p><i class="fa fa-link" aria-hidden="true"></i> <a href="{{ team.link }}">{{ team.link }}</a></p>
+</div>
+
+<div class="row justify-content-between mb-4">
+	<div class="col-md-6">
+		<h4 class="d-flex justify-content-between align-items-center mb-3">
+			<span class="text-muted">Players</span>
+			<span class="badge badge-secondary badge-pill">{{ team.size }}</span>
+		</h4>
+		<ul class="list-group mb-3">
+			{% for member in team.owners %}
+			<li class="list-group-item d-flex justify-content-between lh-condensed">
+				<div>
+					<h6 class="my-0">{{ member.user.profile.display_name }}</h6>
+				</div>
+				<span class="text-success">Captain</span>
+			</li>
+			{% endfor %}
+			{% for member in team.members %}
+			<li class="list-group-item d-flex justify-content-between lh-condensed">
+				<div>
+					<h6 class="my-0">{{ member.user.profile.display_name }}</h6>
+				</div>
+				<span class="text-muted">Member</span>
+			</li>
+			{% endfor %}
+		</ul>
+		{% if owner %}
+			{% if team.locked %}
+			<form action="{% url 'portal:team_unlock' pk=team.pk %}" method="post">{% csrf_token %}
+				<button class="btn btn-info" type="submit">Unlock Team</button>
+			</form>
+			{% else %}
+			<form action="{% url 'portal:team_lock' pk=team.pk %}" method="post">{% csrf_token %}
+				<button class="btn btn-info" type="submit">Lock Team</button>
+			</form>
+			{% endif %}
+		{% else %}
+		<form action="{% url 'portal:team_leave' pk=team.pk %}" method="post">{% csrf_token %}
+				<button class="btn btn-danger" type="submit">Leave Team</button>
+		</form>
+		{% endif %}
+	</div> <!--Team members section -->
+	
+	<div class="col-md-5">
+		<div> <!--Applicant Section-->
+			<h5>Applicants</h5>
+			{% if team.locked %}
+			<p class="text-warning">Team is locked. Applications are closed.</p>
+			{% else %}
+			
+			<div class="list-group mb-1">
+				{% for member in applicants %}
+				<div class="list-group-item d-flex justify-content-between lh-condensed">
+					<div>
+						<h6 class="my-0">{{ member.user.email }}</h6>
+					</div>
+					{% if owner %}
+					<div class="btn-group" role="group" aria-label="Accept or Reject">
+						<form action="{% url 'portal:team_accept' pk=member.pk %}" method="post">{% csrf_token %}
+							<button class="btn btn-success" type="submit">Accept</button>
+						</form>
+						<form action="{% url 'portal:team_reject' pk=member.pk %}" method="post">{% csrf_token %}
+							<button class="btn btn-danger" type="submit">Reject</button>
+						</form>
+					</div>
+					{% endif %}
+				</div>
+				{% empty %}
+				<p> No pending applications. </p>
+				{% endfor %}
+			</div>
+			{% endif %}
+		</div><!--Applicant Section End-->
+		{% if owner %}
+		<div>
+			<h5>Edit Team Details</h5>
+			<form action="#" method="POST">{% csrf_token %}
+				{{ team_form }}
+			<button class="btn btn-primary" name="create" type="submit">Update Details</button>
+			</form>
+		</div>
+	  </div><!--Edit team ends -->
+	  {% endif %}
+</div>
+
+{% endblock %}

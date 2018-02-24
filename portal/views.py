@@ -10,6 +10,7 @@ from django.utils.encoding import force_bytes, force_text
 from django.utils.html import strip_tags
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.translation import ugettext as _
+from django.views.decorators.http import require_POST
 from django.views.generic import View, FormView, ListView
 
 from django.conf import settings
@@ -22,20 +23,24 @@ from social_core.backends.steam import SteamOpenId
 from social_core.backends.open_id import OpenIdAuth
 
 from .models import MyUser, Team, Profile, Membership
-from .forms import SignUpForm, TeamForm, ProfileForm, forgetpass
+from .forms import SignUpForm, ProfileForm, TeamForm, TeamUpdateForm
+
+def index(request):
+    template_name = 'stat/index.html'
+    return render(request, template_name)
 
 @login_required
 def send_verification_email(request):
     user = request.user
     current_site = get_current_site(request)
     subject = 'Your ' + current_site.name + ' account has been created. Please verify your email.'
-    html_message = render_to_string('portal/email_activation_html.html', {
+    html_message = render_to_string('email/email_activation_html.html', {
         'user': user,
         'domain': current_site.domain,
         'uid': urlsafe_base64_encode(force_bytes(user.pk)),
         'token': account_activation_token.make_token(user),
     })
-    plain_message = render_to_string('portal/email_activation_plain.html', {
+    plain_message = render_to_string('email/email_activation_plain.html', {
         'user': user,
         'domain': current_site.domain,
         'uid': urlsafe_base64_encode(force_bytes(user.pk)),
@@ -137,101 +142,6 @@ def profile(request):
         'steam': steam,
     })
 
-
-@login_required
-def manage_team(request):
-    teams = Team.objects.filter(memberships=request.user.memberships.all())
-
-    return render(request, 'portal/dashboard.html', {'teams': teams})
-
-@login_required
-def create_team(request):
-    teams_available = []
-    for team in Team.objects.all():
-         if team.can_apply(request.user):
-            teams_available.append(team)
-
-    if request.method == 'POST':
-        if 'create' in request.POST:
-            create_team_form = TeamForm(request.POST)
-            if create_team_form.is_valid():
-                team = create_team_form.save(commit=False)
-                team.creator = request.user
-                team.save()
-                membership = Membership.objects.create(team=team, user=request.user, role=Membership.ROLE_OWNER, state=Membership.STATE_ACCEPTED)
-                membership.save()
-                messages.success(request, _('Your team was succesfully created. You are now its manager.'))
-                return redirect('portal:team_list')
-            else:
-                messages.error(request, _('Could not create team.'))
-    else:
-        create_team_form = TeamForm()
-
-    return render(request, 'portal/create_or_join.html', {'create_form': create_team_form, 'teams_available': teams_available})
-
-def dashboard(request):
-    title = 'Team Dashboard'
-    if not request.user.is_authenticated():
-        message = 'You need to be logged in to access your Team Dashboard.'
-        return render(request, 'portal/no_access.html', {'title': title, 'message': message})
-    if True:
-        message = 'Coming up soon for you to create and join teams.'
-        return render(request, 'portal/no_access.html', {'title': title, 'message': message})
-    
-    if not request.user.profile.steam_connected:
-        message = 'You need to be signed-in to Steam to join a Team.'
-        return render(request, 'portal/no_access.html', {'title': title, 'message': message})
-
-    memberships = request.user.memberships.all()
-
-    if memberships.exists():
-        result = manage_team(request)
-    else:
-        result = create_or_join(request)
-    return result
-
-def SingleTeam(request, team_id):
-    template_name = 'portal/single_team.html'
-    if Team.objects.filter(id=team_id).count() != 0:
-        team = Team.objects.get(id=team_id)
-        players = Profile.objects.filter(team_cs=team)
-        return render(request, template_name, {'team': team, 'players': players})
-    else:
-        return redirect('portal:index')
-
-def DeleteTeam(request, team_id):
-    team1 = Team.objects.get(id=team_id)
-    if request.user==team1.team_head:
-        players = Profile.objects.filter(team_cs=team1)
-        for player in players:
-            player.status_CS=0
-            player.team_cs=None
-            player.save()
-        team1.delete()
-        return redirect('portal:index')
-    else:
-        return redirect('portal:dashboard')
-
-def RemovePlayer(request,team_id,user_id):
-    team_id1=team_id
-    team1=Team.objects.get(id=team_id)
-    if request.user==team1.team_head:
-        profiles = Profile.objects.get(id=user_id)
-        profiles.status_CS=0
-        profiles.team_cs=None
-        return redirect('portal:dashboard')
-
-    return redirect('portal:index')
-
-class TeamListView(ListView):
-    model = Team
-    context_object_name = "teams"
-    template_name = "portal/team_list.html"
-
-def index(request):
-    template_name = 'stat/index.html'
-    return render(request, template_name)
-
 def steam_connect(request):
     if request.user.is_authenticated():
         user = request.user
@@ -242,3 +152,167 @@ def steam_connect(request):
         return redirect('portal:profile')
     else:
         raise Http404("Invalid Request!")
+
+class TeamListView(ListView):
+    model = Team
+    context_object_name = "teams"
+    template_name = "portal/team_list.html"
+
+################################### TEAM HANDLING BELOW THIS #################################
+
+def team_view(request, pk, dashboard=False):
+    team = get_object_or_404(Team, pk=pk)
+    
+    if not request.user.is_authenticated():
+        return render(request, 'portal/team.html', {'team': team, 'can_apply': False})
+    
+    if request.user.profile.only_team() is None:
+        return render(request, 'portal/team.html', {'team': team, 'can_apply': True})
+
+    if request.user.profile.only_team().pk != team.pk:
+        return render(request, 'portal/team.html', {'team': team, 'can_apply': False})
+
+    state = team.state_for(request.user)
+    role = team.role_for(request.user)
+
+    if request.method == 'POST':
+        team_form = TeamUpdateForm(request.POST, instance=team)
+        if team_form.is_valid():
+            team = team_form.save()
+            messages.add_message(request, messages.SUCCESS, _('Team details were successfully updated!'))
+            return redirect('portal:dashboard')
+        else:
+            messages.error(request, _('There were some errors updating the team.'))
+    else:
+        team_form = TeamUpdateForm()
+
+    '''steam_ids = []
+    for member in team.acceptances:
+        steam_ids.append(member.user.social_auth.get(provider='steam').uid)'''
+
+    return render(request, 'portal/team_manage.html', {
+                                                'team': team,
+                                                'owner': role == Membership.ROLE_OWNER,
+                                                'team_form': team_form,
+                                                'applicants': team.applicants
+                                                })
+
+def dashboard(request):
+    title = 'Team Dashboard'
+    if not request.user.is_authenticated():
+        message = 'You need to be logged in to access your Team Dashboard.'
+        return render(request, 'portal/no_access.html', {'title': title, 'message': message})
+
+    if not request.user.profile.steam_connected:
+        message = 'You need to be signed-in to Steam to join a Team.'
+        return render(request, 'portal/no_access.html', {'title': title, 'message': message})
+
+    team = request.user.profile.only_team()
+    if team is not None:
+        return team_view(request, team.pk, dashboard=True) 
+    else:
+        teams_available = Team.objects.filter(locked=False)
+
+        if request.method == 'POST':
+            create_team_form = TeamForm(request.POST)
+            if create_team_form.is_valid():
+                team = create_team_form.save(commit=False)
+                team.creator = request.user
+                team.save() #A post-save signal is used to create the membership for the owner
+                messages.success(request, _('Your team was successfully created. You are now its manager.'))
+                return redirect('portal:dashboard')
+            else:
+                messages.error(request, _('There were some errors creating the team.'))
+        else:
+            create_team_form = TeamForm()
+
+        return render(request, 'portal/dashboard.html', {'team_form': create_team_form, 'teams_available': teams_available})
+
+
+@login_required
+@require_POST
+def team_accept(request, pk):
+    """Accept a user who has has membership status set as APPLIED."""
+    membership = get_object_or_404(Membership, pk=pk)
+    team = membership.team
+    try:
+        player = Membership.objects.get(user=membership.user, state=Membership.STATE_ACCEPTED)
+    except Membership.DoesNotExist:
+        player = None
+    if player is None and membership.accept(by=request.user):
+        messages.success(request, _('Accepted player application.'))
+    else:
+        membership.remove(by=request.user)
+        messages.info(request, _('Cannot accept player application. Already part of another team.'))
+    return redirect('portal:team', pk=team.pk)
+    
+@login_required
+@require_POST
+def team_reject(request, pk):
+    """Reject a user who has has membership status set as APPLIED."""
+    membership = get_object_or_404(Membership, pk=pk)
+    team = membership.team
+    if membership.reject(by=request.user):
+        messages.info(request, _('Rejected player application. The player will not be able to send any further requests.'))
+    return redirect('portal:team', pk=team.pk)
+
+@login_required
+@require_POST
+def team_apply(request, pk):
+    team = get_object_or_404(Team, pk=pk)
+
+    if team.can_apply(request.user):
+        membership, created = Membership.objects.get_or_create(team=team, user=request.user)
+        membership.state = Membership.STATE_APPLIED
+        membership.save()
+        messages.success(request,  _('You have successfully applied to the team. Wait for the manager to accept.'))
+    else:
+        messages.error(request,  _('Error applying for the team. Make sure your profile is complete and you are not already in a team.'))
+    return redirect('portal:team', pk=pk)
+
+@login_required
+@require_POST
+def team_leave(request, pk):
+    team = get_object_or_404(Team, pk=pk)
+    state = team.state_for(request.user)
+    if state is None:
+        raise Http404()
+
+    if team.can_leave(request.user):
+        membership = Membership.objects.get(team=team, user=request.user)
+        membership.delete()
+        messages.success(request, _('You have left the team.'))
+        return redirect('portal:index')
+    else:
+        messages.error(request, _('You cannot leave the team.'))
+        return redirect('portal:team', pk=pk)
+
+@login_required
+@require_POST
+def team_lock(request, pk):
+    team = get_object_or_404(Team, pk=pk)
+    if team.is_owner(request.user):
+        try:
+            team.lock()
+            messages.info(request, _('You have locked the team. User applications have been closed now.'))
+        except:
+            messages.error(request, _('Error locking the team.'))
+    else:
+        raise Http404()
+    return redirect('portal:team', pk=pk)
+
+@login_required
+@require_POST
+def team_unlock(request, pk):
+    team = get_object_or_404(Team, pk=pk)
+    if team.is_owner(request.user):
+        try:
+            team.unlock()
+            messages.info(request, _('You have unlocked the team. User applications will be accepted now.'))
+        except:
+            messages.error(request, _('Error unlocking the team.'))
+    else:
+        raise Http404()
+    return redirect('portal:team', pk=pk)
+
+
