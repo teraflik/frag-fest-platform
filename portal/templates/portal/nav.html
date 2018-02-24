@@ -23,12 +23,10 @@
 						<a class="dropdown-item {% if page == 'all_games' %}active{% endif %}" href="{% url 'portal:all_games' %}">All Games</a>
 					</div>
 				</li>
-				{% comment %}
-				<li class="nav-item"><a class="nav-link" href="{% url 'portal:team_list' %}">Registered Teams</a></li>
-				{% endcomment %}
 			</ul>
 			
 			<ul class="navbar-nav ml-auto">
+				<li class="nav-item {% if page == 'team_list' %}active{% endif %}"><a class="nav-link" href="{% url 'portal:team_list' %}">All Teams</a></li>
 				{% if user.is_authenticated %}
 				<li class="nav-item {% if page == 'profile' %}active{% endif %}"><a class="nav-link" href="{% url 'portal:profile'  %}">Profile</a></li>
 				<li class="nav-item"><a class="nav-link" href="{% url 'portal:logout' %}">Logout</a></li>

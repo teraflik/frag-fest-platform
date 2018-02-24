@@ -7,14 +7,36 @@
 </div>
 
 <p class="lead">Following teams are signup for the tournament.</p>
-<div class="list-group"> {# If no team in teams, add something #}
+
+<table class="table table-hover">
+	<thead>
+		<tr>
+			<th scope="col">Team Name</th>
+			<th scope="col">No of Members</th>
+			<th scope="col">Details</th>
+			<th scope="col">Open/Locked</th>
+		</tr>
+	</thead>
+	<tbody>
 		{% for team in teams %}
-		<a href="#" class="list-group-item list-group-item-action active">
-			{{ team.name }}
-		</a>
+		<tr>
+			<td>{{ team.name }}</td>
+			<td>{{ team.size }}</td>
+			<td><a href="{% url 'portal:team' pk=team.pk %}">Team Page</a></td>
+			<td>{% if team.locked %}
+					<i class="fa fa-lock" aria-hidden="true"></i>
+				{% else %}
+					<i class="fa fa-unlock" aria-hidden="true"></i>
+				{% endif %}
+			</td>
+		</tr>
+		{% empty %}
+		<tr><td>No teams available</td></tr>
 		{% endfor %}
-	</div>
+	</tbody>
+</table>
+
 <p>Keep in mind this list is not final. You can modify your team or remove your team from this list.
-	Teams will be automatically locked on 1st March'2018 00:01 Hrs.</p>
+	Teams will be automatically locked on 7th March' 2018 at 00:01 Hrs.</p>
 
 {% endblock %}

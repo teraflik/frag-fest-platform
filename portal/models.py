@@ -212,8 +212,6 @@ class Profile(models.Model):
         except Membership.DoesNotExist:
             return None
         
-
-
 @receiver(post_save, sender=MyUser)
 def update_user_profile(sender, instance, created, **kwargs):
     if created:
