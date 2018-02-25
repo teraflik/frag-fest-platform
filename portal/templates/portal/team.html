@@ -1,6 +1,9 @@
 {% extends 'portal/base.html' %}
 
 {% block title %}{{ team.name }} | Frag-Fest' 18{% endblock %}
+{% block description %}
+<meta name="description" content="{{ team.info }}" />
+{% endblock %}
 
 {% block content %}
 <div class="px-3 py-3 pb-md-4 mx-auto text-center">
