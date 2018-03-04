@@ -17,6 +17,7 @@ from django.conf.urls import url
 
 from django.contrib.auth import views as auth_views
 from django.views.generic import TemplateView
+from django.views.generic import RedirectView
 from .forms import LoginForm
 from . import views
 
@@ -56,4 +57,7 @@ urlpatterns = [
     url(r'^organizers/$', TemplateView.as_view(template_name="stat/organizers.html"), name='organizers'),
     url(r'^terms_and_conditions/$', TemplateView.as_view(template_name="stat/terms.html"), name='terms'),
     url(r'^sponsors/$', TemplateView.as_view(template_name="stat/sponsors.html"), name='sponsors'),
+    
+    #Redirect view for register/
+    url(r'^register/$', RedirectView.as_view(pattern_name='portal:signup', permanent=False)),
 ]
