@@ -55,7 +55,8 @@ class TeamAdmin(admin.ModelAdmin):
         for obj in queryset:
             user = obj.creator
             if obj.size() >= 5:
-                obj.lock()
+                if not obj.locked:
+                    obj.lock()
                 subject = 'Frag-Fest registrations closed. Your team has now been locked.'
                 html_message = render_to_string('email/registration_success_html.html', {
                     'team': obj,
@@ -64,7 +65,8 @@ class TeamAdmin(admin.ModelAdmin):
                     'team': obj,
                 })
             else:
-                obj.unlock()
+                if obj.locked:
+                    obj.unlock()
                 subject = 'Alert! Complete your team on Frag-Fest dashboard.'
                 html_message = render_to_string('email/registration_fail_html.html', {
                     'team': obj,
