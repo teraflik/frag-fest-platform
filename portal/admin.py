@@ -1,6 +1,9 @@
+from django.conf import settings
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
+from django.core.mail import send_mail, EmailMultiAlternatives
 from django.utils.translation import ugettext_lazy as _
+from django.template.loader import render_to_string
 
 from .models import MyUser, Profile, Team, Membership
 
@@ -35,11 +38,45 @@ class ProfileAdmin(admin.ModelAdmin):
 
 @admin.register(Team)
 class TeamAdmin(admin.ModelAdmin):
-    list_display = ('name', 'creator', 'locked')
+    list_display = ('name', 'creator', 'size', 'locked')
     search_fields = ('name', 'creator')
+    readonly_fields = ['size']
+    #ordering = ('-size', )
+    actions = ['reg_close']
+
+    def size(self, obj):
+        return obj.size()
+    
     inlines = [
         MembershipInline,
     ]
+
+    def reg_close(self, request, queryset):
+        for obj in queryset:
+            user = obj.creator
+            if obj.size() >= 5:
+                obj.lock()
+                subject = 'Frag-Fest registrations closed. Your team has now been locked.'
+                html_message = render_to_string('email/registration_success_html.html', {
+                    'team': obj,
+                })
+                plain_message = render_to_string('email/registration_success_plain.html', {
+                    'team': obj,
+                })
+            else:
+                obj.unlock()
+                subject = 'Alert! Complete your team on Frag-Fest dashboard.'
+                html_message = render_to_string('email/registration_fail_html.html', {
+                    'team': obj,
+                })
+                plain_message = render_to_string('email/registration_fail_plain.html', {
+                    'team': obj,
+                })
+            msg = EmailMultiAlternatives(subject, plain_message, settings.DEFAULT_FROM_EMAIL, [user.email])
+            msg.attach_alternative(html_message, "text/html")
+            msg.send()
+
+    reg_close.short_description = "Close team registrations."
 
 admin.site.register(Membership)
 

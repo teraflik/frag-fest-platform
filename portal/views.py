@@ -317,4 +317,3 @@ def team_unlock(request, pk):
         raise Http404()
     return redirect('portal:team', pk=pk)
 
-

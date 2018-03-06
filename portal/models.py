@@ -63,9 +63,9 @@ class Team(models.Model):
         self.save()
 
     def can_leave(self, user):
-        # owners can't leave at the moment
+        # owners can't leave at the moment. Locked team's players can't leave.
         role = self.role_for(user)
-        return role == Membership.ROLE_MEMBER
+        return role == Membership.ROLE_MEMBER and not self.locked
 
     def can_apply(self, user):
         state = self.state_for(user)
