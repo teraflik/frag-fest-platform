@@ -24,6 +24,22 @@ class UserAdmin(DjangoUserAdmin):
     search_fields = ('email', 'first_name', 'last_name')
     ordering = ('email',)
 
-admin.site.register(Profile)
-admin.site.register(Team)
+class MembershipInline(admin.TabularInline):
+    model = Membership
+    fk_name = 'team'
+
+@admin.register(Profile)
+class ProfileAdmin(admin.ModelAdmin):
+    list_display = ('user', 'display_name')
+    search_fields = ('user', 'display_name')
+
+@admin.register(Team)
+class TeamAdmin(admin.ModelAdmin):
+    list_display = ('name', 'creator', 'locked')
+    search_fields = ('name', 'creator')
+    inlines = [
+        MembershipInline,
+    ]
+
 admin.site.register(Membership)
+
