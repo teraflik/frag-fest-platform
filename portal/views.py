@@ -186,6 +186,7 @@ def team_view(request, pk, dashboard=False):
     else:
         team_form = TeamUpdateForm()
 
+    captain_steam_id = team.creator.social_auth.get(provider='steam').uid
     '''steam_ids = []
     for member in team.acceptances:
         steam_ids.append(member.user.social_auth.get(provider='steam').uid)'''
@@ -193,6 +194,7 @@ def team_view(request, pk, dashboard=False):
     return render(request, 'portal/team_manage.html', {
                                                 'team': team,
                                                 'owner': role == Membership.ROLE_OWNER,
+                                                'captain_steam_id': captain_steam_id,
                                                 'team_form': team_form,
                                                 'applicants': team.applicants
                                                 })
