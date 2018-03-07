@@ -36,12 +36,26 @@ class ProfileAdmin(admin.ModelAdmin):
     list_display = ('user', 'display_name', 'email_confirmed','is_subscribed','steam_id','only_team')
     search_fields = ('user__email', 'display_name')
     readonly_fields = ['steam_id', 'only_team']
+    actions = ['send_email']
 
     def steam_id(self, obj):
         try:
             return obj.user.social_auth.get(provider='steam').uid
         except:
             return None
+    
+    def send_email(self, request, queryset):
+        for obj in queryset:
+            if obj.is_subscribed:
+                user = obj.user
+                subject = 'Get ready for Frag-Fest\' 18. CS:GO Prelims are live.'
+                html_message = render_to_string('email/newsletter_1.html')
+                plain_message = render_to_string('email/newsletter_1_plain.html')
+                msg = EmailMultiAlternatives(subject, plain_message, settings.DEFAULT_FROM_EMAIL, [user.email])
+                msg.attach_alternative(html_message, "text/html")
+                msg.send()
+
+    send_email.short_description = "Send the set email"
 
 @admin.register(Team)
 class TeamAdmin(admin.ModelAdmin):

@@ -15,7 +15,7 @@
 	<thead>
 		<tr>
 			<th scope="col">Team Name</th>
-			<th scope="col">No of Members</th>
+			{% comment %} <th scope="col">No of Members</th> {% endcomment %}
 			<th scope="col">Details</th>
 			<th scope="col">Open/Locked</th>
 		</tr>
@@ -24,7 +24,7 @@
 		{% for team in teams %}
 		<tr>
 			<td>{{ team.name }}</td>
-			<td>{{ team.size }}</td>
+			{% comment %} <td>{{ team.size }}</td> {% endcomment %}
 			<td><a href="{% url 'portal:team' pk=team.pk %}">Team Page</a></td>
 			<td>{% if team.locked %}
 					<i class="fa fa-lock" aria-hidden="true"></i>
