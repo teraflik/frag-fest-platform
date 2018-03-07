@@ -33,19 +33,21 @@ class MembershipInline(admin.TabularInline):
 
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
-    list_display = ('user', 'display_name', 'steam_id')
-    search_fields = ('user', 'display_name')
-    readonly_fields = ['steam_id']
-    actions = ['reg_close']
+    list_display = ('user', 'display_name', 'email_confirmed','is_subscribed','steam_id','only_team')
+    search_fields = ('user__email', 'display_name')
+    readonly_fields = ['steam_id', 'only_team']
 
     def steam_id(self, obj):
-        return obj.size()
+        try:
+            return obj.user.social_auth.get(provider='steam').uid
+        except:
+            return None
 
 @admin.register(Team)
 class TeamAdmin(admin.ModelAdmin):
-    list_display = ('name', 'creator', 'size', 'locked')
+    list_display = ('name', 'creator', 'steam_id','size','locked')
     search_fields = ('name', 'creator__email')
-    readonly_fields = ['size']
+    readonly_fields = ['steam_id', 'size']
     actions = ['reg_close', 'lock']
 
     def size(self, obj):
@@ -54,7 +56,13 @@ class TeamAdmin(admin.ModelAdmin):
     inlines = [
         MembershipInline,
     ]
-
+    
+    def steam_id(self, obj):
+        try:
+            return obj.creator.social_auth.get(provider='steam').uid
+        except:
+            return None
+    
     def lock(self, request, queryset):
         for obj in queryset:
             if not obj.locked:
