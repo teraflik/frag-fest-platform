@@ -33,15 +33,19 @@ class MembershipInline(admin.TabularInline):
 
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
-    list_display = ('user', 'display_name')
+    list_display = ('user', 'display_name', 'steam_id')
     search_fields = ('user', 'display_name')
+    readonly_fields = ['steam_id']
+    actions = ['reg_close']
+
+    def steam_id(self, obj):
+        return obj.size()
 
 @admin.register(Team)
 class TeamAdmin(admin.ModelAdmin):
     list_display = ('name', 'creator', 'size', 'locked')
-    search_fields = ('name', 'creator')
+    search_fields = ('name', 'creator__email')
     readonly_fields = ['size']
-    #ordering = ('-size', )
     actions = ['reg_close']
 
     def size(self, obj):
