@@ -56,12 +56,12 @@
 				<button class="btn btn-danger" type="submit">Leave Team</button>
 		</form>
 		{% endif %}
-		{% endcomment %}
 		{% if not team.locked and not team.owner %} <!-- Added for final day -->
 			<form action="{% url 'portal:team_leave' pk=team.pk %}" method="post">{% csrf_token %}
 					<button class="btn btn-danger" type="submit">Leave Team</button>
 			</form>
 		{% endif %}
+		{% endcomment %}
 
 	</div> <!--Team members section -->
 	

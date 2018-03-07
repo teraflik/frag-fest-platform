@@ -46,7 +46,7 @@ class TeamAdmin(admin.ModelAdmin):
     list_display = ('name', 'creator', 'size', 'locked')
     search_fields = ('name', 'creator__email')
     readonly_fields = ['size']
-    actions = ['reg_close']
+    actions = ['reg_close', 'lock']
 
     def size(self, obj):
         return obj.size()
@@ -54,6 +54,24 @@ class TeamAdmin(admin.ModelAdmin):
     inlines = [
         MembershipInline,
     ]
+
+    def lock(self, request, queryset):
+        for obj in queryset:
+            if not obj.locked:
+                obj.lock()
+            if obj.size() < 5:    
+                subject = 'Your team got a default loss in Frag-Fest due to being incomplete.'
+                html_message = render_to_string('email/team_removed_html.html', {
+                    'team': obj,
+                })
+                plain_message = render_to_string('email/team_removed_plain.html', {
+                    'team': obj,
+                })
+                for member in obj.memberships.all():
+                    user = member.user
+                    msg = EmailMultiAlternatives(subject, plain_message, settings.DEFAULT_FROM_EMAIL, [user.email])
+                    msg.attach_alternative(html_message, "text/html")
+                    msg.send()
 
     def reg_close(self, request, queryset):
         for obj in queryset:
@@ -83,6 +101,7 @@ class TeamAdmin(admin.ModelAdmin):
             msg.send()
 
     reg_close.short_description = "Close team registrations."
+    lock.short_description = "Lock Teams."
 
 admin.site.register(Membership)
 
