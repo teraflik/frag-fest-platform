@@ -62,7 +62,7 @@ class TeamAdmin(admin.ModelAdmin):
     list_display = ('name', 'creator', 'steam_id','size','locked')
     search_fields = ('name', 'creator__email')
     readonly_fields = ['steam_id', 'size']
-    actions = ['reg_close', 'lock']
+    actions = ['reg_close', 'lock', 'send_instructions']
 
     def size(self, obj):
         return obj.size()
@@ -122,8 +122,19 @@ class TeamAdmin(admin.ModelAdmin):
             msg.attach_alternative(html_message, "text/html")
             msg.send()
 
+    def send_instructions(self, request, queryset):
+        for obj in queryset:
+            if obj.size() >= 1:
+                subject = 'Instructions for Frag-Fest CS:GO Prelims.'
+                plain_message = render_to_string('email/instructions_plain.html')
+                for member in obj.memberships.all():
+                    user = member.user
+                    msg = EmailMultiAlternatives(subject, plain_message, settings.DEFAULT_FROM_EMAIL, [user.email])
+                    msg.send()
+
     reg_close.short_description = "Close team registrations."
     lock.short_description = "Lock Teams."
+    send_instructions.short_description = "Email Instructions"
 
 admin.site.register(Membership)
 
