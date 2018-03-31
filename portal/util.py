@@ -9,6 +9,8 @@ from social_core.exceptions import AuthAlreadyAssociated
 
 from collections import OrderedDict
 
+from .models import MyUser, Profile, Team, Membership
+
 class AccountActivationTokenGenerator(PasswordResetTokenGenerator):
     def _make_hash_value(self, user, timestamp):
         return (
@@ -38,3 +40,14 @@ def social_links(request):
     ]
     social = OrderedDict(social)
     return {'SOCIAL': social, 'SHOW_SPONSORS':SHOW_SPONSORS}
+
+def export_database():
+    with open('database.csv', 'w') as csv:
+        for profile in Profile.objects.all():
+            try:
+                steam_id = profile.user.social_auth.get(provider='steam').uid    
+            except:
+                steam_id = 'null'
+            d = '%s, %s, %s, %s,\n' % (profile.user.email, profile.user.first_name, profile.user.last_name, steam_id)
+            csv.write(d)
+            
