@@ -6,9 +6,9 @@
 - [x] Sign in with Steam  
 - [x] Profile View and Edit  
 - [x] Frontend - Home, CS:GO, FIFA, All Games, Organizers  
-- [ ] Front-end - The Event, Schedule, Sponsors, Sponsor-Strip, Privacy Policy  
-- [ ] Back-end - Team Dashboard (Join, or Create)  
-- [ ] Back-end - Team Dashboard (Edit Description, Remove Player, Join Notification)  
+- [x] Front-end - The Event, Schedule, Sponsors, Sponsor-Strip, Privacy Policy  
+- [x] Back-end - Team Dashboard (Join, or Create)  
+- [x] Back-end - Team Dashboard (Edit Description, Remove Player, Join Notification)  
 
 ### To run on your system
 
