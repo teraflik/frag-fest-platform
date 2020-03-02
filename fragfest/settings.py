@@ -1,5 +1,6 @@
 import os
 import dj_database_url
+
 from decouple import config, Csv
 from django.contrib.messages import constants as messages
 
@@ -24,7 +25,7 @@ DATABASES = {
     )
 }
 
-#Email settings
+# Email settings
 EMAIL_BACKEND = config('EMAIL_BACKEND', default='django.core.mail.backends.console.EmailBackend')
 EMAIL_HOST = config('EMAIL_HOST', default='smtp.gmail.com')
 EMAIL_PORT = config('EMAIL_PORT', default='25', cast=int)
@@ -34,12 +35,12 @@ EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
 DEFAULT_FROM_EMAIL = 'Frag-Fest <noreply@frag-fest.in>'
 SERVER_EMAIL = 'Frag-Fest <noreply@frag-fest.in>'
 
-#SteamOpenId Authentication
+# SteamOpenId Authentication
 SOCIAL_AUTH_STEAM_API_KEY = config('SOCIAL_AUTH_STEAM_API_KEY')
 SOCIAL_AUTH_STEAM_EXTRA_DATA = ['player']
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/steam_connect/'
 
-#Other settings
+# Other settings
 SHOW_SPONSORS = config('SHOW_SPONSORS', default=True, cast=bool)
 
 # Application definition
