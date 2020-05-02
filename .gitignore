@@ -1,7 +1,15 @@
+# Exclude virtual environment and python cache files
 venv
 *.pyc
-*.sqlite3
-.vscode
-.env
+
+# Exclude statically collected images
 /static
-database.csv
+
+# Exclude secrets and environment configuration
+.env
+
+# Exclude sqlite database (if present)
+*.sqlite3
+
+# Exclude editor files
+.vscode
