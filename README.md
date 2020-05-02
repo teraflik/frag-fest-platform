@@ -16,7 +16,7 @@
 - (for windows) Add Python installation to your PATH
 - Run the following in terminal:
 
-```
+```bash
     cd frag-fest-platform
     mv .env.EXAMPLE .env
     pip install -r requirements.txt
@@ -26,6 +26,28 @@
 ```
 
 Navigate to 127.0.0.1:8000 in your browser. Linux users may need to use `python3` instead of `python`.
+
+### Run using docker
+```yaml
+version: '3'
+
+services:
+  frag-fest:
+    image: teraflik/frag-fest-platform:latest
+    env_file: .env
+    ports:
+      - "8000:8000"
+  postgres:
+    image: postgres:11-alpine
+    container_name: postgres
+    restart: always
+    ports:
+      - "5432"
+    volumes:
+      - ./data:/var/lib/postgresql/data
+    env_file:
+      - postgres.env
+```
 
 ### Contributing to front-end
 
@@ -37,7 +59,7 @@ Navigate to 127.0.0.1:8000 in your browser. Linux users may need to use `python3
 
 ### Updating webserver
 
-```
+```bash
 source bin/activate
 cd frag-fest-platform
 git pull origin master

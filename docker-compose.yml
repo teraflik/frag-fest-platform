@@ -1,8 +1,0 @@
-version: '3'
-
-services:
-  frag-fest:
-    image: teraflik/frag-fest-platform:latest
-    env_file: .env
-    ports:
-      - "8000:8000"
